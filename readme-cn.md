@@ -166,7 +166,7 @@ try {
 1. 获取原始结果
     ```php
     $mixinSdk->wallet()->setRaw(true)->transfer($asset_id, $opponent_id, $pin, $amount, $memo);
-    // 返回 MixinNetwork 的 原始 Response 内容
+    // 返回 MixinNetwork 原始 Response 内容
     ```
 
 ## Alternatives
