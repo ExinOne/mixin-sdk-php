@@ -55,7 +55,7 @@ vA4vKPqu2ZnD0O4YbGmciuTRPgeJqAt8bbHq/xOfL0lE
 -----END RSA PRIVATE KEY-----
 EOF
             ,  //import your private_key
-]
+];
 
 $mixinSdk = new \ExinOne\MixinSDK\MixinSDK();
 // use setConfig method to save config
