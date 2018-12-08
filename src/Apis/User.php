@@ -28,7 +28,7 @@ class User extends Api
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function updateProfile(string $full_name,string $avatar_base64 = ''): array
+    public function updateProfile(string $full_name, string $avatar_base64 = ''): array
     {
         $body = compact('full_name', 'avatar_base64');
 

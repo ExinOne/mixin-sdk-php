@@ -24,6 +24,10 @@ class Wallet extends Api
      */
     public function createAddress(string $asset_id, string $public_key, $pin, $label, bool $isEOS = false): array
     {
+        if ($pin === null) {
+            $pin = $this->config['pin'];
+        }
+
         if (! $isEOS) {
             $body = [
                 'asset_id'   => $asset_id,
@@ -81,6 +85,10 @@ class Wallet extends Api
      */
     public function deleteAddress(string $addressId, $pin): array
     {
+        if ($pin === null) {
+            $pin = $this->config['pin'];
+        }
+
         $body = [
             "pin" => $pin == '' ? '' : $this->encryptPin((string) $pin),
         ];
@@ -140,6 +148,10 @@ class Wallet extends Api
      */
     public function withdrawal(string $addressId, $amount, $pin, $memo = '', $tracd_id = null): array
     {
+        if ($pin === null) {
+            $pin = $this->config['pin'];
+        }
+
         $body = [
             "address_id" => $addressId,
             "amount"     => (string) $amount,
@@ -164,6 +176,10 @@ class Wallet extends Api
      */
     public function transfer(string $assetId, string $opponentId, $pin, $amount, $memo = '', $tracd_id = null): array
     {
+        if ($pin === null) {
+            $pin = $this->config['pin'];
+        }
+
         $body = [
             "asset_id"    => $assetId,
             "opponent_id" => $opponentId,
