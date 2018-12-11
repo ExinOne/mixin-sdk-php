@@ -98,6 +98,7 @@ $mixinSdk->use('myConfig-A')->user()->readProfile();
 |`MixinSDK::wallet()->readAssetFee(string $assetId)`|获取资产提现费率|Wallet|**null**
 |`MixinSDK::wallet()->readUserSnapshots($limit = null, string $offset = null, string $asset = '', string $order = 'DESC')`|获取当前用户某个资产全部的 snapshots|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/network-snapshots/)
 |`MixinSDK::wallet()->readUserSnapshot(string $snapshotId)`|获取当前用户某个 snapshot 的信息|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/network-snapshot/)
+|`MixinSDK::wallet()->searchAssets(string $snapshotId)`|search assets|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/search-assets/)
 |**---**|**--**|**--**|
 |`MixinSDK::network()->readUser(string $userId)`|获取某个用户的信息|Network|[link](https://developers.mixin.one/api/beta-mixin-message/read-user/)
 |`MixinSDK::network()->readUsers(array $userIds)`|获取多个用户的信息|Network|[link](https://developers.mixin.one/api/beta-mixin-message/read-users/)
@@ -110,6 +111,8 @@ $mixinSdk->use('myConfig-A')->user()->readProfile();
 |`MixinSDK::network()->createAttachments()`|create attachments|Network|[link](https://developers.mixin.one/api/beta-mixin-message/create-attachment/)
 |`MixinSDK::netwo rk()->mixinNetworkChainsSyncStatus()`|获取 Mixin Network 当前的区块同步状态|Network|**null**
 |`MixinSDK::network()->topAsset()`|top asset|Network|[link](https://developers.mixin.one/api/alpha-mixin-network/network/)
+|`MixinSDK::network()->requestAccessToken(string $code)`|use code request access token|Network|[link](https://developers.mixin.one/guides)
+|`MixinSDK::network()->accessTokenGetInfo(string $access_token)`|use access token get info|Network|[link](https://developers.mixin.one/guides)
 |**---**|**--**|**--**|
 |`MixinSDK::getOauthUrl($client_id, string $scope)`|获取 Oauth Url|other|[link](https://developers.mixin.one/guides)
 |`MixinSDK::getConfig($configGroupName='')`|查看一个或者全部配置|other|**null**
