@@ -98,6 +98,7 @@ $mixinSdk->use('myConfig-A')->user()->readProfile();
 |`MixinSDK::wallet()->readAssetFee(string $assetId)`|Read transfer fee|Wallet|**null**
 |`MixinSDK::wallet()->readUserSnapshots($limit = null, string $offset = null, string $asset = '', string $order = 'DESC')`|Get user's all snapshots.|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/network-snapshots/)
 |`MixinSDK::wallet()->readUserSnapshot(string $snapshotId)`|Get user's a snapshots by ID.|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/network-snapshot/)
+|`MixinSDK::wallet()->searchAssets(string $snapshotId)`|search assets|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/search-assets/)
 |**---**|**--**|**--**|
 |`MixinSDK::network()->readUser(string $userId)`|Get user’s information by ID.|Network|[link](https://developers.mixin.one/api/beta-mixin-message/read-user/)
 |`MixinSDK::network()->readUsers(array $userIds)`|Get users information by IDs.|Network|[link](https://developers.mixin.one/api/beta-mixin-message/read-users/)
@@ -110,6 +111,8 @@ $mixinSdk->use('myConfig-A')->user()->readProfile();
 |`MixinSDK::network()->createAttachments()`|Create an attachment upload address.|Network|[link](https://developers.mixin.one/api/beta-mixin-message/create-attachment/)
 |`MixinSDK::network()->mixinNetworkChainsSyncStatus()`|Get Mixin Network Chains Synchronize status|Network|**null**
 |`MixinSDK::network()->topAsset()`|Read top valuable assets of Mixin Network.|Network|[link](https://developers.mixin.one/api/alpha-mixin-network/network/)
+|`MixinSDK::network()->requestAccessToken()`|use code request access token|Network|[link](https://developers.mixin.one/guides)
+|`MixinSDK::network()->accessTokenGetInfo()`|use access token get info|Network|[link](https://developers.mixin.one/guides)
 |**---**|**--**|**--**|
 |`MixinSDK::getOauthUrl($client_id, string $scope)`|Get Oauth Url|other|[link](https://developers.mixin.one/guides)
 |`MixinSDK::getConfig($configGroupName='')`|read config|other|**null**
