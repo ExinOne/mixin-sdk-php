@@ -21,25 +21,25 @@ class NetworkApiTest extends TestCase
         $this->mixinSDK = new MixinSDK([
                 'mixin_id'      => '7000101633',
                 'client_id'     => '982afd4e-92dd-4430-98cf-d308442ea04d',
-                'client_secret' => 'd014902f7f1097e55ad3da1f995e6dd467e4d78aa6ae602d953d35393daed58f',
-                'pin'           => '874489',
-                'pin_token'     => 'aly/VB9UTQx4pUBCGiENxohns49xcKmGhS9rRBoRBO+BlXo6ts3sBInTUMrpt8ksOPHhIFmNVf/s6dzQYi8ed0LzraxtjirItJprm/wKbjA3ec+J7WWtFlGT/H55iwdx7WA6b2DgA2AHpvTVws6OUbSuYKdE2HJUfNWaSaI4UGE=',
-                'session_id'    => '70f74a4a-a46a-4c54-9174-b0e1135f4aa0',
+                'client_secret' => '10d53145962b9c9e3d79dc3143f81f75e0a69df611a26590f4ddc6f735a934c5',
+                'pin'           => '764227',
+                'pin_token'     => 'Y393cKaYI9vx37y11vuyrQWcF60eRTAsxitiwWeO2qRI+KPui+6lSg8BXMhKNS2Gvby4TsDg4zfgy2aBTCiuLlVJEVNftRyWKB46iQOgfMyUUh+dKPwnklopAyJ2rrWQIxMWYy6o4x4x3g9PQRIlaH8qyQuJveDHtFbnNHSSU1M=',
+                'session_id'    => '0b7f65c8-47db-4e9e-89dc-29e8eac80dc2',
                 'private_key'   => <<<EOF
 -----BEGIN RSA PRIVATE KEY-----
-MIICWwIBAAKBgQCp3JLKtRychlbqyrahZJyVyt7UhyE0V0SsMbKoPGV8dVL+qJGh
-QGW/dD3vDskDmevyhOie6CcS1eOvkTS1hab2gVBQwWgZb8YmAxFryb5IZrksZk9u
-5eTabdkjalTKHq4C90PEGG622dPARy//7JQTsVNNQYJeXwOWW4oShj1WhwIDAQAB
-AoGAakqeiL5AgyoFZbMoCWJeIdXrDm7otkoNrPsEYwY4M2NvZe+yAYe8o8tnnhpQ
-azJ8VSwaLKX1HXI+ofRpWVWjHgOasRcnKQxiIhG/LrHSVh6W6XpOPuibBotCZaP0
-uueCv/r09Eym3urtV76SALdkfZA+A77aCTB73aKFJFtoCAECQQDmGL8zYqd5w5vd
-yOnrvRb2XeMHq/3BQMT7kd6/ZLg7MwDJikpuN7yAwV66S9Yvw9BnFungKNGlzpXq
-ZIGztyyHAkEAvPvjF/0hCaDrIMS3JVk/naUVZofRbsnRakhC6ut7i61mcg9sy6qm
-43npuOBsDEJOH0dJmAWdSZlkFJelXm0GAQJAScPROBX+fsi45UcNxuddvymmKMV4
-mkW7YLMI5+7QKRpWvEW7Ss5Pfi9/wNWjGrj5zLLJ03UCkNdDtFr4QbcNbQJAYx5l
-pF5SJp+s0tn6CO+/aup7x/PyR344hNrzpgzuFntS4P3wHP4bW/HEQQAMC333RXZ5
-Re+j6Ec4c4h55oWeAQJARzVUlVVTvohhw3cIhejfsyIbdbPk48UDTIlnSGNORlyY
-vcFMTWHvd8ZzDXxQzd2MZIH6TVBvPohY6LOOQPtDdw==
+MIICXQIBAAKBgQCL/uFeTdkeXZEhj1fQl2Bew7Qi+AaadNCMXK9dO0MGcwNWTC7f
+R0cEKVygbFc7CdMOUiiKnx+gdt5igklwdS459P4XJ7IX73ia3uf3G6vqCsX+FSaK
+TfEBCDCWIPjEYiEvga46KLlmWjXtHH2P1vaOlvoBpY6eQCF/POCXVRGVjQIDAQAB
+AoGAFNrkcesA9DAWJby35UAXwCZBWJBAU5QhWTeZfDcO1hAeKCXzOZnhr3IF9XQO
+TqI5CcIdfgEUchAjMuOb0x/xwcIG95JMCZagYSITvr+cnjFzT3gHPM2VeyKUYzdA
+hbhvTqhOS9QBKK/Am7PqWze/8vjROwaZ8aCRPENEPPP04WECQQDJBxJ5ogVzGvOx
+xY9TrEv5Y67rmDbD/3gz6Js6uyJqVQdpLOUSn+p3VsR/kYcGSL3C5o+N2Wu/HWHe
+MT63GeFlAkEAskdENSPEfF3efdjikSI1apOAtkSYlagzUcofW0zXg2ZWGSl19cuJ
+IWA8IlyFXT9uRKOq8fMgWGcUNJYdiPf1CQJAfx2iuBkUuxli2ZmkLPO5QuSeukkQ
+8FT9zE0cw0GL3JMR0Zba7zEB0R6juErsh7O9kp26TqcaM8o/lYGsN5n85QJBAJwA
+iMsHVXSOn5b4JqphiOSN1l+ofuzWlrHHcNDv2NZ+wnCaO0KurHysPXLEC1+hldgy
+b+/wlClHagLqKUYl1CECQQCPGG4PuDVsYaHiHUnsCAUv1g7XN4p0WdG66S416cnS
+tqdCIpAkfQkVmgOzFdt3lhjNxEucUYv+PbcK31TtYxQ+
 -----END RSA PRIVATE KEY-----
 EOF
                 ,  //import your private_key
@@ -197,5 +197,22 @@ EOF
         $res = $this->mixinSDK->network()->topAsset();
         dump($res);
         self::assertArrayHasKey('chains', $res);
+    }
+
+    public function test_it_can_access_token_request_access_token_success0()
+    {
+        $code = '2c97aedf7e3bc90ddd9a399308caf8abb549e2c090fbdf0d2d08bf5a2c3f0389';
+
+        $res = $this->mixinSDK->network()->requestAccessToken($code);
+        dump($res);
+        self::assertInternalType('array', $res);
+    }
+
+    public function test_it_can_access_token_get_info_success0()
+    {
+        $accessToken = 'eyJhbGciOiJSUzUxMVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV\VVVVVVVVVVVVVVVVVVVVvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv50PRk8DUHdcRhEp\nqMnNkT8a6GzHFKrGPQ';
+        $res = $this->mixinSDK->network()->accessTokenGetInfo($accessToken);
+        dump($res);
+        self::assertInternalType('array', $res);
     }
 }

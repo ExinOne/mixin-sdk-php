@@ -135,5 +135,18 @@ return [
             'url'    => '/conversations',
         ],
 
+        //181211
+        'request_access_token' => [
+            'method' => 'post',
+            'url'    => '/oauth/token',
+        ],
+        'access_token_get_info' => [
+            'method' => 'get',
+            'url'    => '/me',
+        ],
+        'search_assets' => [
+            'method' => 'get',
+            'url'    => '/network/assets/search/', //后面需要填参数
+        ],
     ],
 ];

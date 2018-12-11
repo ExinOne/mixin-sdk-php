@@ -275,4 +275,17 @@ class Wallet extends Api
 
         return $this->res([], $url);
     }
+
+    /**
+     * @param string $q
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function searchAssets(string $q)
+    {
+        $url = $this->endPointUrl.$q;
+        return $this->res([], $url);
+    }
 }

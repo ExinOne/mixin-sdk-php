@@ -32,7 +32,7 @@ MIICWwIBAAKBgQCp3JLKtRychlbqyrahZJyVyt7UhyE0V0SsMbKoPGV8dVL+qJGh
 QGW/dD3vDskDmevyhOie6CcS1eOvkTS1hab2gVBQwWgZb8YmAxFryb5IZrksZk9u
 5eTabdkjalTKHq4C90PEGG622dPARy//7JQTsVNNQYJeXwOWW4oShj1WhwIDAQAB
 AoGAakqeiL5AgyoFZbMoCWJeIdXrDm7otkoNrPsEYwY4M2NvZe+yAYe8o8tnnhpQ
-azJ8VSwaLKX1HXI+ofRpWVWjHgOasRcnKQxiIhG/LrHSVh6W6XpOPuibBotCZaP0
+azJ8VSwaLKX1HXI+ofRpWVWjHgOa1`sRcnKQxiIhG/LrHSVh6W6XpOPuibBotCZaP0
 uueCv/r09Eym3urtV76SALdkfZA+A77aCTB73aKFJFtoCAECQQDmGL8zYqd5w5vd
 yOnrvRb2XeMHq/3BQMT7kd6/ZLg7MwDJikpuN7yAwV66S9Yvw9BnFungKNGlzpXq
 ZIGztyyHAkEAvPvjF/0hCaDrIMS3JVk/naUVZofRbsnRakhC6ut7i61mcg9sy6qm
@@ -228,6 +228,15 @@ EOF
         $snapshot_id = '2081330a-2f74-4c3c-9663-538f3ba93a0d';
 
         $res = $this->mixinSDK->wallet()->readUserSnapshot($snapshot_id);
+        dump($res);
+        self::assertInternalType('array', $res);
+    }
+
+    public function test_it_can_search_assets_success0()
+    {
+        $q = 'EPC';
+
+        $res = $this->mixinSDK->wallet()->searchAssets($q);
         dump($res);
         self::assertInternalType('array', $res);
     }
