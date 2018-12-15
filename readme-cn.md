@@ -90,7 +90,7 @@ $mixinSdk->use('myConfig-A')->user()->readProfile();
 |`MixinSDK::wallet()->deleteAddress(string $addressId, $pin)`|删除一个 address|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/delete-address/)
 |`MixinSDK::wallet()->readAssets()`|获取当前用户全部的 assets 信息|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/read-assets/)
 |`MixinSDK::wallet()->readAsset(string $assetId)`|获取当前用户某个 asset 的信息|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/read-asset/)
-|`MixinSDK::wallet()->deposit(string $assetId)`|deposit|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/deposit/)
+|`MixinSDK::wallet()->deposit(string $assetId)`|deposit (The api same as `wallet()->readAsset`)|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/deposit/)
 |`MixinSDK::wallet()->withdrawal(string $addressId, $amount, $pin, $memo = '', $tracd_id = null)`|转账到某个 address|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/withdrawal/)
 |`MixinSDK::wallet()->transfer(string $assetId, string $opponentId, $pin, $amount, $memo = '', $tracd_id = null)`|转账给某个用户|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/transfer/)
 |`MixinSDK::wallet()->verifyPayment(string $asset_id, string $opponent_id, $amount, string $trace_id)`|verify payment|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/verify-payment/)

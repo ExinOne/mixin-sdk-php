@@ -102,7 +102,7 @@ return [
             'method' => 'get',
             'url'    => '/network/snapshots',
         ],
-        'read_network_snapshot'                    => [
+        'read_network_snapshot'            => [
             'method' => 'get',
             'url'    => '/network/snapshots/',  //后面需要填参数
         ],
@@ -124,7 +124,7 @@ return [
         ],
         'top_asset'                        => [
             'method' => 'get',
-            'url'    => '/network',
+            'url'    => '/network/assets/top',
         ],
         'create_attachments'               => [
             'method' => 'post',
@@ -136,15 +136,15 @@ return [
         ],
 
         //181211
-        'request_access_token' => [
+        'request_access_token'             => [
             'method' => 'post',
             'url'    => '/oauth/token',
         ],
-        'access_token_get_info' => [
+        'access_token_get_info'            => [
             'method' => 'get',
             'url'    => '/me',
         ],
-        'search_assets' => [
+        'search_assets'                    => [
             'method' => 'get',
             'url'    => '/network/assets/search/', //后面需要填参数
         ],

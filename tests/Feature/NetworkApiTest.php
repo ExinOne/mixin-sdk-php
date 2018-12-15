@@ -196,7 +196,7 @@ EOF
     {
         $res = $this->mixinSDK->network()->topAsset();
         dump($res);
-        self::assertArrayHasKey('chains', $res);
+        self::assertInternalType('array', $res);
     }
 
     public function test_it_can_access_token_request_access_token_success0()
@@ -211,7 +211,7 @@ EOF
     public function test_it_can_access_token_get_info_success0()
     {
         $accessToken = 'eyJhbGciOiJSUzUxMVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV\VVVVVVVVVVVVVVVVVVVVvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv50PRk8DUHdcRhEp\nqMnNkT8a6GzHFKrGPQ';
-        $res = $this->mixinSDK->network()->accessTokenGetInfo($accessToken);
+        $res         = $this->mixinSDK->network()->accessTokenGetInfo($accessToken);
         dump($res);
         self::assertInternalType('array', $res);
     }

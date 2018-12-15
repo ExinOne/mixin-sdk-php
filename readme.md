@@ -90,7 +90,7 @@ $mixinSdk->use('myConfig-A')->user()->readProfile();
 |`MixinSDK::wallet()->deleteAddress(string $addressId, $pin)`|Delete an address by ID.|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/delete-address/)
 |`MixinSDK::wallet()->readAssets()`|Read user’s all assets.|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/read-assets/)
 |`MixinSDK::wallet()->readAsset(string $assetId)`|Read asset by ID.|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/read-asset/)
-|`MixinSDK::wallet()->deposit(string $assetId)`|Gant an asset’s deposit address|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/deposit/)
+|`MixinSDK::wallet()->deposit(string $assetId)`|Gant an asset’s deposit address (The api same as `wallet()->readAsset`)|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/deposit/)
 |`MixinSDK::wallet()->withdrawal(string $addressId, $amount, $pin, $memo = '', $tracd_id = null)`|Get assets out of Mixin Network|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/withdrawal/)
 |`MixinSDK::wallet()->transfer(string $assetId, string $opponentId, $pin, $amount, $memo = '', $tracd_id = null)`|Transfer of assets between Mixin Network users.|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/transfer/)
 |`MixinSDK::wallet()->verifyPayment(string $asset_id, string $opponent_id, $amount, string $trace_id)`|Verify a transfer|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/verify-payment/)
