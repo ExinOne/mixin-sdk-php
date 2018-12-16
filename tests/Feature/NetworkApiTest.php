@@ -215,4 +215,13 @@ EOF
         dump($res);
         self::assertInternalType('array', $res);
     }
+
+    public function test_it_can_search_assets_success0()
+    {
+        $q = 'EPC';
+
+        $res = $this->mixinSDK->network()->searchAssets($q);
+        dump($res);
+        self::assertInternalType('array', $res);
+    }
 }
