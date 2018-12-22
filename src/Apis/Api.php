@@ -11,6 +11,7 @@ namespace ExinOne\MixinSDK\Apis;
 use ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException;
 use ExinOne\MixinSDK\Traits\MixinSDKTrait;
 use GuzzleHttp\Client;
+use Wrench\Protocol\Protocol;
 
 class Api
 {
@@ -34,6 +35,11 @@ class Api
      * @var Client
      */
     protected $httpClient;
+
+    /**
+     * @var \Wrench\Client
+     */
+    protected $wsClient;
 
     /**
      * Api constructor.
@@ -93,6 +99,31 @@ class Api
         ];
     }
 
+    public function webSocketRes($message)
+    {
+
+        // TODO 这里需要优化
+        // 重试操作
+        //for ($i = 0; $i < 5; $i++) {
+        //    try {
+                $this->wsClient->connect();
+                $this->wsClient->sendData(gzencode(json_encode($message)), Protocol::TYPE_BINARY);
+                $response = $this->wsClient->receive()[0]->getPayload();
+        dd(json_decode(gzdecode($response), true));
+                //break;
+        //    } catch (\Error $e) {
+        //        $this->wsClient->disconnect();
+        //    }
+        //}
+
+        $this->wsClient->disconnect();
+
+        return [
+            'content'       => json_decode(gzdecode($response), true),
+            'customize_res' => [],
+        ];
+    }
+
     /**
      * @param $config
      *
@@ -143,8 +174,8 @@ class Api
     public function init($useFunction)
     {
         $this->useFunction    = $useFunction;
-        $this->endPointUrl    = $this->packageConfig['endpoints'][camel2Underline($this->useFunction)]['url'];
-        $this->endPointMethod = $this->packageConfig['endpoints'][camel2Underline($this->useFunction)]['method'];
+        $this->endPointUrl    = $this->packageConfig['endpoints'][camel2Underline($this->useFunction)]['url'] ?? null;
+        $this->endPointMethod = $this->packageConfig['endpoints'][camel2Underline($this->useFunction)]['method'] ?? null;
     }
 
     /**

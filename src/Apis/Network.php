@@ -8,6 +8,10 @@
 
 namespace ExinOne\MixinSDK\Apis;
 
+use Ramsey\Uuid\Uuid;
+use Wrench\Client;
+use Wrench\Protocol\Protocol;
+
 class Network extends Api
 {
     /**
@@ -112,7 +116,7 @@ class Network extends Api
         [$priKey, $pubKey, $session_secret] = $this->generateSSLKey();
         $body = [
             "session_secret" => $session_secret,
-            "full_name"      => (string)$fullName,
+            "full_name"      => (string) $fullName,
         ];
 
         return $this->res($body, null, [], compact('priKey', 'pubKey'));
@@ -154,17 +158,43 @@ class Network extends Api
         return $this->res();
     }
 
-    // TODO
-    //public function createConversations()
-    //{
+    /**
+     * @param string      $category
+     * @param array       $participants
+     * @param string|null $conversation_id
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function createConversations(string $category, array $participants, string $conversation_id = null): array
+    {
+        if (empty($conversation_id)) {
+            $conversation_id = $category == 'GROUP'
+                ? Uuid::uuid4()->toString()
+                : $this->uniqueConversationId($participants[0]['user_id'], $this->config['client_id']);
+        }
 
-    //}
+        $body = [
+            'category'        => $category,
+            'conversation_id' => $conversation_id,
+            'participants'    => $participants,
+        ];
 
-    // TODO
-    //public function readConversations()
-    //{
+        return $this->res($body);
+    }
 
-    //}
+    /**
+     * @param string $conversation_id
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function readConversations(string $conversation_id)
+    {
+        $url = $this->endPointUrl.$conversation_id;
+
+        return $this->res([], $url);
+    }
 
     /**
      * @return mixed
@@ -185,7 +215,6 @@ class Network extends Api
     {
         return $this->res();
     }
-
 
     /**
      * @param string $code
@@ -219,5 +248,49 @@ class Network extends Api
         ];
 
         return $this->res(null, null, $headers);
+    }
+
+    //-------
+    //-------
+    public function webs($user_id)
+    {
+        $client = new Client("wss://blaze.mixin.one/", 'https://google.com');
+
+        $client->addRequestHeader('Authorization', 'Bearer '.$this->getToken('GET', '/', ""));
+        $client->addRequestHeader('protocol', 'Mixin-Blaze-1');
+        $client->connect();
+
+        $message = json_encode([
+            'id'     => Uuid::uuid4()->toString(),
+            'action' => 'CREATE_MESSAGE',
+            'params' => [
+                'conversation_id' => $this->uniqueConversationId($user_id, $this->config['client_id']),
+                //'recipient_id'    => $user_id,
+                "status"          => "SENT",
+                'message_id'      => Uuid::uuid4()->toString(),
+                'category'        => 'PLAIN_TEXT',
+                'data'            => base64_encode('lalala'),
+            ],
+        ]);
+
+        //dump($message);
+
+        //dd(base64_encode(gzcompress($message)));
+
+        $client->sendData(gzencode($message), Protocol::TYPE_BINARY);
+        sleep(1);
+        $response = $client->receive()[0]->getPayload();
+        $client->disconnect();
+        dd(gzdecode($response));
+        //dd($response);  // Will output 'Hello WebSocket.org!'
+        //dd(1);
+
+        //$client = new Client('wss://blaze.mixin.one/');
+        //$client->d
+
+        //$client = new Client('wss://blaze.mixin.one/','');
+        //$client->addRequestHeader('Authorization','Bearer '.$this->getToken('GET','/', ''));
+
+        exit();
     }
 }

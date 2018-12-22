@@ -215,4 +215,81 @@ EOF
         dump($res);
         self::assertInternalType('array', $res);
     }
+
+    public function test_it_can_test()
+    {
+        //dd($this->mixinSDK->network()->createAttachments());
+
+        // 4d7a1c69-dd56-4c64-b160-61f234364cea
+        //dd($this->mixinSDK->network()->searchUser('+8615002087196'));
+        dd($this->mixinSDK->network()->webs('17d1c125-aada-46b0-897d-3cb2a29eb011'));
+
+        dd($this->mixinSDK->network()->readConversations('d2c77eb2-e0b0-3e6e-bd66-2160437c5171'));
+        dd($this->mixinSDK->network()->createConversations('CONTACT', [
+            [
+                'action'  => 'ADD',
+                'role'    => '',
+                'user_id' => '17d1c125-aada-46b0-897d-3cb2a29eb011',
+            ],
+        ]));
+
+        [$userId, $recipientId] = ["The fog is getting thicker!1", "And Leon's getting laaarger!1"];
+
+        [$minId, $maxId] = [$userId, $recipientId];
+        if (strcmp($userId, $recipientId) > 0) {
+            [$maxId, $minId] = [$userId, $recipientId];
+        }
+        $sum         = md5($minId.$maxId);
+        $replacement = dechex((hexdec($sum[12].$sum[13]) & 0x0f) | 0x30);
+        $sum         = substr_replace($sum, $replacement, 12, 2);
+
+        $replacement = dechex((hexdec($sum[16].$sum[17]) & 0x3f) | 0x80);
+        $sum         = substr_replace($sum, $replacement, 16, 2);
+
+        $sum = Uuid::fromString($sum)->toString();
+
+        dd($sum, 'cb4e3830-cee0-329c-ab2b-0ae35a88d28e', $sum == 'cb4e3830-cee0-329c-ab2b-0ae35a88d28e');
+
+        dd($this->mixinSDK->uniqueConversationId());
+        dump(hash('md5', 'The fog is getting thicker!And Leon\'s getting laaarger!'));
+        dd(md5('The fog is getting thicker!And Leon\'s getting laaarger!'));
+        var_dump(0x0 ."5f");
+        dd(1);
+        $a = hash('md5', 'The fog is getting thi0cker!And Leon\'s getting laaarger!');
+
+        dd($a);
+        dd(crypt('csdcsdcsdcsdc', 'sdfpljsdijhfusdijfoisdfc'));
+        dd(md5("The fog is getting thicker!\r\nAnd Leons getting laaarger!", true));
+
+        dd($this->mixinSDK->network()->createConversations('CONTACT', [
+            [
+                'action'  => 'ADD',
+                'role'    => '',
+                'user_id' => '17d1c125-aada-46b0-897d-3cb2a29eb011',
+            ],
+        ]));
+
+        //$this->mixinSDK->network()->webs();
+
+        dd(-1);
+    }
+
+    public function test_v()
+    {
+        //dd($this->mixinSDK->wallet()->readAssets());
+        dd($this->mixinSDK->wallet()->readUserSnapshots());
+
+
+        $a = $this->mixinSDK->network()->createUser("ccc");
+        dd($a);
+        
+        //dd($this->mixinSDK->network()->searchUser('+8618588225667'));
+        dd($this->mixinSDK->message()->sendBatchMessage(['17d1c125-aada-46b0-897d-3cb2a29eb011'], ['sdfsdfsdf']));
+
+        dump($this->mixinSDK->message()->sendText('17d1c125-aada-46b0-897d-3cb2a29eb011', 'start'));
+
+        for ($i = 0; $i < 50; ++$i) {
+            dump($this->mixinSDK->message()->sendText('17d1c125-aada-46b0-897d-3cb2a29eb011', $i));
+        }
+    }
 }
