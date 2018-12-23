@@ -115,8 +115,8 @@ class Network extends Api
     {
         [$priKey, $pubKey, $session_secret] = $this->generateSSLKey();
         $body = [
-            "session_secret" => $session_secret,
-            "full_name"      => (string) $fullName,
+            'session_secret' => $session_secret,
+            'full_name'      => (string) $fullName,
         ];
 
         return $this->res($body, null, [], compact('priKey', 'pubKey'));
@@ -250,47 +250,33 @@ class Network extends Api
         return $this->res(null, null, $headers);
     }
 
-    //-------
-    //-------
-    public function webs($user_id)
+    /**
+     * @param string $access_token
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function accessTokenGetAssets(string $access_token)
     {
-        $client = new Client("wss://blaze.mixin.one/", 'https://google.com');
+        $headers = [
+            'Authorization' => 'Bearer '.$access_token,
+        ];
 
-        $client->addRequestHeader('Authorization', 'Bearer '.$this->getToken('GET', '/', ""));
-        $client->addRequestHeader('protocol', 'Mixin-Blaze-1');
-        $client->connect();
+        return $this->res(null, null, $headers);
+    }
 
-        $message = json_encode([
-            'id'     => Uuid::uuid4()->toString(),
-            'action' => 'CREATE_MESSAGE',
-            'params' => [
-                'conversation_id' => $this->uniqueConversationId($user_id, $this->config['client_id']),
-                //'recipient_id'    => $user_id,
-                "status"          => "SENT",
-                'message_id'      => Uuid::uuid4()->toString(),
-                'category'        => 'PLAIN_TEXT',
-                'data'            => base64_encode('lalala'),
-            ],
-        ]);
+    /**
+     * @param string $access_token
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function accessTokenGetContacts(string $access_token)
+    {
+        $headers = [
+            'Authorization' => 'Bearer '.$access_token,
+        ];
 
-        //dump($message);
-
-        //dd(base64_encode(gzcompress($message)));
-
-        $client->sendData(gzencode($message), Protocol::TYPE_BINARY);
-        sleep(1);
-        $response = $client->receive()[0]->getPayload();
-        $client->disconnect();
-        dd(gzdecode($response));
-        //dd($response);  // Will output 'Hello WebSocket.org!'
-        //dd(1);
-
-        //$client = new Client('wss://blaze.mixin.one/');
-        //$client->d
-
-        //$client = new Client('wss://blaze.mixin.one/','');
-        //$client->addRequestHeader('Authorization','Bearer '.$this->getToken('GET','/', ''));
-
-        exit();
+        return $this->res(null, null, $headers);
     }
 }

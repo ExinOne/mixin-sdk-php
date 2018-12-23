@@ -75,14 +75,18 @@ $mixinSdk->use('myConfig-A')->user()->readProfile();
 
 |code|description|module|Mixin Network Docs
 |---|---|---|---
-|`MixinSDK::pin()->updatePin($oldPin, $pin)`|更新 Pin 码|Pin|[link](https://developers.mixin.one/api/alpha-mixin-network/create-pin/)
-|`MixinSDK::pin()->verifyPin($pin)`|验证 Pin 码|Pin|[link](https://developers.mixin.one/api/alpha-mixin-network/verify-pin/)
+|`MixinSDK::pin()->updatePin($oldPin, $pin)`|更新 Pin 码|Pin|[/api/alpha-mixin-network/create-pin/](https://developers.mixin.one/api/alpha-mixin-network/create-pin/)
+|`MixinSDK::pin()->verifyPin($pin)`|验证 Pin 码|Pin|[/api/alpha-mixin-network/verify-pin/](https://developers.mixin.one/api/alpha-mixin-network/verify-pin/)
+|**---**|**--**|**--**|
+|**---**|**--**|**--**|
 |**---**|**--**|**--**|
 |`MixinSDK::user()->readProfile()`|读取当前账号信息|User|[link](https://developers.mixin.one/api/beta-mixin-message/read-profile/)
 |`MixinSDK::user()->updateProfile(string $full_name, string $avatar_base64 = '')`|更新账号信息|User|[link](https://developers.mixin.one/api/beta-mixin-message/update-profile/)
 |`MixinSDK::user()->updatePreferences(string $receive_message_source, string $accept_conversation_source)`|更新隐私设置|User|[link](https://developers.mixin.one/api/beta-mixin-message/update-perference/)
 |`MixinSDK::user()->rotateQRCode()`|更换 QRCode|User|[link](https://developers.mixin.one/api/beta-mixin-message/rotate-qr/)
 |`MixinSDK::user()->readFriends()`|read friends|User|[link](https://developers.mixin.one/api/beta-mixin-message/friends/)
+|**---**|**--**|**--**|
+|**---**|**--**|**--**|
 |**---**|**--**|**--**|
 |`MixinSDK::wallet()->createAddress(string $asset_id, string $public_key, $pin, $label, bool $isEOS = false)`|创建一个 address|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/create-address/)
 |`MixinSDK::wallet()->readAddresses(string $assetId)`|获取某个 asset 的全部地址|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/withdrawal-addresses/)
@@ -100,21 +104,37 @@ $mixinSdk->use('myConfig-A')->user()->readProfile();
 |`MixinSDK::wallet()->readUserSnapshot(string $snapshotId)`|获取当前用户某个 snapshot 的信息|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/network-snapshot/)
 |`MixinSDK::wallet()->searchAssets(string $snapshotId)`|search assets|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/search-assets/)
 |**---**|**--**|**--**|
-|`MixinSDK::network()->readUser(string $userId)`|获取某个用户的信息|Network|[link](https://developers.mixin.one/api/beta-mixin-message/read-user/)
+|**---**|**--**|**--**|
+|**---**|**--**|**--**|
+|`MixinSDK::network()->readUser($userId)`|获取某个用户的信息|Network|[/api/beta-mixin-message/read-user/](https://developers.mixin.one/api/beta-mixin-message/read-user/)
 |`MixinSDK::network()->readUsers(array $userIds)`|获取多个用户的信息|Network|[link](https://developers.mixin.one/api/beta-mixin-message/read-users/)
 |`MixinSDK::network()->searchUser($item)`|search user|Network|[link](https://developers.mixin.one/api/beta-mixin-message/search-user/)
 |`MixinSDK::network()->readNetworkAsset(string $assetId)`|read network asset|Network|[link](https://developers.mixin.one/api/alpha-mixin-network/network-asset/)
 |`MixinSDK::network()->readNetworkSnapshots($limit = null, string $offset = null, string $asset = '', string $order = 'DESC')`|read network snapshots|Network|[link](https://developers.mixin.one/api/alpha-mixin-network/network-snapshots/)
 |`MixinSDK::network()->readNetworkSnapshot(string $snapshotId)`|read network snapshot|Network|[link](https://developers.mixin.one/api/alpha-mixin-network/network-snapshot/)
 |`MixinSDK::network()->createUser($fullName)`|在 Mixin Network 上创建用户|Network|[link](https://developers.mixin.one/api/alpha-mixin-network/app-user/)
-|`MixinSDK::network()->externalTransactions(string $asset = null, string $public_key = null, $limit = null, string $offset = null, string $account_name = null)`|read external transactions|Network|[link](https://developers.mixin.one/api/alpha-mixin-network/external-transactions/)
+|`MixinSDK::network()->externalTransactions($asset,  $public_key, $limit, $offset, $account_name)`|read external transactions|Network|[link](https://developers.mixin.one/api/alpha-mixin-network/external-transactions/)
 |`MixinSDK::network()->createAttachments()`|create attachments|Network|[link](https://developers.mixin.one/api/beta-mixin-message/create-attachment/)
 |`MixinSDK::netwo rk()->mixinNetworkChainsSyncStatus()`|获取 Mixin Network 当前的区块同步状态|Network|**null**
-|`MixinSDK::network()->topAsset()`|top asset|Network|[link](https://developers.mixin.one/api/alpha-mixin-network/network/)
-|`MixinSDK::network()->requestAccessToken(string $code)`|use code request access token|Network|[link](https://developers.mixin.one/guides)
-|`MixinSDK::network()->accessTokenGetInfo(string $access_token)`|use access token get info|Network|[link](https://developers.mixin.one/guides)
+|`MixinSDK::network()->topAsset()`|top asset|Network|[/api/alpha-mixin-network/network/](https://developers.mixin.one/api/alpha-mixin-network/network/)
+|`MixinSDK::network()->requestAccessToken(string $code)`|use code request access token|Network|[/guides](https://developers.mixin.one/guides)
+|`MixinSDK::network()->accessTokenGetInfo(string $access_token)`|use access token get info|Network|[/guides](https://developers.mixin.one/guides)
+|`MixinSDK::network()->accessTokenGetAssets(string $access_token)`|use access token get assets info|Network|[/guides](https://developers.mixin.one/guides)
+|`MixinSDK::network()->accessTokenGetContacts(string $access_token)`|use access token get contact info|Network|[/guides](https://developers.mixin.one/guides)
 |**---**|**--**|**--**|
-|`MixinSDK::getOauthUrl($client_id, string $scope)`|获取 Oauth Url|other|[link](https://developers.mixin.one/guides)
+|**---**|**--**|**--**|
+|**---**|**--**|**--**|
+|`MixinSDK::message()->sendText($user_id, $data, $category , $conversation_id)`|发送文本消息|Message|[/api/beta-mixin-message/websocket-messages/](https://developers.mixin.one/api/beta-mixin-message/websocket-messages/)
+|`MixinSDK::message()->sendContact($user_id, $contact_id, $category, $conversation_id)`|发送用户名片|Message|[/api/beta-mixin-message/websocket-messages/](https://developers.mixin.one/api/beta-mixin-message/websocket-messages/)
+|`MixinSDK::message()->sendAppButtonGroup($user_id, $data, $category, $conversation_id)`|发送 App Button Group (最多三个)|Message|[/api/beta-mixin-message/websocket-messages/](https://developers.mixin.one/api/beta-mixin-message/websocket-messages/)
+|`MixinSDK::message()->sendAppCard($user_id, $data, $category, $conversation_id)`|发送 App Card|Message|[/api/beta-mixin-message/websocket-messages/](https://developers.mixin.one/api/beta-mixin-message/websocket-messages/)
+|`MixinSDK::message()->askMessageReceipt($message_id)`|确认消息是否送达|Message|[/api/beta-mixin-message/websocket-messages/](https://developers.mixin.one/api/beta-mixin-message/websocket-messages/)
+|`MixinSDK::message()->sendBatchMessage($user_id, $data, $category , $conversation_id)`|群发消息|Message|[/api/beta-mixin-message/websocket-messages/](https://developers.mixin.one/api/beta-mixin-message/websocket-messages/)
+|**---**|**--**|**--**|
+|**---**|**--**|**--**|
+|**---**|**--**|**--**|
+|`MixinSDK::getOauthUrl($user_id, $data, $category = 'CONTACT', $conversation_id = null)`|获取 Oauth Url|other|[/guides](https://developers.mixin.one/guides)
+|`MixinSDK::getPayUrl($asset_id, $amount, $trace_id, $memo, $client_id = null)`|生成一个支付 Url|other|[/guides](https://developers.mixin.one/guides)
 |`MixinSDK::getConfig($configGroupName='')`|查看一个或者全部配置|other|**null**
 
 ## 异常

@@ -48,7 +48,7 @@ class Api
      */
     public function __construct($config)
     {
-        $this->packageConfig = require(__DIR__.'/../../config/config.php');
+        $this->packageConfig = require(__DIR__ . '/../../config/config.php');
         $this->config        = $config;
         $this->httpClient    = new Client([
             'base_uri' => $this->packageConfig['base_uri'],
@@ -85,7 +85,7 @@ class Api
         // headers
         $headers = array_merge([
             'Content-Type'  => 'application/json',
-            'Authorization' => 'Bearer '.$this->getToken(strtoupper($method), $url, $body),
+            'Authorization' => 'Bearer ' . $this->getToken(strtoupper($method), $url, $body),
         ], $customizeHeaders);
 
         // 发起请求
@@ -99,22 +99,32 @@ class Api
         ];
     }
 
+    /**
+     * @param $message
+     *
+     * @return array
+     * @throws \Wrench\Exception\FrameException
+     * @throws \Wrench\Exception\SocketException
+     */
     public function webSocketRes($message)
     {
-
         // TODO 这里需要优化
         // 重试操作
-        //for ($i = 0; $i < 5; $i++) {
-        //    try {
+        for ($i = 0; $i < 5; $i++) {
+            try {
                 $this->wsClient->connect();
-                $this->wsClient->sendData(gzencode(json_encode($message)), Protocol::TYPE_BINARY);
+                if (is_array($message[0] ?? 'e')) {
+                    $messages = $message;
+                    foreach ($messages as $v) {
+                        $this->wsClient->sendData(gzencode(json_encode(array_shift($messages))), Protocol::TYPE_BINARY);
+                    }
+                }
                 $response = $this->wsClient->receive()[0]->getPayload();
-        dd(json_decode(gzdecode($response), true));
-                //break;
-        //    } catch (\Error $e) {
-        //        $this->wsClient->disconnect();
-        //    }
-        //}
+                break;
+            } catch (\Error $e) {
+                $this->wsClient->disconnect();
+            }
+        }
 
         $this->wsClient->disconnect();
 

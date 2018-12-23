@@ -18,33 +18,7 @@ class NetworkApiTest extends TestCase
     public function __construct(?string $name = null, array $data = [], string $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        $this->mixinSDK = new MixinSDK([
-                'mixin_id'      => '7000101633',
-                'client_id'     => '982afd4e-92dd-4430-98cf-d308442ea04d',
-                'client_secret' => '10d53145962b9c9e3d79dc3143f81f75e0a69df611a26590f4ddc6f735a934c5',
-                'pin'           => '764227',
-                'pin_token'     => 'Y393cKaYI9vx37y11vuyrQWcF60eRTAsxitiwWeO2qRI+KPui+6lSg8BXMhKNS2Gvby4TsDg4zfgy2aBTCiuLlVJEVNftRyWKB46iQOgfMyUUh+dKPwnklopAyJ2rrWQIxMWYy6o4x4x3g9PQRIlaH8qyQuJveDHtFbnNHSSU1M=',
-                'session_id'    => '0b7f65c8-47db-4e9e-89dc-29e8eac80dc2',
-                'private_key'   => <<<EOF
------BEGIN RSA PRIVATE KEY-----
-MIICXQIBAAKBgQCL/uFeTdkeXZEhj1fQl2Bew7Qi+AaadNCMXK9dO0MGcwNWTC7f
-R0cEKVygbFc7CdMOUiiKnx+gdt5igklwdS459P4XJ7IX73ia3uf3G6vqCsX+FSaK
-TfEBCDCWIPjEYiEvga46KLlmWjXtHH2P1vaOlvoBpY6eQCF/POCXVRGVjQIDAQAB
-AoGAFNrkcesA9DAWJby35UAXwCZBWJBAU5QhWTeZfDcO1hAeKCXzOZnhr3IF9XQO
-TqI5CcIdfgEUchAjMuOb0x/xwcIG95JMCZagYSITvr+cnjFzT3gHPM2VeyKUYzdA
-hbhvTqhOS9QBKK/Am7PqWze/8vjROwaZ8aCRPENEPPP04WECQQDJBxJ5ogVzGvOx
-xY9TrEv5Y67rmDbD/3gz6Js6uyJqVQdpLOUSn+p3VsR/kYcGSL3C5o+N2Wu/HWHe
-MT63GeFlAkEAskdENSPEfF3efdjikSI1apOAtkSYlagzUcofW0zXg2ZWGSl19cuJ
-IWA8IlyFXT9uRKOq8fMgWGcUNJYdiPf1CQJAfx2iuBkUuxli2ZmkLPO5QuSeukkQ
-8FT9zE0cw0GL3JMR0Zba7zEB0R6juErsh7O9kp26TqcaM8o/lYGsN5n85QJBAJwA
-iMsHVXSOn5b4JqphiOSN1l+ofuzWlrHHcNDv2NZ+wnCaO0KurHysPXLEC1+hldgy
-b+/wlClHagLqKUYl1CECQQCPGG4PuDVsYaHiHUnsCAUv1g7XN4p0WdG66S416cnS
-tqdCIpAkfQkVmgOzFdt3lhjNxEucUYv+PbcK31TtYxQ+
------END RSA PRIVATE KEY-----
-EOF
-                ,  //import your private_key
-            ]
-        );
+        $this->mixinSDK = new MixinSDK(require './testKeys.php');
     }
 
     public function test_it_can_read_user_success0()
@@ -222,7 +196,7 @@ EOF
 
         // 4d7a1c69-dd56-4c64-b160-61f234364cea
         //dd($this->mixinSDK->network()->searchUser('+8615002087196'));
-        dd($this->mixinSDK->network()->webs('17d1c125-aada-46b0-897d-3cb2a29eb011'));
+//        dd($this->mixinSDK->network()->webs('17d1c125-aada-46b0-897d-3cb2a29eb011'));
 
         dd($this->mixinSDK->network()->readConversations('d2c77eb2-e0b0-3e6e-bd66-2160437c5171'));
         dd($this->mixinSDK->network()->createConversations('CONTACT', [
@@ -239,11 +213,11 @@ EOF
         if (strcmp($userId, $recipientId) > 0) {
             [$maxId, $minId] = [$userId, $recipientId];
         }
-        $sum         = md5($minId.$maxId);
-        $replacement = dechex((hexdec($sum[12].$sum[13]) & 0x0f) | 0x30);
+        $sum         = md5($minId . $maxId);
+        $replacement = dechex((hexdec($sum[12] . $sum[13]) & 0x0f) | 0x30);
         $sum         = substr_replace($sum, $replacement, 12, 2);
 
-        $replacement = dechex((hexdec($sum[16].$sum[17]) & 0x3f) | 0x80);
+        $replacement = dechex((hexdec($sum[16] . $sum[17]) & 0x3f) | 0x80);
         $sum         = substr_replace($sum, $replacement, 16, 2);
 
         $sum = Uuid::fromString($sum)->toString();
@@ -253,7 +227,7 @@ EOF
         dd($this->mixinSDK->uniqueConversationId());
         dump(hash('md5', 'The fog is getting thicker!And Leon\'s getting laaarger!'));
         dd(md5('The fog is getting thicker!And Leon\'s getting laaarger!'));
-        var_dump(0x0 ."5f");
+        var_dump(0x0 . "5f");
         dd(1);
         $a = hash('md5', 'The fog is getting thi0cker!And Leon\'s getting laaarger!');
 
@@ -277,14 +251,14 @@ EOF
     public function test_v()
     {
         //dd($this->mixinSDK->wallet()->readAssets());
-        dd($this->mixinSDK->wallet()->readUserSnapshots());
+//        dd($this->mixinSDK->wallet()->readUserSnapshots());
 
 
-        $a = $this->mixinSDK->network()->createUser("ccc");
-        dd($a);
-        
+//        $a = $this->mixinSDK->network()->createUser("ccc");
+//        dd($a);
+
         //dd($this->mixinSDK->network()->searchUser('+8618588225667'));
-        dd($this->mixinSDK->message()->sendBatchMessage(['17d1c125-aada-46b0-897d-3cb2a29eb011'], ['sdfsdfsdf']));
+        dd($this->mixinSDK->message()->sendBatchMessage(['17d1c125-aada-46b0-897d-3cb2a29eb011',], ['sdfsdfsdf',]));
 
         dump($this->mixinSDK->message()->sendText('17d1c125-aada-46b0-897d-3cb2a29eb011', 'start'));
 
