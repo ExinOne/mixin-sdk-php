@@ -11,7 +11,7 @@ namespace ExinOne\MixinSDK\Tests\Feature;
 use ExinOne\MixinSDK\MixinSDK;
 use PHPUnit\Framework\TestCase;
 
-class PinApiTest extends TestCase
+class MessageApiTest extends TestCase
 {
     protected $mixinSDK;
 

@@ -90,7 +90,7 @@ class Wallet extends Api
         }
 
         $body = [
-            "pin" => $pin == '' ? '' : $this->encryptPin((string) $pin),
+            'pin' => $pin == '' ? '' : $this->encryptPin((string) $pin),
         ];
 
         $url = str_replace('{$addressId}', $addressId, $this->endPointUrl);
@@ -153,11 +153,11 @@ class Wallet extends Api
         }
 
         $body = [
-            "address_id" => $addressId,
-            "amount"     => (string) $amount,
-            "memo"       => $memo,
-            "trace_id"   => empty($tracd_id) ? Uuid::uuid4()->toString() : $tracd_id,
-            "pin"        => $this->encryptPin($pin),
+            'address_id' => $addressId,
+            'amount'     => (string) $amount,
+            'memo'       => $memo,
+            'trace_id'   => empty($tracd_id) ? Uuid::uuid4()->toString() : $tracd_id,
+            'pin'        => $this->encryptPin($pin),
         ];
 
         return $this->res($body);
@@ -181,16 +181,16 @@ class Wallet extends Api
         }
 
         $body = [
-            "asset_id"    => $assetId,
-            "opponent_id" => $opponentId,
-            "amount"      => (string) $amount,
-            "pin"         => $this->encryptPin($pin),
-            "trace_id"    => empty($tracd_id) ? Uuid::uuid4()->toString() : $tracd_id,
-            "memo"        => $memo,
+            'asset_id'    => $assetId,
+            'opponent_id' => $opponentId,
+            'amount'      => (string) $amount,
+            'pin'         => $this->encryptPin($pin),
+            'trace_id'    => empty($tracd_id) ? Uuid::uuid4()->toString() : $tracd_id,
+            'memo'        => $memo,
         ];
 
         $headers = [
-            "Mixin-Device-Id" => $this->config['session_id'],
+            'Mixin-Device-Id' => $this->config['session_id'],
         ];
 
         return $this->res($body, null, $headers);

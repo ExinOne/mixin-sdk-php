@@ -36,7 +36,8 @@ use ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException;
  * @method  array topAsset(): array
  * @method  array requestAccessToken(string $code): array
  * @method  array accessTokenGetInfo(string $access_token): array
- * @method  array searchAssets(string $q): array
+ * @method  array accessTokenGetAssets(string $access_token): array
+ * @method  array accessTokenGetContacts(string $access_token): array
  *
  * @see \ExinOne\MixinSDK\Apis\Wallet
  * @method  array readAssets(): array
@@ -53,11 +54,21 @@ use ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException;
  * @method  array readAssetFee(string $assetId): array
  * @method  array readUserSnapshots($limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
  * @method  array readUserSnapshot(string $snapshotId): array
+ * @method  array searchAssets(string $q): array
+ *
+ * @see \ExinOne\MixinSDK\Apis\Message
+ * @method  array sendText($user_id, $data, $category = 'CONTACT', $conversation_id = null): array
+ * @method  array sendContact($user_id, $contact_id, $category = 'CONTACT', $conversation_id = null): array
+ * @method  array sendAppButtonGroup($user_id, $data, $category = 'CONTACT', $conversation_id = null): array
+ * @method  array sendAppCard($user_id, $data, $category = 'CONTACT', $conversation_id = null): array
+ * @method  array askMessageReceipt($message_id): array
+ * @method  array sendBatchMessage(array $user_ids, $data): array
  *
  * @see \ExinOne\MixinSDK\Apis\Pin
  * @see \ExinOne\MixinSDK\Apis\Wallet
  * @see \ExinOne\MixinSDK\Apis\Network
  * @see \ExinOne\MixinSDK\Apis\User
+ * @see \ExinOne\MixinSDK\Apis\Message
  *
  * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
  */

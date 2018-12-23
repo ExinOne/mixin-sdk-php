@@ -126,4 +126,26 @@ trait MixinSDKTrait
 
         return openssl_decrypt($data, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
     }
+
+    /**
+     * @param string $userId
+     * @param string $recipientId
+     *
+     * @return string
+     */
+    public function uniqueConversationId(string $userId, string $recipientId): string
+    {
+        [$minId, $maxId] = [$userId, $recipientId];
+        if (strcmp($userId, $recipientId) > 0) {
+            [$maxId, $minId] = [$userId, $recipientId];
+        }
+        $sum         = md5($minId.$maxId);
+        $replacement = dechex((hexdec($sum[12].$sum[13]) & 0x0f) | 0x30);
+        $sum         = substr_replace($sum, $replacement, 12, 2);
+
+        $replacement = dechex((hexdec($sum[16].$sum[17]) & 0x3f) | 0x80);
+        $sum         = substr_replace($sum, $replacement, 16, 2);
+
+        return Uuid::fromString($sum)->toString();
+    }
 }

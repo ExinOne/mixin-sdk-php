@@ -134,8 +134,16 @@ return [
             'method' => 'post',
             'url'    => '/conversations',
         ],
+        'read_conversations'               => [
+            'method' => 'get',
+            'url'    => '/conversations/', //后面需要填参数
+        ],
+        'external_transactions'            => [
+            'method' => 'get',
+            'url'    => '/external/transactions',
+        ],
 
-        //181211
+        //
         'request_access_token'             => [
             'method' => 'post',
             'url'    => '/oauth/token',
@@ -143,6 +151,14 @@ return [
         'access_token_get_info'            => [
             'method' => 'get',
             'url'    => '/me',
+        ],
+        'access_token_get_assets'            => [
+            'method' => 'get',
+            'url'    => '/assets',
+        ],
+        'access_token_get_contacts'            => [
+            'method' => 'get',
+            'url'    => '/friends',
         ],
         'search_assets'                    => [
             'method' => 'get',

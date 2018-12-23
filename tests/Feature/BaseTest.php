@@ -138,8 +138,8 @@ class BaseTest extends TestCase
             'session_key'   => 4,
         ];
         $mixinSDK->use('user', $config);
-        self::assertArraySubset($config,  $mixinSDK->getConfig('user'));
-        self::assertAttributeEquals('user', 'useConfigName',  $mixinSDK->get());
+        self::assertArraySubset($config, $mixinSDK->getConfig('user'));
+        self::assertAttributeEquals('user', 'useConfigName', $mixinSDK->get());
     }
 
     // 测试有多个配置文件的时候是否可以正确运转
@@ -173,6 +173,12 @@ class BaseTest extends TestCase
 
         $mixinContainer = $mixinSDK->use('balabala')->user();
         self::assertArraySubset($balabala, $mixinContainer->getDetailClass()->getConfig());
+    }
 
+    public function test_it_can_get_pay_url()
+    {
+        $mixinSDK = new MixinSDK(require 'testKeys.php');
+        $a        = $mixinSDK->getPayUrl('ccc', 'asd', 'ddd', 'ee');
+        dd($a);
     }
 }

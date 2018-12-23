@@ -10,6 +10,6 @@ namespace ExinOne\MixinSDK\Exceptions;
 
 use Exception;
 
-class ClassNotFoundException extends Exception
+class InternalErrorException extends Exception
 {
 }
