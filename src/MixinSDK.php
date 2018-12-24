@@ -11,6 +11,7 @@ use ExinOne\MixinSDK\Exceptions\NotFoundConfigException;
  * @method  Container pin()
  * @method  Container network()
  * @method  Container wallet()
+ * @method  Container message()
  *
  * @see \ExinOne\MixinSDK\MixinSDK
  */
