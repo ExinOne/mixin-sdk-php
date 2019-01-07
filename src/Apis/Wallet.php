@@ -48,6 +48,35 @@ class Wallet extends Api
     }
 
     /**
+     * @param string $asset_id
+     * @param        $public_key
+     * @param        $label
+     * @param        $account_name
+     * @param        $account_tag
+     * @param null   $pin
+     *
+     * @return array
+     * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
+     */
+    public function createAddressRaw(string $asset_id,  $public_key,  $label,  $account_name,  $account_tag, $pin = null)
+    {
+        if ($pin === null) {
+            $pin = $this->config['pin'];
+        }
+
+        $body = [
+            'asset_id'     => $asset_id,
+            'public_key'   => $public_key,
+            'label'        => $label,
+            'account_name' => $account_name,
+            'account_tag'  => $account_tag,
+            'pin'          => $pin == '' ? '' : $this->encryptPin((string)$pin),
+        ];
+
+        return $this->res($body);
+    }
+
+    /**
      * @param string $assetId
      *
      * @return array

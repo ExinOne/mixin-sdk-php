@@ -66,6 +66,10 @@ return [
             'method' => 'post',
             'url'    => '/addresses',
         ],
+        'create_address_raw'                   => [
+            'method' => 'post',
+            'url'    => '/addresses',
+        ],
         'read_addresses'                   => [
             'method' => 'get',
             'url'    => '/assets/{$assetId}/addresses',

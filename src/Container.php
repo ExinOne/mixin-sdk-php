@@ -48,6 +48,7 @@ use ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException;
  * @method  array verifyPayment(string $asset_id, string $opponent_id, $amount, string $trace_id): array
  * @method  array readTransfer(string $traceId): array
  * @method  array createAddress(string $assetId, string $publicKey, $pin, string $label, bool $isEOS = false): array
+ * @method  array createAddressRaw(string $asset_id,  $public_key,  $label,  $account_name,  $account_tag, $pin = null): array
  * @method  array readAddress(string $addressId): array
  * @method  array readAddresses(string $assetId): array
  * @method  array deleteAddress(string $addressId, $pin): array
