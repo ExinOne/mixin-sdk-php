@@ -114,14 +114,9 @@ class Api
             try {
                 $this->wsClient->connect();
                 if (is_array($message[0] ?? 'e')) {
-                    foreach ($message as $v) {
-                        try {
-                            $this->wsClient->sendData(gzencode(json_encode(array_shift($message))), Protocol::TYPE_BINARY);
-                        } catch (\Throwable $e) {
-                            dump($e->getMessage());
-                            $this->wsClient->disconnect();
-                            $this->wsClient->connect();
-                        }
+                    $messages = $message;
+                    foreach ($messages as $v) {
+                        $this->wsClient->sendData(gzencode(json_encode(array_shift($messages))), Protocol::TYPE_BINARY);
                     }
                 } else {
                     $this->wsClient->sendData(gzencode(json_encode($message)), Protocol::TYPE_BINARY);

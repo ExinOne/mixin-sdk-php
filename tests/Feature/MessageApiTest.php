@@ -15,29 +15,18 @@ class MessageApiTest extends TestCase
 {
     protected $mixinSDK;
 
-    public function __construct(?string $name = null, array $data = [], string $dataName = '')
+    public function __construct(string $name = null, array $data = [], string $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        $this->mixinSDK = new MixinSDK(require 'testKeys.php');
+        $this->mixinSDK = new MixinSDK(require './testKeys.php');
     }
 
-    public function test_it_can_change_user_pin_code()
+    public function test_it_can_send_message()
     {
-        $nowPin = $this->mixinSDK->getConfig('default')['pin'];
-        $newPin = '111111';
-        //$res    = $this->mixinSDK->pin()->updatePin($newPin, $nowPin);
-        //dd($res);
-        //$res = $this->mixinSDK->pin()->verifyPin($nowPin);
-        //dump($res);
-        //dump($nowPin, $newPin);
-        $res = $this->mixinSDK->pin()->updatePin($nowPin, $newPin);
-        //dd($res);
-        dump($res);
-        $res = $this->mixinSDK->pin()->verifyPin($newPin);
-        dump($res);
-        $res = $this->mixinSDK->pin()->updatePin($newPin, $nowPin);
-        dump($res);
-
-        self::assertFalse(false);
+        $ids = [
+            '17d1c125-aada-46b0-897d-3cb2a29eb011',
+        ];
+        $a = $this->mixinSDK->message()->sendBatchMessage($ids,'cccc');
+        dd($a);
     }
 }
