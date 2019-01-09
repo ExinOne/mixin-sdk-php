@@ -32,6 +32,7 @@ use ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException;
  * @method  array createUser(string $fullName): array
  * @method  array externalTransactions(string $asset = null, string $public_key = null, int $limit = null, string $offset = null, string $account_name = null): array
  * @method  array createAttachments(): array
+ * @method  array createConversations(string $category, array $participants, string $conversation_id = null): array
  * @method  array mixinNetworkChainsSyncStatus(): array
  * @method  array topAsset(): array
  * @method  array requestAccessToken(string $code): array

@@ -23,10 +23,10 @@ class Message extends Api
      */
     public function __construct($config)
     {
-        $this->packageConfig = require(__DIR__ . '/../../config/config.php');
+        $this->packageConfig = require(__DIR__.'/../../config/config.php');
         $this->config        = $config;
         $this->wsClient      = new Client('wss://blaze.mixin.one/', 'https://google.com');
-        $this->wsClient->addRequestHeader('Authorization', 'Bearer ' . $this->getToken('GET', '/', ''));
+        $this->wsClient->addRequestHeader('Authorization', 'Bearer '.$this->getToken('GET', '/', ''));
         $this->wsClient->addRequestHeader('protocol', 'Mixin-Blaze-1');
     }
 
@@ -46,7 +46,7 @@ class Message extends Api
             'id'     => Uuid::uuid4()->toString(),
             'action' => 'CREATE_MESSAGE',
             'params' => [
-                'conversation_id' => $category == 'CONTACT'
+                'conversation_id' => $category == 'CONTACT' && empty($conversation_id)
                     ? $this->uniqueConversationId($user_id, $this->config['client_id'])
                     : $conversation_id,
                 'message_id'      => Uuid::uuid4()->toString(),
@@ -195,7 +195,7 @@ class Message extends Api
     public function sendBatchMessage(array $user_ids, $data): array
     {
         // 如果 count 不相等的话
-        if (!is_string($data) && (count($user_ids) != count($data))) {
+        if (! is_string($data) && (count($user_ids) != count($data))) {
             throw new InternalErrorException('The length of "user_ids" and "data" is not equal');
         }
 
