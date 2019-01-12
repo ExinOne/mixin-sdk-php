@@ -10,7 +10,6 @@ namespace ExinOne\MixinSDK\Apis;
 
 use ExinOne\MixinSDK\Exceptions\InternalErrorException;
 use Ramsey\Uuid\Uuid;
-use Wrench\Client;
 
 class Message extends Api
 {
@@ -25,9 +24,6 @@ class Message extends Api
     {
         $this->packageConfig = require(__DIR__.'/../../config/config.php');
         $this->config        = $config;
-        $this->wsClient      = new Client('wss://blaze.mixin.one/', 'https://google.com');
-        $this->wsClient->addRequestHeader('Authorization', 'Bearer '.$this->getToken('GET', '/', ''));
-        $this->wsClient->addRequestHeader('protocol', 'Mixin-Blaze-1');
     }
 
     /**
