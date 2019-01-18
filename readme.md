@@ -11,7 +11,7 @@
 ![](https://img.shields.io/github/release/ExinOne/mixin-sdk-php.svg?style=flat-square&colorA=333333)
 [![](https://img.shields.io/badge/language-中文文档-333333.svg?longCache=true&style=flat-square&colorA=E62B1E)](readme-cn.md)
 
-Mixin-Network SDK for PHP, modify from [ExinOne/laravel-mixin-sdk](https://github.com/ExinOne/laravel-mixin-sdk)
+Mixin-Network SDK for PHP
 
 ## Requirement
 

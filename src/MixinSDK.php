@@ -39,7 +39,11 @@ class MixinSDK
     {
         $this->useConfigName = 'default';
         if (!empty($config)) {
-            $this->config[$this->useConfigName] = $config;
+            if (is_array($config['keys'] ?? 'e')) {
+                $this->config = $config;
+            } else {
+                $this->config[$this->useConfigName] = $config;
+            }
         }
     }
 
