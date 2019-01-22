@@ -128,10 +128,14 @@ class Container
 
     /**
      * @param bool $raw
+     *
+     * @return $this
      */
-    public function setRaw(bool $raw): void
+    public function setRaw(bool $raw)
     {
         $this->raw = $raw;
+
+        return $this;
     }
 
     /**
