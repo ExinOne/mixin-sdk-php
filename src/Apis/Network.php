@@ -83,7 +83,6 @@ class Network extends Api
         $urlArgv = compact('limit', 'offset', 'asset', 'order');
 
         $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
-        dump($url);
 
         return $this->res([], $url);
     }
