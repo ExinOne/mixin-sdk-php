@@ -13,7 +13,7 @@
 
 Mixin-Network SDK for PHP
 
-## 框架要求
+## 要求
 
 1. `Composer`
 2. `PHP` >= 7.0
