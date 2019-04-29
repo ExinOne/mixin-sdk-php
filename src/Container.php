@@ -44,7 +44,7 @@ use ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException;
  * @method  array readAssets(): array
  * @method  array readAsset(string $assetId): array
  * @method  array deposit(string $assetId): array
- * @method  array withdrawal(string $addressId, $amount, string $memo, $pin, $tracd_id = null): array
+ * @method  array withdrawal(string $addressId, $amount, $pin, string $memo, $tracd_id = null): array
  * @method  array transfer(string $assetId, string $opponentId, $pin, $amount, string $memo, $tracd_id = null): array
  * @method  array verifyPayment(string $asset_id, string $opponent_id, $amount, string $trace_id): array
  * @method  array readTransfer(string $traceId): array
