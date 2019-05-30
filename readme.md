@@ -120,6 +120,8 @@ $mixinSdk->use('myConfig-A')->user()->readProfile();
 |`MixinSDK::network()->accessTokenGetInfo(string $access_token)`|use access token get info|Network|[/guides](https://developers.mixin.one/guides)
 |`MixinSDK::network()->accessTokenGetAssets(string $access_token)`|use access token get assets info|Network|[/guides](https://developers.mixin.one/guides)
 |`MixinSDK::network()->accessTokenGetContacts(string $access_token)`|use access token get contact info|Network|[/guides](https://developers.mixin.one/guides)
+|`MixinSDK::network()->accessTokenGetAddresses(string $access_token, string $assetId)`|use access token get addresses|Network|[/guides](https://developers.mixin.one/guides)
+|`MixinSDK::network()->accessTokenGetAddress(string $access_token, string $addressId)`|use access token get an addresseses|Network|[/guides](https://developers.mixin.one/guides)
 |`MixinSDK::network()->searchAssets(string $snapshotId)`|search assets|Network|[link](https://developers.mixin.one/api/alpha-mixin-network/search-assets/)
 |**---**|**--**|**--**|
 |**---**|**--**|**--**|
