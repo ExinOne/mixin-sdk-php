@@ -38,8 +38,8 @@ use ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException;
  * @method  array requestAccessToken(string $code): array
  * @method  array accessTokenGetInfo(string $access_token): array
  * @method  array accessTokenGetAssets(string $access_token): array
- * @method  array accessTokenGetAddress(string $access_token, string $addressId): array
  * @method  array accessTokenGetAddresses(string $access_token, string $assetId): array
+ * @method  array accessTokenGetAddress(string $access_token, string $addressId): array
  * @method  array accessTokenGetContacts(string $access_token): array
  *
  * @see \ExinOne\MixinSDK\Apis\Wallet
