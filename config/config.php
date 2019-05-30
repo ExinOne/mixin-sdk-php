@@ -66,7 +66,7 @@ return [
             'method' => 'post',
             'url'    => '/addresses',
         ],
-        'create_address_raw'                   => [
+        'create_address_raw'               => [
             'method' => 'post',
             'url'    => '/addresses',
         ],
@@ -156,11 +156,19 @@ return [
             'method' => 'get',
             'url'    => '/me',
         ],
-        'access_token_get_assets'            => [
+        'access_token_get_assets'          => [
             'method' => 'get',
             'url'    => '/assets',
         ],
-        'access_token_get_contacts'            => [
+        'access_token_get_addresses'       => [
+            'method' => 'get',
+            'url'    => '/assets/{$assetId}/addresses',
+        ],
+        'access_token_get_address'         => [
+            'method' => 'get',
+            'url'    => '/addresses/',  //后面需要填参数
+        ],
+        'access_token_get_contacts'        => [
             'method' => 'get',
             'url'    => '/friends',
         ],

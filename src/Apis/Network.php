@@ -264,6 +264,44 @@ class Network extends Api
 
     /**
      * @param string $access_token
+     * @param string $assetId
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function accessTokenGetAddresses(string $access_token, string $assetId): array
+    {
+        $headers = [
+            'Authorization' => 'Bearer '.$access_token,
+        ];
+
+        $url = str_replace('{$assetId}', $assetId, $this->endPointUrl);
+
+        return $this->res([], $url, $headers);
+    }
+
+    /**
+     * @param string $access_token
+     * @param string $addressId
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function accessTokenGetAddress(string $access_token, string $addressId): array
+    {
+        $headers = [
+            'Authorization' => 'Bearer '.$access_token,
+        ];
+
+        $url = $this->endPointUrl.$addressId;
+
+        return $this->res([], $url, $headers);
+    }
+
+    /**
+     * @param string $access_token
      *
      * @return array
      * @throws \Exception
