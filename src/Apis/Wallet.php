@@ -305,4 +305,43 @@ class Wallet extends Api
         return $this->res([], $url);
     }
 
+
+    /**
+     * @param string      $access_token
+     * @param int|null    $limit
+     * @param string|null $offset
+     * @param string      $asset
+     * @param string      $order
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function accessTokenGetUserSnapshots(string $access_token, $limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
+    {
+        $limit   = empty($limit) ? $limit : (int) $limit;
+        $urlArgv = compact('access_token' ,'limit', 'offset', 'asset', 'order');
+
+        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
+
+        return $this->res([], $url);
+    }
+
+    /**
+     * @param string $access_token
+     * @param string $snapshotId
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function accessTokenGetUserSnapshot(string $access_token, string $snapshotId): array
+    {
+
+        $urlArgv = compact('access_token');
+
+        $url = $this->endPointUrl.$snapshotId.'?'.http_build_query(delEmptyItemInArray($urlArgv));;
+
+        return $this->res([], $url);
+    }
+
 }

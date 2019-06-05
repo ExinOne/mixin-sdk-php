@@ -172,6 +172,14 @@ return [
             'method' => 'get',
             'url'    => '/friends',
         ],
+        'access_token_get_user_snapshots'         => [
+            'method' => 'get',
+            'url'    => '/snapshots',
+        ],
+        'access_token_get_user_snapshot'               => [
+            'method' => 'get',
+            'url'    => '/snapshots/',  //后面需要填参数
+        ],
         'search_assets'                    => [
             'method' => 'get',
             'url'    => '/network/assets/search/', //后面需要填参数
