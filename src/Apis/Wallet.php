@@ -320,11 +320,15 @@ class Wallet extends Api
     public function accessTokenGetUserSnapshots(string $access_token, $limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
     {
         $limit   = empty($limit) ? $limit : (int) $limit;
-        $urlArgv = compact('access_token' ,'limit', 'offset', 'asset', 'order');
+        $urlArgv = compact('limit', 'offset', 'asset', 'order');
+
+        $headers = [
+            'Authorization' => 'Bearer '.$access_token,
+        ];
 
         $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
 
-        return $this->res([], $url);
+        return $this->res([], $url, $headers);
     }
 
     /**
@@ -336,12 +340,13 @@ class Wallet extends Api
      */
     public function accessTokenGetUserSnapshot(string $access_token, string $snapshotId): array
     {
+        $url = $this->endPointUrl.$snapshotId;
 
-        $urlArgv = compact('access_token');
+        $headers = [
+            'Authorization' => 'Bearer '.$access_token,
+        ];
 
-        $url = $this->endPointUrl.$snapshotId.'?'.http_build_query(delEmptyItemInArray($urlArgv));;
-
-        return $this->res([], $url);
+        return $this->res([], $url, $headers);
     }
 
 }
