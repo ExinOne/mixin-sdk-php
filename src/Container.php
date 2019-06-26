@@ -82,6 +82,8 @@ class Container
 
     protected $raw = false;
 
+    protected $is_return_access_token = false;
+
     /**
      * @param $name
      * @param $arguments
@@ -94,10 +96,12 @@ class Container
         $this->detailClass->init($name);
 
         // 调用对象的$name 方法,获得需要发送的 header 和 body
-        ['content' => $content, 'customize_res' => $customize_res]
+        ['content' => $content, 'customize_res' => $customize_res, 'auth_token' => $auth_token]
             = call_user_func_array([$this->detailClass, $name], $arguments);
 
-        if (! $this->isRaw() && ($content['error'] ?? 0)) {
+        if ($this->isReturnAccessToken()) {
+            return $auth_token;
+        } elseif (! $this->isRaw() && ($content['error'] ?? 0)) {
             // 出现异常
             $error = $content['error'];
             $this->boomRoom($error['code'], $error['description']);
@@ -149,6 +153,29 @@ class Container
     }
 
     /**
+     * @param bool $is_return_access_token
+     *
+     * @return $this
+     */
+    public function setReturnAccessToken(bool $is_return_access_token)
+    {
+        $this->is_return_access_token = $is_return_access_token;
+
+        $this->detailClass->setReturnAccessToken($is_return_access_token);
+
+        return $this;
+    }
+
+        /**
+     * @return bool
+     */
+    public function isReturnAccessToken(): bool
+    {
+        return $this->is_return_access_token;
+    }
+
+
+    /**
      * @param int $timeout
      *
      * @return $this
@@ -156,6 +183,18 @@ class Container
     public function setTimeout(int $timeout)
     {
         $this->detailClass->setTimeout($timeout);
+
+        return $this;
+    }
+
+    /**
+     * @param int $expire
+     *
+     * @return $this
+     */
+    public function setExpire(int $expire)
+    {
+        $this->detailClass->setExpire($expire);
 
         return $this;
     }

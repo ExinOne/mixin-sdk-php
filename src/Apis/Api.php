@@ -32,6 +32,10 @@ class Api
 
     protected $timeout = 20;
 
+    protected $expire = 200;
+
+    protected $is_return_access_token = false;
+
     /**
      * @var Client
      */
@@ -78,11 +82,21 @@ class Api
             ? null
             : json_encode($body);
 
+        $auth_token = 'Bearer ' . $this->getToken(strtoupper($method), $url, $body, $this->expire);
+
         // headers
         $headers = array_merge([
             'Content-Type'  => 'application/json',
-            'Authorization' => 'Bearer ' . $this->getToken(strtoupper($method), $url, $body),
+            'Authorization' => $auth_token,
         ], $customizeHeaders);
+
+        if ($this->is_return_access_token) {
+            return [
+                'content'       => [],
+                'customize_res' => [],
+                'auth_token'    => $auth_token,
+            ];
+        }
 
         // 发起请求
         $method   = strtolower($method);
@@ -92,6 +106,7 @@ class Api
         return [
             'content'       => json_decode($response->getBody()->getContents(), true),
             'customize_res' => $customizeRes,
+            'auth_token'    => $auth_token,
         ];
     }
 
@@ -195,6 +210,22 @@ class Api
     public function setTimeout(int $timeout): void
     {
         $this->timeout = $timeout;
+    }
+
+    /**
+     * @param int $expire
+     */
+    public function setExpire(int $expire): void
+    {
+        $this->expire = $expire;
+    }
+
+    /**
+     * @param int $expire
+     */
+    public function setReturnAccessToken(bool $is_return_access_token): void
+    {
+        $this->is_return_access_token = $is_return_access_token;
     }
 
     /**

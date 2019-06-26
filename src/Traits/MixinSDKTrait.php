@@ -28,13 +28,13 @@ trait MixinSDKTrait
      * @return string
      * @throws \Exception
      */
-    public function getToken($method, $uri, $body)
+    public function getToken($method, $uri, $body, $expire = 200)
     {
         $token = [
             "uid" => $this->config['client_id'],
             "sid" => $this->config['session_id'],
             "iat" => time(),
-            "exp" => time() + 200,
+            "exp" => time() + $expire,
             "jti" => Uuid::uuid4()->toString(),
             "sig" => bin2hex(hash('sha256', $method.$uri.$body, true)),
         ];
