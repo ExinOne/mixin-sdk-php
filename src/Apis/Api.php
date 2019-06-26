@@ -82,12 +82,12 @@ class Api
             ? null
             : json_encode($body);
 
-        $auth_token = 'Bearer ' . $this->getToken(strtoupper($method), $url, $body, $this->expire);
+        $auth_token = $this->getToken(strtoupper($method), $url, $body, $this->expire);
 
         // headers
         $headers = array_merge([
             'Content-Type'  => 'application/json',
-            'Authorization' => $auth_token,
+            'Authorization' => 'Bearer ' . $auth_token,
         ], $customizeHeaders);
 
         if ($this->is_return_access_token) {
