@@ -14,19 +14,6 @@ use Ramsey\Uuid\Uuid;
 class Message extends Api
 {
     /**
-     * Message constructor.
-     *
-     * @param $config
-     *
-     * @throws \Exception
-     */
-    public function __construct($config)
-    {
-        $this->packageConfig = require(__DIR__.'/../../config/config.php');
-        $this->config        = $config;
-    }
-
-    /**
      * @param string      $user_id
      * @param string      $data
      * @param string      $category
@@ -188,11 +175,15 @@ class Message extends Api
      * @throws \Wrench\Exception\FrameException
      * @throws \Wrench\Exception\SocketException
      */
-    public function sendBatchMessage(array $user_ids, $data): array
+    public function sendBatchMessage(array $user_ids, $data, $use_http = false): array
     {
         // 如果 count 不相等的话
         if (! is_string($data) && (count($user_ids) != count($data))) {
             throw new InternalErrorException('The length of "user_ids" and "data" is not equal');
+        }
+
+        if ($use_http && count($user_ids) > 100) {
+            throw new InternalErrorException('The length of "user_ids" should be in 100 when use http');
         }
 
         $messages        = [];
@@ -219,6 +210,10 @@ class Message extends Api
                 $messages[] = $message;
                 $message    = $messageTemplate;
             }
+        }
+
+        if ($use_http) {
+            return $this->res($messages[0]['params']['messages']);
         }
 
         return $this->webSocketRes($messages);

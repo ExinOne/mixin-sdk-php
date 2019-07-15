@@ -184,5 +184,10 @@ return [
             'method' => 'get',
             'url'    => '/network/assets/search/', //后面需要填参数
         ],
+
+        'send_batch_message'                    => [
+            'method' => 'post',
+            'url'    => '/messages',
+        ],
     ],
 ];

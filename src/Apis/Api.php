@@ -147,6 +147,7 @@ class Api
         return [
             'content'       => json_decode(gzdecode($response), true),
             'customize_res' => [],
+            'auth_token'    => null,
         ];
     }
 
