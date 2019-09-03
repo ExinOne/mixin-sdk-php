@@ -198,12 +198,12 @@ class Wallet extends Api
      * @param        $pin
      * @param        $amount
      * @param string $memo
-     * @param null   $tracd_id
+     * @param null   $trace_id
      *
      * @return array
      * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
      */
-    public function transfer(string $assetId, string $opponentId, $pin, $amount, $memo = '', $tracd_id = null): array
+    public function transfer(string $assetId, string $opponentId, $pin, $amount, $memo = '', $trace_id = null): array
     {
         if ($pin === null) {
             $pin = $this->config['pin'];
@@ -214,7 +214,7 @@ class Wallet extends Api
             'opponent_id' => $opponentId,
             'amount'      => (string) $amount,
             'pin'         => $this->encryptPin($pin),
-            'trace_id'    => empty($tracd_id) ? Uuid::uuid4()->toString() : $tracd_id,
+            'trace_id'    => empty($trace_id) ? Uuid::uuid4()->toString() : $trace_id,
             'memo'        => $memo,
         ];
 
