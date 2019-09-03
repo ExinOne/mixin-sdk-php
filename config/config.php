@@ -180,11 +180,14 @@ return [
             'method' => 'get',
             'url'    => '/snapshots/',  //后面需要填参数
         ],
+        'access_token_get_transfer'                    => [
+            'method' => 'get',
+            'url'    => '/transfers/trace/{$traceId}',
+        ],
         'search_assets'                    => [
             'method' => 'get',
             'url'    => '/network/assets/search/', //后面需要填参数
         ],
-
         'send_batch_message'                    => [
             'method' => 'post',
             'url'    => '/messages',

@@ -170,12 +170,12 @@ class Wallet extends Api
      * @param        $amount
      * @param string $memo
      * @param        $pin
-     * @param null   $tracd_id
+     * @param null   $trace_id
      *
      * @return array
      * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
      */
-    public function withdrawal(string $addressId, $amount, $pin, $memo = '', $tracd_id = null): array
+    public function withdrawal(string $addressId, $amount, $pin, $memo = '', $trace_id = null): array
     {
         if ($pin === null) {
             $pin = $this->config['pin'];
@@ -185,7 +185,7 @@ class Wallet extends Api
             'address_id' => $addressId,
             'amount'     => (string) $amount,
             'memo'       => $memo,
-            'trace_id'   => empty($tracd_id) ? Uuid::uuid4()->toString() : $tracd_id,
+            'trace_id'   => empty($trace_id) ? Uuid::uuid4()->toString() : $trace_id,
             'pin'        => $this->encryptPin($pin),
         ];
 
@@ -333,14 +333,14 @@ class Wallet extends Api
 
     /**
      * @param string $access_token
-     * @param string $snapshotId
+     * @param string $snapshot_id
      * @return array
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function accessTokenGetUserSnapshot(string $access_token, string $snapshotId): array
+    public function accessTokenGetUserSnapshot(string $access_token, string $snapshot_id): array
     {
-        $url = $this->endPointUrl.$snapshotId;
+        $url = $this->endPointUrl.$snapshot_id;
 
         $headers = [
             'Authorization' => 'Bearer '.$access_token,
@@ -349,4 +349,22 @@ class Wallet extends Api
         return $this->res([], $url, $headers);
     }
 
+    /**
+     * @param string $access_token
+     * @param string $snapshot_id
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function accessTokenGetTransfer(string $access_token, string $trace_id): array
+    {
+        $url = str_replace('{$traceId}', $trace_id, $this->endPointUrl);
+
+        $headers = [
+            'Authorization' => 'Bearer '.$access_token,
+        ];
+
+        return $this->res([], $url, $headers);
+    }
 }
