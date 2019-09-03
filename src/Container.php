@@ -46,8 +46,8 @@ use ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException;
  * @method  array readAssets(): array
  * @method  array readAsset(string $assetId): array
  * @method  array deposit(string $assetId): array
- * @method  array withdrawal(string $addressId, $amount, $pin, string $memo, $tracd_id = null): array
- * @method  array transfer(string $assetId, string $opponentId, $pin, $amount, string $memo, $tracd_id = null): array
+ * @method  array withdrawal(string $addressId, $amount, $pin, string $memo, $trace_id = null): array
+ * @method  array transfer(string $assetId, string $opponentId, $pin, $amount, string $memo, $trace_id = null): array
  * @method  array verifyPayment(string $asset_id, string $opponent_id, $amount, string $trace_id): array
  * @method  array readTransfer(string $traceId): array
  * @method  array createAddress(string $assetId, string $publicKey, $pin, string $label, bool $isEOS = false): array
@@ -59,6 +59,9 @@ use ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException;
  * @method  array readUserSnapshots($limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
  * @method  array readUserSnapshot(string $snapshotId): array
  * @method  array searchAssets(string $q): array
+ * @method  array accessTokenGetUserSnapshots(string $access_token, $limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
+ * @method  array accessTokenGetUserSnapshot(string $access_token, string $snapshot_id): array
+ * @method  array accessTokenGetTransfer(string $access_token, string $trace_id): array
  *
  * @see \ExinOne\MixinSDK\Apis\Message
  * @method  array sendText($user_id, $data, $category = 'CONTACT', $conversation_id = null): array
