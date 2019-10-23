@@ -88,7 +88,7 @@ $mixinSdk->use('myConfig-A')->user()->readProfile();
 |**---**|**--**|**--**|
 |**---**|**--**|**--**|
 |**---**|**--**|**--**|
-|`MixinSDK::wallet()->createAddress(string $asset_id, string $public_key, $pin, $label, bool $isEOS = false)`|创建一个 address|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/create-address/)
+|`MixinSDK::wallet()->createAddress(string $asset_id, string $destination, $pin, $label, $tag)`|创建一个 address|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/create-address/)
 |`MixinSDK::wallet()->readAddresses(string $assetId)`|获取某个 asset 的全部地址|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/withdrawal-addresses/)
 |`MixinSDK::wallet()->readAddress(string $addressId)`|获取某个 address 的信息|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/read-address/)
 |`MixinSDK::wallet()->deleteAddress(string $addressId, $pin)`|删除一个 address|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/delete-address/)

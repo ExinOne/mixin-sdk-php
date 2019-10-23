@@ -88,7 +88,7 @@ $mixinSdk->use('myConfig-A')->user()->readProfile();
 |**---**|**--**|**--**|
 |**---**|**--**|**--**|
 |**---**|**--**|**--**|
-|`MixinSDK::wallet()->createAddress(string $asset_id, string $public_key, $pin, $label, bool $isEOS = false)`|Create an address for withdrawal|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/create-address/)
+|`MixinSDK::wallet()->createAddress(string $asset_id, string $destination, $pin, $label, $tag)`|Create an address for withdrawal|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/create-address/)
 |`MixinSDK::wallet()->readAddresses(string $assetId)`|Read addresses by asset ID.|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/withdrawal-addresses/)
 |`MixinSDK::wallet()->readAddress(string $addressId)`|Read an address by ID.|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/read-address/)
 |`MixinSDK::wallet()->deleteAddress(string $addressId, $pin)`|Delete an address by ID.|Wallet|[link](https://developers.mixin.one/api/alpha-mixin-network/delete-address/)

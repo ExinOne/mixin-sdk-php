@@ -14,33 +14,43 @@ class Wallet extends Api
 {
     /**
      * @param string $asset_id
-     * @param string $public_key
-     * @param        $pin
-     * @param        $label
-     * @param bool   $isEOS
-     *
+     * @param string $destination   BTC address or EOS account name like ‘eoswithmixin’
+     * @param $pin
+     * @param $label    “Mixin”, can’t be blank, max size 64
+     * @param $tag  can be blank, EOS account tag or memo
      * @return array
      * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
      */
-    public function createAddress(string $asset_id, string $public_key, $pin, $label, bool $isEOS = false): array
+    public function createAddress(string $asset_id, string $destination, $pin, $label, $tag = false): array
     {
         if ($pin === null) {
             $pin = $this->config['pin'];
         }
 
-        if (! $isEOS) {
-            $body = [
-                'asset_id'   => $asset_id,
-                'public_key' => $public_key,
-                'label'      => $label,
-                'pin'        => $pin == '' ? '' : $this->encryptPin((string) $pin),
-            ];
+        if (is_bool($tag)) {
+            if (! $tag) {
+                $body = [
+                    'asset_id'   => $asset_id,
+                    'public_key' => $destination,
+                    'label'      => $label,
+                    'pin'        => $pin == '' ? '' : $this->encryptPin((string) $pin),
+                ];
+            } else {
+                $body = [
+                    'asset_id'     => $asset_id,
+                    'account_name' => $destination,
+                    'account_tag'  => $label,
+                    'pin'          => $pin == '' ? '' : $this->encryptPin((string) $pin),
+                ];
+            }
+
         } else {
             $body = [
-                'asset_id'     => $asset_id,
-                'account_name' => $label,
-                'account_tag'  => $public_key,
-                'pin'          => $pin == '' ? '' : $this->encryptPin((string) $pin),
+                'asset_id'    => $asset_id,
+                'label'       => $label,
+                'pin'         => $pin == '' ? '' : $this->encryptPin((string) $pin),
+                'destination' => $destination,
+                'tag'         => $tag,
             ];
         }
 
@@ -48,6 +58,7 @@ class Wallet extends Api
     }
 
     /**
+     * @deprecated 由于支持新的 alpha 创建地址api，该方法遗弃
      * @param string $asset_id
      * @param        $public_key
      * @param        $label
