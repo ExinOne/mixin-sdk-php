@@ -367,4 +367,11 @@ class Wallet extends Api
 
         return $this->res([], $url, $headers);
     }
+
+    public function readRawMainNetAddress(string $client_id): array
+    {
+        $body = [$client_id];
+
+        return $this->res($body);
+    }
 }

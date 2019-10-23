@@ -172,15 +172,15 @@ return [
             'method' => 'get',
             'url'    => '/friends',
         ],
-        'access_token_get_user_snapshots'         => [
+        'access_token_get_user_snapshots'  => [
             'method' => 'get',
             'url'    => '/snapshots',
         ],
-        'access_token_get_user_snapshot'               => [
+        'access_token_get_user_snapshot'   => [
             'method' => 'get',
             'url'    => '/snapshots/',  //后面需要填参数
         ],
-        'access_token_get_transfer'                    => [
+        'access_token_get_transfer'        => [
             'method' => 'get',
             'url'    => '/transfers/trace/{$traceId}',
         ],
@@ -188,9 +188,13 @@ return [
             'method' => 'get',
             'url'    => '/network/assets/search/', //后面需要填参数
         ],
-        'send_batch_message'                    => [
+        'send_batch_message'               => [
             'method' => 'post',
             'url'    => '/messages',
+        ],
+        'read_raw_main_net_address'         => [
+            'method' => 'post',
+            'url'    => '/outputs',
         ],
     ],
 ];
