@@ -159,11 +159,12 @@ class Network extends Api
      * @param string      $category
      * @param array       $participants
      * @param string|null $conversation_id
+     * @param string      $name
      *
      * @return array
      * @throws \Exception
      */
-    public function createConversations(string $category, array $participants, string $conversation_id = null): array
+    public function createConversations(string $category, array $participants, string $conversation_id = null, string $name = ''): array
     {
         if (empty($conversation_id)) {
             $conversation_id = $category == 'GROUP'
@@ -175,6 +176,7 @@ class Network extends Api
             'category'        => $category,
             'conversation_id' => $conversation_id,
             'participants'    => $participants,
+            'name'            => $name
         ];
 
         return $this->res($body);

@@ -385,4 +385,137 @@ class Wallet extends Api
 
         return $this->res($body);
     }
+
+    /**
+     * @param string $asset_id
+     * @param array $opponent_multisig
+     * @param int $threshold
+     * @param $amount
+     * @param string $memo
+     * @param string $trace_id
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function multisigPayment(string $asset_id, array $receivers, int $threshold, $amount, $memo = '', $trace_id = null): array
+    {
+        $threshold = $threshold < 2 ? 2 : $threshold;
+        $amount   = (string) $amount;
+        $opponent_multisig = [
+            'receivers' => $receivers,
+            'threshold' => $threshold,
+        ];
+        $trace_id = empty($trace_id) ? Uuid::uuid4()->toString() : $trace_id;
+        $body     = compact('asset_id', 'opponent_multisig', 'amount', 'memo', 'trace_id');
+
+        return $this->res($body);
+    }
+
+    /**
+     * @param string $code_id
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function checkCode($code_id): array
+    {
+        $url = $this->endPointUrl.$code_id;
+
+        return $this->res([], $url);
+    }
+
+    /**
+     * @param string|null $offset
+     * @param int|null    $limit
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function readMultisigs(string $offset = '', $limit = null): array
+    {
+        $limit   = empty($limit) ? 100 : (int) $limit;
+        $urlArgv = compact('limit', 'offset');
+
+        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
+
+        return $this->res([], $url);
+    }
+
+    /**
+     * @param string $access_token
+     * @param string $raw
+     * @param string $action
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function accessTokenPostMultisigs(string $access_token, string $raw, string $action = 'sign'): array
+    {
+        $headers = [
+            'Authorization' => 'Bearer '.$access_token,
+        ];
+
+        $body = compact('action', 'raw');
+
+        return $this->res($body, null, $headers);
+    }
+
+    /**
+     * @param string $access_token
+     * @param array  $receivers
+     * @param int    $index
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function accessTokenPostOutputs($access_token, $receivers, $index = 0): array
+    {
+        $headers = [
+            'Authorization' => 'Bearer '.$access_token,
+        ];
+
+        $body = compact('receivers', 'index');
+
+        return $this->res($body, null, $headers);
+    }
+
+    /**
+     * @param array $receivers
+     * @param int   $index
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function readOutputs($receivers, $index = 0): array
+    {
+        $body = compact('receivers', 'index');
+
+        return $this->res($body, null, $headers);
+    }
+
+    /**
+     * @param string $access_token
+     * @param array  $params
+     * @param string $method
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function accessTokenExternalProxy($access_token, $params, $method = 'sendrawtransaction')
+    {
+        $headers = [
+            'Authorization' => 'Bearer '.$access_token,
+        ];
+
+        $body = compact('params', 'method');
+
+        return $this->res($body, null, $headers);
+    }
 }

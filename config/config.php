@@ -196,5 +196,33 @@ return [
             'method' => 'post',
             'url'    => '/outputs',
         ],
+        'multisig_payment' => [
+            'method' => 'post',
+            'url'    => '/payments',
+        ],
+        'check_code' => [
+            'method' => 'get',
+            'url'    => '/codes/',
+        ],
+        'read_multisigs' => [
+            'method' => 'get',
+            'url'    => '/multisigs',
+        ],
+        'access_token_post_multisigs' => [
+            'method' => 'post',
+            'url'    => '/multisigs',
+        ],
+        'access_token_post_outputs' => [
+            'method' => 'post',
+            'url'    => '/outputs',
+        ],
+        'read_outputs' => [
+            'method' => 'post',
+            'url'    => '/outputs',
+        ],
+        'access_token_external_proxy' => [
+            'method' => 'post',
+            'url'    => '/external/proxy',
+        ],
     ],
 ];

@@ -175,7 +175,7 @@ class Message extends Api
      * @throws \Wrench\Exception\FrameException
      * @throws \Wrench\Exception\SocketException
      */
-    public function sendBatchMessage(array $user_ids, $data, $use_http = false, $type='PLAIN_TEXT'): array
+    public function sendBatchMessage(array $user_ids, $data, $use_http = false, $type = 'PLAIN_TEXT'): array
     {
         // 如果 count 不相等的话
         if (! is_string($data) && (count($user_ids) != count($data))) {

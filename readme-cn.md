@@ -130,7 +130,7 @@ $mixinSdk->use('myConfig-A')->user()->readProfile();
 |`MixinSDK::message()->sendAppButtonGroup($user_id, $data, $category, $conversation_id)`|发送 App Button Group (最多三个)|Message|[/api/beta-mixin-message/websocket-messages/](https://developers.mixin.one/api/beta-mixin-message/websocket-messages/)
 |`MixinSDK::message()->sendAppCard($user_id, $data, $category, $conversation_id)`|发送 App Card|Message|[/api/beta-mixin-message/websocket-messages/](https://developers.mixin.one/api/beta-mixin-message/websocket-messages/)
 |`MixinSDK::message()->askMessageReceipt($message_id)`|确认消息是否送达|Message|[/api/beta-mixin-message/websocket-messages/](https://developers.mixin.one/api/beta-mixin-message/websocket-messages/)
-|`MixinSDK::message()->sendBatchMessage($user_id, $data, $category , $conversation_id)`|群发消息|Message|[/api/beta-mixin-message/websocket-messages/](https://developers.mixin.one/api/beta-mixin-message/websocket-messages/)
+|`MixinSDK::message()->sendBatchMessage($user_id, $data, $use_http, $type)`|群发消息|Message|[/api/beta-mixin-message/websocket-messages/](https://developers.mixin.one/api/beta-mixin-message/websocket-messages/)
 |**---**|**--**|**--**|
 |**---**|**--**|**--**|
 |**---**|**--**|**--**|
