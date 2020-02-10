@@ -236,5 +236,9 @@ return [
             'method' => 'get',
             'url'    => '/fiats',
         ],
+        'multisigs_cancel'                  => [
+            'method' => 'post',
+            'url'    => '/multisigs/{$requestId}/cancel',
+        ],
     ],
 ];
