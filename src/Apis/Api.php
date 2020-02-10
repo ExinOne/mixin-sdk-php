@@ -100,7 +100,8 @@ class Api
 
         // 发起请求
         $method   = strtolower($method);
-        $response = $this->httpClient->$method($url, compact('headers', 'body'));
+        $timeout  = $this->timeout;
+        $response = $this->httpClient->$method($url, compact('headers', 'body', 'timeout'));
 
         // 获取内容
         return [
