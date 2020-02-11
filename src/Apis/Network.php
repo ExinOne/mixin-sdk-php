@@ -121,24 +121,18 @@ class Network extends Api
 
     /**
      * @param string|null $asset
-     * @param string|null $public_key
+     * @param string|null $destination
      * @param int|null    $limit
      * @param string|null $offset
-     * @param string|null $account_name
-     *
+     * @param string|null $tag
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function externalTransactions(string $asset = null, string $public_key = null, $limit = null, string $offset = null, string $account_name = null): array
+    public function externalTransactions(string $asset = null, string $destination = null, $limit = null, string $offset = null, string $tag = null): array
     {
         $limit = empty($limit) ? $limit : (int) $limit;
-        if (empty($account_name)) {
-            $urlArgv = compact('asset', 'public_key', 'limit', 'offset', 'account_name');
-        } else {
-            $account_tag = $public_key;
-            $urlArgv     = compact('asset', 'limit', 'offset', 'account_tag', 'account_name');
-        }
+
+        $urlArgv = compact('asset', 'limit', 'offset', 'destination', 'tag');
 
         $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
 
