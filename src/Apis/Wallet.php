@@ -565,4 +565,23 @@ class Wallet extends Api
     {
         return $this->res();
     }
+
+    /**
+     * @param string $request_id
+     * @param string $pin
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function multisigsCancel(string $request_id, String $pin): array
+    {
+        $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
+
+        $body = [
+            'pin' => $this->encryptPin((string) $pin),
+        ];
+
+        return $this->res($body, $url);
+    }
 }
