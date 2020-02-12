@@ -238,7 +238,7 @@ return [
         ],
         'multisigs_cancel'                  => [
             'method' => 'post',
-            'url'    => '/multisigs/{$requestId}/cancel',
+            'url'    => '/multisigs/{$requestId}/unlock',
         ],
     ],
 ];
