@@ -544,7 +544,7 @@ class Wallet extends Api
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function multisigsSign(string $request_id, String $pin): array
+    public function multisigsSign(string $request_id, string $pin = null): array
     {
         if ($pin === null) {
             $pin = $this->config['pin'];
@@ -578,7 +578,7 @@ class Wallet extends Api
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function multisigsCancel(string $request_id, String $pin): array
+    public function multisigsCancel(string $request_id, string $pin = null): array
     {
         if ($pin === null) {
             $pin = $this->config['pin'];
