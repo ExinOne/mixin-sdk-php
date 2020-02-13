@@ -183,7 +183,7 @@ class Message extends Api
      * @throws \Wrench\Exception\FrameException
      * @throws \Wrench\Exception\SocketException
      */
-    public function sendBatchMessage(array $user_ids, $data, $use_http = false, $type = 'PLAIN_TEXT'): array
+    public function sendBatchMessage(array $user_ids, $data, $use_http = false, $type = 'PLAIN_TEXT', $conversation_id = null): array
     {
         // 如果 count 不相等的话
         if (! is_string($data) && (count($user_ids) != count($data))) {
@@ -207,7 +207,7 @@ class Message extends Api
 
         foreach ($user_ids as $k => $v) {
             $message['params']['messages'][] = [
-                'conversation_id' => $this->uniqueConversationId($v, $this->config['client_id']),
+                'conversation_id' => empty($conversation_id) ? $this->uniqueConversationId($v, $this->config['client_id']) : $conversation_id,
                 'recipient_id'    => $v,
                 'message_id'      => Uuid::uuid4()->toString(),
                 'category'        => $type,
