@@ -546,6 +546,10 @@ class Wallet extends Api
      */
     public function multisigsSign(string $request_id, String $pin): array
     {
+        if ($pin === null) {
+            $pin = $this->config['pin'];
+        }
+
         $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
 
         $body = [
@@ -576,6 +580,10 @@ class Wallet extends Api
      */
     public function multisigsCancel(string $request_id, String $pin): array
     {
+        if ($pin === null) {
+            $pin = $this->config['pin'];
+        }
+
         $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
 
         $body = [
