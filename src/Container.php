@@ -107,7 +107,9 @@ class Container
         } elseif (! $this->isRaw() && ($content['error'] ?? 0)) {
             // 出现异常
             $error = $content['error'];
-            $this->boomRoom($error['code'], $error['description']);
+            $code = isset($error['code']) ? $error['code'] : 404;
+            $description = isset($error['description']) ? $error['description'] : '';
+            $this->boomRoom($code, $description);
         } elseif ($this->isRaw()) {
             return array_merge($content ?? [], $customize_res);
         } else {
