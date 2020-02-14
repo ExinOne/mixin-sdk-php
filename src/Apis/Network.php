@@ -323,4 +323,22 @@ class Network extends Api
         $url = $this->endPointUrl.$q;
         return $this->res([], $url);
     }
+
+    /**
+     * @param string $access_token
+     * @param string $assetId
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function accessTokenGetAsset(string $access_token, string $assetId)
+    {
+        $url = $this->endPointUrl.$assetId;
+
+        $headers = [
+            'Authorization' => 'Bearer '.$access_token,
+        ];
+
+        return $this->res([], $url, $headers);
+    }
 }

@@ -240,5 +240,9 @@ return [
             'method' => 'post',
             'url'    => '/multisigs/{$requestId}/unlock',
         ],
+        'access_token_get_asset'            => [
+            'method' => 'get',
+            'url'    => '/assets/',
+        ],
     ],
 ];
