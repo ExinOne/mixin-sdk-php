@@ -14,29 +14,17 @@ use Ramsey\Uuid\Uuid;
 class Message extends Api
 {
     /**
-     * Message constructor.
-     *
-     * @param $config
-     *
-     * @throws \Exception
-     */
-    public function __construct($config)
-    {
-        $this->packageConfig = require(__DIR__.'/../../config/config.php');
-        $this->config        = $config;
-    }
-
-    /**
      * @param string      $user_id
      * @param string      $data
      * @param string      $category
      * @param string|null $conversation_id
+     * @param string|null $recipient_id
      *
      * @return array
      * @throws \Wrench\Exception\FrameException
      * @throws \Wrench\Exception\SocketException
      */
-    public function sendText(string $user_id, string $data, string $category = 'CONTACT', string $conversation_id = null): array
+    public function sendText(string $user_id, string $data, string $category = 'CONTACT', string $conversation_id = null, string $recipient_id = null): array
     {
         $message = [
             'id'     => Uuid::uuid4()->toString(),
@@ -48,6 +36,7 @@ class Message extends Api
                 'message_id'      => Uuid::uuid4()->toString(),
                 'category'        => 'PLAIN_TEXT',
                 'data'            => base64_encode($data),
+                'recipient_id'    => $recipient_id,
             ],
         ];
 
@@ -73,16 +62,17 @@ class Message extends Api
     //}
 
     /**
-     * @param string $user_id
-     * @param string $contact_id
-     * @param string $category
-     * @param null   $conversation_id
+     * @param string      $user_id
+     * @param string      $contact_id
+     * @param string      $category
+     * @param null        $conversation_id
+     * @param string|null $recipient_id
      *
      * @return array
      * @throws \Wrench\Exception\FrameException
      * @throws \Wrench\Exception\SocketException
      */
-    public function sendContact(string $user_id, string $contact_id, string $category = 'CONTACT', $conversation_id = null): array
+    public function sendContact(string $user_id, string $contact_id, string $category = 'CONTACT', string $conversation_id = null, string $recipient_id = null): array
     {
         $message = [
             'id'     => Uuid::uuid4()->toString(),
@@ -96,6 +86,7 @@ class Message extends Api
                 'data'            => base64_encode(json_encode([
                     'user_id' => $contact_id,
                 ])),
+                'recipient_id'    => $recipient_id,
             ],
         ];
 
@@ -103,16 +94,17 @@ class Message extends Api
     }
 
     /**
-     * @param string $user_id
-     * @param array  $data
-     * @param string $category
-     * @param null   $conversation_id
+     * @param string      $user_id
+     * @param array       $data
+     * @param string      $category
+     * @param string|null $conversation_id
+     * @param string|null $recipient_id
      *
      * @return array
      * @throws \Wrench\Exception\FrameException
      * @throws \Wrench\Exception\SocketException
      */
-    public function sendAppButtonGroup(string $user_id, array $data, string $category = 'CONTACT', $conversation_id = null): array
+    public function sendAppButtonGroup(string $user_id, array $data, string $category = 'CONTACT', string $conversation_id = null, string $recipient_id = null): array
     {
         $message = [
             'id'     => Uuid::uuid4()->toString(),
@@ -124,6 +116,7 @@ class Message extends Api
                 'message_id'      => Uuid::uuid4()->toString(),
                 'category'        => 'APP_BUTTON_GROUP',
                 'data'            => base64_encode(json_encode($data)),
+                'recipient_id'    => $recipient_id,
             ],
         ];
 
@@ -131,16 +124,17 @@ class Message extends Api
     }
 
     /**
-     * @param string $user_id
-     * @param array  $data
-     * @param string $category
-     * @param null   $conversation_id
+     * @param string      $user_id
+     * @param array       $data
+     * @param string      $category
+     * @param null        $conversation_id
+     * @param string|null $recipient_id
      *
      * @return array
      * @throws \Wrench\Exception\FrameException
      * @throws \Wrench\Exception\SocketException
      */
-    public function sendAppCard(string $user_id, array $data, string $category = 'CONTACT', $conversation_id = null): array
+    public function sendAppCard(string $user_id, array $data, string $category = 'CONTACT', string $conversation_id = null, string $recipient_id = null): array
     {
         $message = [
             'id'     => Uuid::uuid4()->toString(),
@@ -152,6 +146,7 @@ class Message extends Api
                 'message_id'      => Uuid::uuid4()->toString(),
                 'category'        => 'APP_CARD',
                 'data'            => base64_encode(json_encode($data)),
+                'recipient_id'    => $recipient_id,
             ],
         ];
 
@@ -188,11 +183,15 @@ class Message extends Api
      * @throws \Wrench\Exception\FrameException
      * @throws \Wrench\Exception\SocketException
      */
-    public function sendBatchMessage(array $user_ids, $data): array
+    public function sendBatchMessage(array $user_ids, $data, $use_http = false, $type = 'PLAIN_TEXT', $conversation_id = null): array
     {
         // 如果 count 不相等的话
         if (! is_string($data) && (count($user_ids) != count($data))) {
             throw new InternalErrorException('The length of "user_ids" and "data" is not equal');
+        }
+
+        if ($use_http && count($user_ids) > 100) {
+            throw new InternalErrorException('The length of "user_ids" should be in 100 when use http');
         }
 
         $messages        = [];
@@ -208,10 +207,10 @@ class Message extends Api
 
         foreach ($user_ids as $k => $v) {
             $message['params']['messages'][] = [
-                'conversation_id' => $this->uniqueConversationId($v, $this->config['client_id']),
+                'conversation_id' => empty($conversation_id) ? $this->uniqueConversationId($v, $this->config['client_id']) : $conversation_id,
                 'recipient_id'    => $v,
                 'message_id'      => Uuid::uuid4()->toString(),
-                'category'        => 'PLAIN_TEXT',
+                'category'        => $type,
                 'data'            => base64_encode(is_string($data) ? $data : $data[$k] ?? 'default'),
             ];
 
@@ -219,6 +218,10 @@ class Message extends Api
                 $messages[] = $message;
                 $message    = $messageTemplate;
             }
+        }
+
+        if ($use_http) {
+            return $this->res($messages[0]['params']['messages']);
         }
 
         return $this->webSocketRes($messages);

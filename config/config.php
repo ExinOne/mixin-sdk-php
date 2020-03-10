@@ -172,17 +172,77 @@ return [
             'method' => 'get',
             'url'    => '/friends',
         ],
-        'access_token_get_user_snapshots'         => [
+        'access_token_get_user_snapshots'  => [
             'method' => 'get',
             'url'    => '/snapshots',
         ],
-        'access_token_get_user_snapshot'               => [
+        'access_token_get_user_snapshot'   => [
             'method' => 'get',
             'url'    => '/snapshots/',  //后面需要填参数
+        ],
+        'access_token_get_transfer'        => [
+            'method' => 'get',
+            'url'    => '/transfers/trace/{$traceId}',
         ],
         'search_assets'                    => [
             'method' => 'get',
             'url'    => '/network/assets/search/', //后面需要填参数
+        ],
+        'send_batch_message'               => [
+            'method' => 'post',
+            'url'    => '/messages',
+        ],
+        'read_raw_main_net_address'         => [
+            'method' => 'post',
+            'url'    => '/outputs',
+        ],
+        'multisig_payment'                  => [
+            'method' => 'post',
+            'url'    => '/payments',
+        ],
+        'check_code'                        => [
+            'method' => 'get',
+            'url'    => '/codes/',
+        ],
+        'read_multisigs'                    => [
+            'method' => 'get',
+            'url'    => '/multisigs',
+        ],
+        'access_token_post_multisigs'       => [
+            'method' => 'post',
+            'url'    => '/multisigs',
+        ],
+        'access_token_post_outputs'         => [
+            'method' => 'post',
+            'url'    => '/outputs',
+        ],
+        'read_outputs'                      => [
+            'method' => 'post',
+            'url'    => '/outputs',
+        ],
+        'external_proxy'                    => [
+            'method' => 'post',
+            'url'    => '/external/proxy',
+        ],
+        'post_multisigs'                    => [
+            'method' => 'post',
+            'url'    => '/multisigs',
+        ],
+        'multisigs_sign'                    => [
+            'method' => 'post',
+            'url'    => '/multisigs/{$requestId}/sign',
+        ],
+        'read_fiats'                        => [
+            'method' => 'get',
+            'url'    => '/fiats',
+        ],
+        'multisigs_cancel'                  => [
+            'method' => 'post',
+            'url'    => '/multisigs/{$requestId}/unlock',
+        ],
+        'access_token_get_asset'            => [
+            'method' => 'get',
+            'url'    => '/assets/',
         ],
     ],
 ];

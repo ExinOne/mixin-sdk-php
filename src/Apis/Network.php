@@ -121,24 +121,18 @@ class Network extends Api
 
     /**
      * @param string|null $asset
-     * @param string|null $public_key
+     * @param string|null $destination
      * @param int|null    $limit
      * @param string|null $offset
-     * @param string|null $account_name
-     *
+     * @param string|null $tag
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function externalTransactions(string $asset = null, string $public_key = null, $limit = null, string $offset = null, string $account_name = null): array
+    public function externalTransactions(string $asset = null, string $destination = null, $limit = null, string $offset = null, string $tag = null): array
     {
         $limit = empty($limit) ? $limit : (int) $limit;
-        if (empty($account_name)) {
-            $urlArgv = compact('asset', 'public_key', 'limit', 'offset', 'account_name');
-        } else {
-            $account_tag = $public_key;
-            $urlArgv     = compact('asset', 'limit', 'offset', 'account_tag', 'account_name');
-        }
+
+        $urlArgv = compact('asset', 'limit', 'offset', 'destination', 'tag');
 
         $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
 
@@ -159,11 +153,12 @@ class Network extends Api
      * @param string      $category
      * @param array       $participants
      * @param string|null $conversation_id
+     * @param string      $name
      *
      * @return array
      * @throws \Exception
      */
-    public function createConversations(string $category, array $participants, string $conversation_id = null): array
+    public function createConversations(string $category, array $participants, string $conversation_id = null, string $name = ''): array
     {
         if (empty($conversation_id)) {
             $conversation_id = $category == 'GROUP'
@@ -175,6 +170,7 @@ class Network extends Api
             'category'        => $category,
             'conversation_id' => $conversation_id,
             'participants'    => $participants,
+            'name'            => $name
         ];
 
         return $this->res($body);
@@ -326,5 +322,23 @@ class Network extends Api
     {
         $url = $this->endPointUrl.$q;
         return $this->res([], $url);
+    }
+
+    /**
+     * @param string $access_token
+     * @param string $assetId
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function accessTokenGetAsset(string $access_token, string $assetId)
+    {
+        $url = $this->endPointUrl.$assetId;
+
+        $headers = [
+            'Authorization' => 'Bearer '.$access_token,
+        ];
+
+        return $this->res([], $url, $headers);
     }
 }

@@ -46,8 +46,8 @@ use ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException;
  * @method  array readAssets(): array
  * @method  array readAsset(string $assetId): array
  * @method  array deposit(string $assetId): array
- * @method  array withdrawal(string $addressId, $amount, $pin, string $memo, $tracd_id = null): array
- * @method  array transfer(string $assetId, string $opponentId, $pin, $amount, string $memo, $tracd_id = null): array
+ * @method  array withdrawal(string $addressId, $amount, $pin, string $memo, $trace_id = null): array
+ * @method  array transfer(string $assetId, string $opponentId, $pin, $amount, string $memo, $trace_id = null): array
  * @method  array verifyPayment(string $asset_id, string $opponent_id, $amount, string $trace_id): array
  * @method  array readTransfer(string $traceId): array
  * @method  array createAddress(string $assetId, string $publicKey, $pin, string $label, bool $isEOS = false): array
@@ -59,6 +59,9 @@ use ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException;
  * @method  array readUserSnapshots($limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
  * @method  array readUserSnapshot(string $snapshotId): array
  * @method  array searchAssets(string $q): array
+ * @method  array accessTokenGetUserSnapshots(string $access_token, $limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
+ * @method  array accessTokenGetUserSnapshot(string $access_token, string $snapshot_id): array
+ * @method  array accessTokenGetTransfer(string $access_token, string $trace_id): array
  *
  * @see \ExinOne\MixinSDK\Apis\Message
  * @method  array sendText($user_id, $data, $category = 'CONTACT', $conversation_id = null): array
@@ -82,6 +85,8 @@ class Container
 
     protected $raw = false;
 
+    protected $is_return_access_token = false;
+
     /**
      * @param $name
      * @param $arguments
@@ -94,13 +99,17 @@ class Container
         $this->detailClass->init($name);
 
         // 调用对象的$name 方法,获得需要发送的 header 和 body
-        ['content' => $content, 'customize_res' => $customize_res]
+        ['content' => $content, 'customize_res' => $customize_res, 'auth_token' => $auth_token]
             = call_user_func_array([$this->detailClass, $name], $arguments);
 
-        if (! $this->isRaw() && ($content['error'] ?? 0)) {
+        if ($this->isReturnAccessToken()) {
+            return $auth_token;
+        } elseif (! $this->isRaw() && ($content['error'] ?? 0)) {
             // 出现异常
             $error = $content['error'];
-            $this->boomRoom($error['code'], $error['description']);
+            $code = isset($error['code']) ? $error['code'] : 404;
+            $description = isset($error['description']) ? $error['description'] : '';
+            $this->boomRoom($code, $description);
         } elseif ($this->isRaw()) {
             return array_merge($content ?? [], $customize_res);
         } else {
@@ -149,6 +158,29 @@ class Container
     }
 
     /**
+     * @param bool $is_return_access_token
+     *
+     * @return $this
+     */
+    public function setReturnAccessToken(bool $is_return_access_token)
+    {
+        $this->is_return_access_token = $is_return_access_token;
+
+        $this->detailClass->setReturnAccessToken($is_return_access_token);
+
+        return $this;
+    }
+
+        /**
+     * @return bool
+     */
+    public function isReturnAccessToken(): bool
+    {
+        return $this->is_return_access_token;
+    }
+
+
+    /**
      * @param int $timeout
      *
      * @return $this
@@ -156,6 +188,18 @@ class Container
     public function setTimeout(int $timeout)
     {
         $this->detailClass->setTimeout($timeout);
+
+        return $this;
+    }
+
+    /**
+     * @param int $expire
+     *
+     * @return $this
+     */
+    public function setExpire(int $expire)
+    {
+        $this->detailClass->setExpire($expire);
 
         return $this;
     }

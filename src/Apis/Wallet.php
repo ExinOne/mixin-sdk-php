@@ -14,33 +14,43 @@ class Wallet extends Api
 {
     /**
      * @param string $asset_id
-     * @param string $public_key
-     * @param        $pin
-     * @param        $label
-     * @param bool   $isEOS
-     *
+     * @param string $destination   BTC address or EOS account name like ‘eoswithmixin’
+     * @param $pin
+     * @param $label    “Mixin”, can’t be blank, max size 64
+     * @param $tag  can be blank, EOS account tag or memo
      * @return array
      * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
      */
-    public function createAddress(string $asset_id, string $public_key, $pin, $label, bool $isEOS = false): array
+    public function createAddress(string $asset_id, string $destination, $pin, $label, $tag = false): array
     {
         if ($pin === null) {
             $pin = $this->config['pin'];
         }
 
-        if (! $isEOS) {
-            $body = [
-                'asset_id'   => $asset_id,
-                'public_key' => $public_key,
-                'label'      => $label,
-                'pin'        => $pin == '' ? '' : $this->encryptPin((string) $pin),
-            ];
+        if (is_bool($tag)) {
+            if (! $tag) {
+                $body = [
+                    'asset_id'   => $asset_id,
+                    'public_key' => $destination,
+                    'label'      => $label,
+                    'pin'        => $pin == '' ? '' : $this->encryptPin((string) $pin),
+                ];
+            } else {
+                $body = [
+                    'asset_id'     => $asset_id,
+                    'account_name' => $destination,
+                    'account_tag'  => $label,
+                    'pin'          => $pin == '' ? '' : $this->encryptPin((string) $pin),
+                ];
+            }
+
         } else {
             $body = [
-                'asset_id'     => $asset_id,
-                'account_name' => $label,
-                'account_tag'  => $public_key,
-                'pin'          => $pin == '' ? '' : $this->encryptPin((string) $pin),
+                'asset_id'    => $asset_id,
+                'label'       => $label,
+                'pin'         => $pin == '' ? '' : $this->encryptPin((string) $pin),
+                'destination' => $destination,
+                'tag'         => $tag,
             ];
         }
 
@@ -48,6 +58,7 @@ class Wallet extends Api
     }
 
     /**
+     * @deprecated 由于支持新的 alpha 创建地址api，该方法遗弃
      * @param string $asset_id
      * @param        $public_key
      * @param        $label
@@ -170,12 +181,12 @@ class Wallet extends Api
      * @param        $amount
      * @param string $memo
      * @param        $pin
-     * @param null   $tracd_id
+     * @param null   $trace_id
      *
      * @return array
      * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
      */
-    public function withdrawal(string $addressId, $amount, $pin, $memo = '', $tracd_id = null): array
+    public function withdrawal(string $addressId, $amount, $pin, $memo = '', $trace_id = null): array
     {
         if ($pin === null) {
             $pin = $this->config['pin'];
@@ -185,7 +196,7 @@ class Wallet extends Api
             'address_id' => $addressId,
             'amount'     => (string) $amount,
             'memo'       => $memo,
-            'trace_id'   => empty($tracd_id) ? Uuid::uuid4()->toString() : $tracd_id,
+            'trace_id'   => empty($trace_id) ? Uuid::uuid4()->toString() : $trace_id,
             'pin'        => $this->encryptPin($pin),
         ];
 
@@ -198,12 +209,12 @@ class Wallet extends Api
      * @param        $pin
      * @param        $amount
      * @param string $memo
-     * @param null   $tracd_id
+     * @param null   $trace_id
      *
      * @return array
      * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
      */
-    public function transfer(string $assetId, string $opponentId, $pin, $amount, $memo = '', $tracd_id = null): array
+    public function transfer(string $assetId, string $opponentId, $pin, $amount, $memo = '', $trace_id = null): array
     {
         if ($pin === null) {
             $pin = $this->config['pin'];
@@ -214,7 +225,7 @@ class Wallet extends Api
             'opponent_id' => $opponentId,
             'amount'      => (string) $amount,
             'pin'         => $this->encryptPin($pin),
-            'trace_id'    => empty($tracd_id) ? Uuid::uuid4()->toString() : $tracd_id,
+            'trace_id'    => empty($trace_id) ? Uuid::uuid4()->toString() : $trace_id,
             'memo'        => $memo,
         ];
 
@@ -333,14 +344,14 @@ class Wallet extends Api
 
     /**
      * @param string $access_token
-     * @param string $snapshotId
+     * @param string $snapshot_id
      * @return array
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function accessTokenGetUserSnapshot(string $access_token, string $snapshotId): array
+    public function accessTokenGetUserSnapshot(string $access_token, string $snapshot_id): array
     {
-        $url = $this->endPointUrl.$snapshotId;
+        $url = $this->endPointUrl.$snapshot_id;
 
         $headers = [
             'Authorization' => 'Bearer '.$access_token,
@@ -349,4 +360,236 @@ class Wallet extends Api
         return $this->res([], $url, $headers);
     }
 
+    /**
+     * @param string $access_token
+     * @param string $trace_id
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function accessTokenGetTransfer(string $access_token, string $trace_id): array
+    {
+        $url = str_replace('{$traceId}', $trace_id, $this->endPointUrl);
+
+        $headers = [
+            'Authorization' => 'Bearer '.$access_token,
+        ];
+
+        return $this->res([], $url, $headers);
+    }
+
+    /**
+     * @param string $client_id
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function readRawMainNetAddress(string $client_id): array
+    {
+        $body = [$client_id];
+
+        return $this->res($body);
+    }
+
+    /**
+     * @param string $asset_id
+     * @param array  $opponent_multisig
+     * @param int    $threshold
+     * @param $amount
+     * @param string $memo
+     * @param string $trace_id
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function multisigPayment(string $asset_id, array $receivers, int $threshold, $amount, $memo = '', $trace_id = null): array
+    {
+        $threshold = $threshold < 2 ? 2 : $threshold;
+        $amount   = (string) $amount;
+        $opponent_multisig = [
+            'receivers' => $receivers,
+            'threshold' => $threshold,
+        ];
+        $trace_id = empty($trace_id) ? Uuid::uuid4()->toString() : $trace_id;
+        $body     = compact('asset_id', 'opponent_multisig', 'amount', 'memo', 'trace_id');
+
+        return $this->res($body);
+    }
+
+    /**
+     * @param string $code_id
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function checkCode($code_id): array
+    {
+        $url = $this->endPointUrl.$code_id;
+
+        return $this->res([], $url);
+    }
+
+    /**
+     * @param string|null $offset
+     * @param int|null    $limit
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function readMultisigs(string $offset = '', $limit = null): array
+    {
+        $limit   = empty($limit) ? 100 : (int) $limit;
+        $urlArgv = compact('limit', 'offset');
+
+        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
+
+        return $this->res([], $url);
+    }
+
+    /**
+     * @param string $access_token
+     * @param string $raw
+     * @param string $action
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function accessTokenPostMultisigs(string $access_token, string $raw, string $action = 'sign'): array
+    {
+        $headers = [
+            'Authorization' => 'Bearer '.$access_token,
+        ];
+
+        $body = compact('action', 'raw');
+
+        return $this->res($body, null, $headers);
+    }
+
+    /**
+     * @param string $access_token
+     * @param array  $receivers
+     * @param int    $index
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function accessTokenPostOutputs($access_token, $receivers, $index = 0): array
+    {
+        $headers = [
+            'Authorization' => 'Bearer '.$access_token,
+        ];
+
+        $body = compact('receivers', 'index');
+
+        return $this->res($body, null, $headers);
+    }
+
+    /**
+     * @param array $receivers
+     * @param int   $index
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function readOutputs($receivers, $index = 0): array
+    {
+        $body = compact('receivers', 'index');
+
+        return $this->res($body);
+    }
+
+    /**
+     * @param array  $params
+     * @param string $method
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function externalProxy($params, $method = 'sendrawtransaction')
+    {
+        $body = compact('params', 'method');
+
+        return $this->res($body);
+    }
+
+    /**
+     * @param string $raw
+     * @param string $action
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function postMultisigs(string $raw, string $action = 'sign'): array
+    {
+        $body = compact('action', 'raw');
+
+        return $this->res($body);
+    }
+
+    /**
+     * @param string $request_id
+     * @param string $pin
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function multisigsSign(string $request_id, string $pin = null): array
+    {
+        if ($pin === null) {
+            $pin = $this->config['pin'];
+        }
+
+        $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
+
+        $body = [
+            'pin' => $this->encryptPin((string) $pin),
+        ];
+
+        return $this->res($body, $url);
+    }
+
+    /**
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function readFiats(): array
+    {
+        return $this->res();
+    }
+
+    /**
+     * @param string $request_id
+     * @param string $pin
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function multisigsCancel(string $request_id, string $pin = null): array
+    {
+        if ($pin === null) {
+            $pin = $this->config['pin'];
+        }
+
+        $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
+
+        $body = [
+            'pin' => $this->encryptPin((string) $pin),
+        ];
+
+        return $this->res($body, $url);
+    }
 }
