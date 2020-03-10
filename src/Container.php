@@ -9,8 +9,10 @@
 namespace ExinOne\MixinSDK;
 
 use ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException;
+use GuzzleHttp\Client;
 
 /**
+ * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
  * @see \ExinOne\MixinSDK\Apis\Pin
  * @method  array updatePin($oldPin, $pin): array
  * @method  array verifyPin($pin): array
@@ -51,7 +53,7 @@ use ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException;
  * @method  array verifyPayment(string $asset_id, string $opponent_id, $amount, string $trace_id): array
  * @method  array readTransfer(string $traceId): array
  * @method  array createAddress(string $assetId, string $publicKey, $pin, string $label, bool $isEOS = false): array
- * @method  array createAddressRaw(string $asset_id,  $public_key,  $label,  $account_name,  $account_tag, $pin = null): array
+ * @method  array createAddressRaw(string $asset_id, $public_key, $label, $account_name, $account_tag, $pin = null): array
  * @method  array readAddress(string $addressId): array
  * @method  array readAddresses(string $assetId): array
  * @method  array deleteAddress(string $addressId, $pin): array
@@ -77,7 +79,6 @@ use ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException;
  * @see \ExinOne\MixinSDK\Apis\User
  * @see \ExinOne\MixinSDK\Apis\Message
  *
- * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
  */
 class Container
 {
@@ -86,6 +87,8 @@ class Container
     protected $raw = false;
 
     protected $is_return_access_token = false;
+
+    protected $http_async = false;
 
     /**
      * @param $name
@@ -99,15 +102,17 @@ class Container
         $this->detailClass->init($name);
 
         // 调用对象的$name 方法,获得需要发送的 header 和 body
-        ['content' => $content, 'customize_res' => $customize_res, 'auth_token' => $auth_token]
+        ['content' => $content, 'customize_res' => $customize_res, 'auth_token' => $auth_token, 'promise' => $promise]
             = call_user_func_array([$this->detailClass, $name], $arguments);
 
         if ($this->isReturnAccessToken()) {
             return $auth_token;
+        } elseif ($this->isHttpAsync()) {
+            return $promise;
         } elseif (! $this->isRaw() && ($content['error'] ?? 0)) {
             // 出现异常
-            $error = $content['error'];
-            $code = isset($error['code']) ? $error['code'] : 404;
+            $error       = $content['error'];
+            $code        = isset($error['code']) ? $error['code'] : 404;
             $description = isset($error['description']) ? $error['description'] : '';
             $this->boomRoom($code, $description);
         } elseif ($this->isRaw()) {
@@ -171,12 +176,57 @@ class Container
         return $this;
     }
 
-        /**
+    /**
+     * @param Client|false   $http_client
+     * @param \Closure|null $on_resolve
+     * @param \Closure|null $on_reject
+     * @return $this
+     */
+    public function setHttpAsync($http_client = false, \Closure $on_resolve = null, \Closure $on_reject = null)
+    {
+        if ($http_client) {
+            $this->http_async = true;
+            if (! $on_resolve) {
+                $on_resolve = function () {
+                };
+            }
+            if (! $on_reject) {
+                $on_reject = function () {
+                };
+            }
+
+            $this->detailClass->setHttpAsync($http_client, $on_resolve, $on_reject);
+        } else {
+            $this->http_async = false;
+
+            $this->detailClass->setHttpAsync(null);
+        }
+
+        return $this;
+    }
+
+    /**
      * @return bool
      */
     public function isReturnAccessToken(): bool
     {
         return $this->is_return_access_token;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHttpAsync(): bool
+    {
+        return $this->http_async;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHttpClient(): Client
+    {
+        return $this->detailClass->getHttpClient();
     }
 
 
