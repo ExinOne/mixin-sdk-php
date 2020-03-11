@@ -101,6 +101,7 @@ class Api
                 'content'       => [],
                 'customize_res' => [],
                 'auth_token'    => $auth_token,
+                'promise'       => null,
             ];
         }
 
