@@ -190,6 +190,21 @@ class Network extends Api
     }
 
     /**
+     * @param string $conversation_id
+     * @param array $participants
+     * @param string $action
+     * @return array
+     * @throws \Exception
+     */
+    public function participantsActions(string $conversation_id, array $participants, string $action = "ADD"): array
+    {
+        $body = $participants;
+
+        $url = str_replace(['{$conversationId}','{$action}'], [$conversation_id, $action], $this->endPointUrl);
+        return $this->res($body, $url);
+    }
+
+    /**
      * @return mixed
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
