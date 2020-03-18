@@ -142,6 +142,10 @@ return [
             'method' => 'get',
             'url'    => '/conversations/', //后面需要填参数
         ],
+        'participants_actions'             => [
+            'method' => 'post',
+            'url'    => '/conversations/{$conversationId}/participants/{$action}',
+        ],
         'external_transactions'            => [
             'method' => 'get',
             'url'    => '/external/transactions',
