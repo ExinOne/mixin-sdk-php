@@ -204,6 +204,12 @@ class Network extends Api
         return $this->res($body, $url);
     }
 
+    public function rotateConversation(string $conversation_id): array
+    {
+        $url = str_replace('{$conversationId}', $conversation_id, $this->endPointUrl);
+        return $this->res(null, $url);
+    }
+
     /**
      * @return mixed
      * @throws \Exception
