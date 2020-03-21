@@ -146,6 +146,10 @@ return [
             'method' => 'post',
             'url'    => '/conversations/{$conversationId}/participants/{$action}',
         ],
+        'rotate_conversation'              => [
+            'method' => 'post',
+            'url'    => '/conversations/{$conversationId}/rotate',
+        ],
         'external_transactions'            => [
             'method' => 'get',
             'url'    => '/external/transactions',
