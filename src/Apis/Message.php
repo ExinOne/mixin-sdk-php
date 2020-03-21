@@ -185,6 +185,9 @@ class Message extends Api
      */
     public function sendBatchMessage(array $user_ids, $data, $use_http = false, $type = 'PLAIN_TEXT', $conversation_id = null): array
     {
+        // TODO please remove "$use_http" when yours code are really
+        // TODO because this api can't be called using websocket
+
         // 如果 count 不相等的话
         if (! is_string($data) && (count($user_ids) != count($data))) {
             throw new InternalErrorException('The length of "user_ids" and "data" is not equal');
@@ -220,10 +223,6 @@ class Message extends Api
             }
         }
 
-        if ($use_http) {
-            return $this->res($messages[0]['params']['messages']);
-        }
-
-        return $this->webSocketRes($messages);
+        return $this->res($messages[0]['params']['messages']);
     }
 }
