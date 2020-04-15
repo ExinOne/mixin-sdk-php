@@ -34,7 +34,10 @@ use GuzzleHttp\Client;
  * @method  array createUser(string $fullName): array
  * @method  array externalTransactions(string $asset = null, string $public_key = null, int $limit = null, string $offset = null, string $account_name = null): array
  * @method  array createAttachments(): array
- * @method  array createConversations(string $category, array $participants, string $conversation_id = null): array
+ * @method  array createConversations(string $category, array $participants, string $conversation_id = null, string $name = ''): array
+ * @method  array readConversations(string $conversation_id): array
+ * @method  array participantsActions(string $conversation_id, array $participants, string $action ): array
+ * @method  array rotateConversation(string $conversation_id): array
  * @method  array mixinNetworkChainsSyncStatus(): array
  * @method  array topAsset(): array
  * @method  array requestAccessToken(string $code): array
@@ -43,8 +46,15 @@ use GuzzleHttp\Client;
  * @method  array accessTokenGetAddresses(string $access_token, string $assetId): array
  * @method  array accessTokenGetAddress(string $access_token, string $addressId): array
  * @method  array accessTokenGetContacts(string $access_token): array
+ * @method  array searchAssets(string $q): array
+ * @method  array accessTokenGetAsset(string $access_token, string $assetId): array
  *
  * @see \ExinOne\MixinSDK\Apis\Wallet
+ * @method  array createAddress(string $asset_id, string $destination, $pin, $label, $tag = false): array
+ * @method  array createAddressRaw(string $asset_id, $public_key, $label, $account_name, $account_tag, $pin = null): array
+ * @method  array readAddresses(string $assetId): array
+ * @method  array readAddress(string $addressId): array
+ * @method  array deleteAddress(string $addressId, $pin): array
  * @method  array readAssets(): array
  * @method  array readAsset(string $assetId): array
  * @method  array deposit(string $assetId): array
@@ -52,18 +62,24 @@ use GuzzleHttp\Client;
  * @method  array transfer(string $assetId, string $opponentId, $pin, $amount, string $memo, $trace_id = null): array
  * @method  array verifyPayment(string $asset_id, string $opponent_id, $amount, string $trace_id): array
  * @method  array readTransfer(string $traceId): array
- * @method  array createAddress(string $assetId, string $publicKey, $pin, string $label, bool $isEOS = false): array
- * @method  array createAddressRaw(string $asset_id, $public_key, $label, $account_name, $account_tag, $pin = null): array
- * @method  array readAddress(string $addressId): array
- * @method  array readAddresses(string $assetId): array
- * @method  array deleteAddress(string $addressId, $pin): array
  * @method  array readAssetFee(string $assetId): array
  * @method  array readUserSnapshots($limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
  * @method  array readUserSnapshot(string $snapshotId): array
- * @method  array searchAssets(string $q): array
  * @method  array accessTokenGetUserSnapshots(string $access_token, $limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
  * @method  array accessTokenGetUserSnapshot(string $access_token, string $snapshot_id): array
  * @method  array accessTokenGetTransfer(string $access_token, string $trace_id): array
+ * @method  array readRawMainNetAddress(string $client_id): array
+ * @method  array multisigPayment(string $asset_id, array $receivers, int $threshold, $amount, $memo = '', $trace_id = null): array
+ * @method  array checkCode($code_id): array
+ * @method  array readMultisigs(string $offset = '', $limit = null): array
+ * @method  array accessTokenPostMultisigs(string $access_token, string $raw, string $action = 'sign'): array
+ * @method  array accessTokenPostOutputs($access_token, $receivers, $index = 0): array
+ * @method  array readOutputs($receivers, $index = 0): array
+ * @method  array externalProxy($params, $method = 'sendrawtransaction'): array
+ * @method  array postMultisigs(string $raw, string $action = 'sign'): array
+ * @method  array multisigsSign(string $request_id, string $pin = null): array
+ * @method  array readFiats(): array
+ * @method  array multisigsCancel(string $request_id, string $pin = null): array
  *
  * @see \ExinOne\MixinSDK\Apis\Message
  * @method  array sendText($user_id, $data, $category = 'CONTACT', $conversation_id = null): array

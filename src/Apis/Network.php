@@ -182,7 +182,7 @@ class Network extends Api
      * @return array
      * @throws \Exception
      */
-    public function readConversations(string $conversation_id)
+    public function readConversations(string $conversation_id): array
     {
         $url = $this->endPointUrl.$conversation_id;
 
@@ -339,7 +339,7 @@ class Network extends Api
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function searchAssets(string $q)
+    public function searchAssets(string $q): array
     {
         $url = $this->endPointUrl.$q;
         return $this->res([], $url);
@@ -352,7 +352,7 @@ class Network extends Api
      * @return array
      * @throws \Exception
      */
-    public function accessTokenGetAsset(string $access_token, string $assetId)
+    public function accessTokenGetAsset(string $access_token, string $assetId): array
     {
         $url = $this->endPointUrl.$assetId;
 

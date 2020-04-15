@@ -514,7 +514,7 @@ class Wallet extends Api
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function externalProxy($params, $method = 'sendrawtransaction')
+    public function externalProxy($params, $method = 'sendrawtransaction'): array
     {
         $body = compact('params', 'method');
 
