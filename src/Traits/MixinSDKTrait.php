@@ -36,9 +36,34 @@ trait MixinSDKTrait
             "iat" => time(),
             "exp" => time() + $expire,
             "jti" => Uuid::uuid4()->toString(),
-            "sig" => bin2hex(hash('sha256', $method.$uri.$body, true)),
+            "sig" => bin2hex(hash('sha256', $method . $uri . $body, true)),
+            "scp" => "FULL",
         ];
-        $jwt   = JWT::encode($token, $this->config['private_key'], 'RS512');
+        $jwt = JWT::encode($token, $this->config['private_key'], 'RS512');
+
+        return $jwt;
+    }
+
+    /**
+     * @param $method
+     * @param $uri
+     * @param $body
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function getTokenWithCustomScp($method, $uri, $body, $scp, $expire = 200)
+    {
+        $token = [
+            "uid" => $this->config['client_id'],
+            "sid" => $this->config['session_id'],
+            "iat" => time(),
+            "exp" => time() + $expire,
+            "jti" => Uuid::uuid4()->toString(),
+            "sig" => bin2hex(hash('sha256', $method . $uri . $body, true)),
+            "scp" => $scp,
+        ];
+        $jwt = JWT::encode($token, $this->config['private_key'], 'RS512');
 
         return $jwt;
     }
@@ -74,15 +99,15 @@ trait MixinSDKTrait
     public function encryptPin($pin)
     {
         $private_key = $this->config['private_key'];
-        $pin_token   = $this->config['pin_token'];
-        $session_id  = $this->config['session_id'];
-        $iterator    = empty($this->iterator)
+        $pin_token = $this->config['pin_token'];
+        $session_id = $this->config['session_id'];
+        $iterator = empty($this->iterator)
             ? microtime(true) * 100000
             : array_shift($this->iterator);
 
         //载入私钥
         $rsa = new RSA();
-        if (! $rsa->loadKey($private_key)) {
+        if (!$rsa->loadKey($private_key)) {
             throw  new LoadPrivateKeyException('local private key error');
         }
 
@@ -92,7 +117,7 @@ trait MixinSDKTrait
         $key_bytes = $rsa->_rsaes_oaep_decrypt(base64_decode($pin_token), $session_id);
 
         //使用 私钥 加密 pin
-        $pin_bytes = $pin.pack("P", time()).pack("P", $iterator);
+        $pin_bytes = $pin . pack("P", time()) . pack("P", $iterator);
 
         return $this->encrypt_openssl($pin_bytes, $key_bytes);
     }
@@ -109,7 +134,7 @@ trait MixinSDKTrait
 
         $encrypted_message = openssl_encrypt($msg, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
 
-        return base64_encode($iv.$encrypted_message);
+        return base64_encode($iv . $encrypted_message);
     }
 
     /**
@@ -120,8 +145,8 @@ trait MixinSDKTrait
      */
     public function decrypt_openssl($payload, $key)
     {
-        $raw  = base64_decode($payload);
-        $iv   = substr($raw, 0, 16);
+        $raw = base64_decode($payload);
+        $iv = substr($raw, 0, 16);
         $data = substr($raw, 16);
 
         return openssl_decrypt($data, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
@@ -139,12 +164,12 @@ trait MixinSDKTrait
         if (strcmp($userId, $recipientId) > 0) {
             [$maxId, $minId] = [$userId, $recipientId];
         }
-        $sum         = md5($minId.$maxId);
-        $replacement = dechex((hexdec($sum[12].$sum[13]) & 0x0f) | 0x30);
-        $sum         = substr_replace($sum, $replacement, 12, 2);
+        $sum = md5($minId . $maxId);
+        $replacement = dechex((hexdec($sum[12] . $sum[13]) & 0x0f) | 0x30);
+        $sum = substr_replace($sum, $replacement, 12, 2);
 
-        $replacement = dechex((hexdec($sum[16].$sum[17]) & 0x3f) | 0x80);
-        $sum         = substr_replace($sum, $replacement, 16, 2);
+        $replacement = dechex((hexdec($sum[16] . $sum[17]) & 0x3f) | 0x80);
+        $sum = substr_replace($sum, $replacement, 16, 2);
 
         return Uuid::fromString($sum)->toString();
     }
