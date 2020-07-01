@@ -252,5 +252,17 @@ return [
             'method' => 'get',
             'url'    => '/assets/',
         ],
+        'add_favorite_app'            => [
+            'method' => 'post',
+            'url'    => '/apps/{$userId}/favorite',
+        ],
+        'remove_favorite_app'            => [
+            'method' => 'post',
+            'url'    => '/apps/{$userId}/unfavorite',
+        ],
+        'read_favorite_apps'            => [
+            'method' => 'get',
+            'url'    => '/users/{$userId}/apps/favorite',
+        ],
     ],
 ];

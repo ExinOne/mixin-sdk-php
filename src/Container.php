@@ -23,6 +23,9 @@ use GuzzleHttp\Client;
  * @method  array updatePreferences(string $receive_message_source, string $accept_conversation_source): array
  * @method  array rotateQRCode(): array
  * @method  array readFriends(): array
+ * @method  array addFavoriteApp(string $user_id): array
+ * @method  array removeFavoriteApp(string $user_id): array
+ * @method  array readFavoriteApps(string $user_id = null): array
  *
  * @see \ExinOne\MixinSDK\Apis\Network
  * @method  array readUser(string $userId): array
@@ -87,7 +90,7 @@ use GuzzleHttp\Client;
  * @method  array sendAppButtonGroup($user_id, $data, $category = 'CONTACT', $conversation_id = null): array
  * @method  array sendAppCard($user_id, $data, $category = 'CONTACT', $conversation_id = null): array
  * @method  array askMessageReceipt($message_id): array
- * @method  array sendBatchMessage(array $user_ids, $data): array
+ * @method  array sendBatchMessage(array $user_ids, $data, $use_http = false, $type = 'PLAIN_TEXT', $conversation_id = null): array
  *
  * @see \ExinOne\MixinSDK\Apis\Pin
  * @see \ExinOne\MixinSDK\Apis\Wallet

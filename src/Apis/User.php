@@ -69,4 +69,40 @@ class User extends Api
     {
         return $this->res();
     }
+
+    /**
+     * @param string $user_id
+     * @return array
+     * @throws \Exception
+     */
+    public function addFavoriteApp(string $user_id): array
+    {
+        $url = str_replace('{$userId}', $user_id, $this->endPointUrl);
+        return $this->res([], $url);
+    }
+
+    /**
+     * @param string $user_id
+     * @return array
+     * @throws \Exception
+     */
+    public function removeFavoriteApp(string $user_id): array
+    {
+        $url = str_replace('{$userId}', $user_id, $this->endPointUrl);
+        return $this->res([], $url);
+    }
+
+    /**
+     * @param string $user_id
+     * @return array
+     * @throws \Exception
+     */
+    public function readFavoriteApps(string $user_id = null): array
+    {
+        if (! $user_id) {
+            $user_id = $this->config['client_id'];
+        }
+        $url = str_replace('{$userId}', $user_id, $this->endPointUrl);
+        return $this->res([], $url);
+    }
 }
