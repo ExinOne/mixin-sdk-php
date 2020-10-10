@@ -21,14 +21,16 @@ use Ramsey\Uuid\Uuid;
 trait MixinSDKTrait
 {
     /**
-     * @param $method
-     * @param $uri
-     * @param $body
+     * @param      $method
+     * @param      $uri
+     * @param      $body
      *
+     * @param int  $expire
+     * @param string $scope
      * @return string
      * @throws \Exception
      */
-    public function getToken($method, $uri, $body, $expire = 200)
+    public function getToken($method, $uri, $body, $expire = 200, $scope = 'FULL')
     {
         $token = [
             "uid" => $this->config['client_id'],
@@ -37,7 +39,9 @@ trait MixinSDKTrait
             "exp" => time() + $expire,
             "jti" => Uuid::uuid4()->toString(),
             "sig" => bin2hex(hash('sha256', $method.$uri.$body, true)),
+            'scp' => $scope,
         ];
+
         $jwt   = JWT::encode($token, $this->config['private_key'], 'RS512');
 
         return $jwt;
