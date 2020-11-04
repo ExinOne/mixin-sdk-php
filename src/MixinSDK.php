@@ -21,6 +21,10 @@ class MixinSDK
      */
     public $config;
 
+    public $base_uri;
+
+    public $timeout;
+
     protected $useConfigName = 'default';
 
     /**
@@ -38,13 +42,16 @@ class MixinSDK
     public function __construct(array $config = [])
     {
         $this->useConfigName = 'default';
-        if (!empty($config)) {
+        if (! empty($config)) {
             if (is_array($config['keys'] ?? 'e')) {
                 $this->config = $config['keys'];
             } else {
                 $this->config[$this->useConfigName] = $config;
             }
+            $this->base_uri = $config['base_uri'] ?? null;
+            $this->timeout  = $config['timeout'] ?? null;
         }
+
     }
 
     /**
@@ -61,11 +68,12 @@ class MixinSDK
         $this->useConfigName = 'default';
 
         $name  = ucfirst($name);
-        $class = __NAMESPACE__ . '\\Apis\\' . $name;
+        $class = __NAMESPACE__.'\\Apis\\'.$name;
+
         // 作为包的入口， 根据 $name 返回相应的实例
         if (class_exists($class)) {
             return (new Container())
-                ->setDetailClass(new $class($this->config[$useConfigName]));
+                ->setDetailClass(new $class($this->config[$useConfigName], $this->base_uri, $this->timeout));
         } else {
             throw new ClassNotFoundException("class \"$name\" not found, pleace check className");
         }
@@ -83,31 +91,44 @@ class MixinSDK
     }
 
     /**
-     * @param       $name
-     * @param array $config
-     *
+     * @param string      $name
+     * @param array       $config
+     * @param string|null $base_uri
+     * @param int|null    $timeout
      * @return $this
      */
-    public function use(string $name, array $config = [])
+    public function use(string $name, array $config = [], string $base_uri = null, int $timeout = null)
     {
         $this->useConfigName = $name;
-        if (!empty($config)) {
+        if (! empty($config)) {
             $this->config[$name] = $config;
+        }
+        if ($base_uri) {
+            $this->base_uri = $base_uri;
+        }
+        if ($timeout) {
+            $this->timeout = $timeout;
         }
 
         return $this;
     }
 
     /**
-     * @param string $name
-     * @param array  $config
-     *
+     * @param string      $name
+     * @param array       $config
+     * @param string|null $base_uri
+     * @param int|null    $timeout
      * @return $this
      */
-    public function setConfig(string $name, array $config)
+    public function setConfig(string $name, array $config, string $base_uri = null, int $timeout = null)
     {
         $this->config[$name] = $config;
-
+        if ($base_uri) {
+            $this->base_uri = $base_uri;
+        }
+        if ($timeout) {
+            $this->timeout = $timeout;
+        }
         return $this;
     }
 
