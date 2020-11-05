@@ -32,6 +32,8 @@ class Api
 
     protected $timeout = 20;
 
+    protected $base_uri;
+
     protected $expire = 200;
 
     protected $is_return_access_token = false;
@@ -51,21 +53,28 @@ class Api
      * Api constructor.
      *
      * @param $config
+     * @param string $base_uri
+     * @param int $timeout
      */
-    public function __construct($config)
+    public function __construct($config, string $base_uri = null, int $timeout = null)
     {
-        $this->packageConfig = require(__DIR__.'/../../config/config.php');
-        $this->config        = $config;
-        $this->http_client   = new Client([
-            'base_uri' => $this->packageConfig['base_uri'],
-            'timeout'  => $this->timeout,
-            'version'  => 1.3,
+        $this->packageConfig = require(__DIR__ . '/../../config/config.php');
+
+        $this->base_uri = $base_uri ?: $this->packageConfig['base_uri'];
+        if ($timeout) {
+            $this->timeout = $timeout;
+        }
+        $this->config = $config;
+        $this->http_client = new Client([
+            'base_uri' => $this->base_uri,
+            'timeout' => $this->timeout,
+            'version' => 1.3,
         ]);
     }
 
     /**
-     * @param null  $body
-     * @param null  $url
+     * @param null $body
+     * @param null $url
      * @param array $customizeHeaders
      * @param array $customizeRes
      *
@@ -93,7 +102,7 @@ class Api
         // headers
         $headers = array_merge([
             'Content-Type'  => 'application/json',
-            'Authorization' => 'Bearer '.$auth_token,
+            'Authorization' => 'Bearer ' . $auth_token,
         ], $customizeHeaders);
 
         if ($this->is_return_access_token) {
@@ -109,7 +118,7 @@ class Api
         $method  = strtolower($method);
         $timeout = $this->timeout;
 
-        if (! $this->http_async) {
+        if (!$this->http_async) {
             $response = $this->http_client->$method($url, compact('headers', 'body', 'timeout'));
             $content  = json_decode($response->getBody()->getContents(), true);
             $promise  = null;
@@ -139,7 +148,7 @@ class Api
     public function webSocketRes($message)
     {
         $wsClient = new WSClient('wss://blaze.mixin.one/', 'https://google.com');
-        $wsClient->addRequestHeader('Authorization', 'Bearer '.$this->getToken('GET', '/', ''));
+        $wsClient->addRequestHeader('Authorization', 'Bearer ' . $this->getToken('GET', '/', ''));
         $wsClient->addRequestHeader('protocol', 'Mixin-Blaze-1');
 
         // 重试操作
@@ -258,7 +267,7 @@ class Api
     }
 
     /**
-     * @param Client|null   $http_client
+     * @param Client|null $http_client
      * @param \Closure|null $on_resolve
      * @param \Closure|null $on_reject
      * @return void
@@ -289,13 +298,5 @@ class Api
     public function __sleep()
     {
         return ['config'];
-    }
-
-    public function __wakeup()
-    {
-        $this->http_client = new Client([
-            'base_uri' => 'https://api.mixin.one',
-            'timeout'  => $this->timeout,
-        ]);
     }
 }
