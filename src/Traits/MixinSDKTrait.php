@@ -8,10 +8,13 @@
 
 namespace ExinOne\MixinSDK\Traits;
 
+use Base64Url\Base64Url;
 use ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException;
 use Firebase\JWT\JWT;
 use phpseclib\Crypt\RSA;
 use Ramsey\Uuid\Uuid;
+use Jose\Component\KeyManagement\JWKFactory;
+use Jose\Easy\Build;
 
 /**
  * Trait MixinSDKTrait
@@ -21,14 +24,14 @@ use Ramsey\Uuid\Uuid;
 trait MixinSDKTrait
 {
     /**
-     * @param      $method
-     * @param      $uri
-     * @param      $body
+     * @param        $method
+     * @param        $uri
+     * @param        $body
      *
-     * @param int  $expire
+     * @param int    $expire
      * @param string $scope
+     * @param string $algorithm
      * @return string
-     * @throws \Exception
      */
     public function getToken($method, $uri, $body, $expire = 200, $scope = 'FULL')
     {
@@ -42,10 +45,42 @@ trait MixinSDKTrait
             'scp' => $scope,
         ];
 
-        $jwt   = JWT::encode($token, $this->config['private_key'], 'RS512');
+        $algorithm = $this->getKeyAlgorithm($this->config['private_key']);
+        if ($algorithm === 'Ed25519') {
+            $key_raw = Base64Url::decode($this->config['private_key']);
+            $jwk     = JWKFactory::createFromValues(
+                [
+                    "kty" => "OKP",
+                    "crv" => "Ed25519",
+                    // seed
+                    "d"   => Base64Url::encode(substr($key_raw, 0, 32)),
+                    // public
+                    "x"   => Base64Url::encode(substr($key_raw, 32)),
+                ]
+            );
+
+            $jws = Build::jws();
+            foreach ($token as $key => $value) {
+                $jws = $jws->claim($key, $value);
+            }
+            // ed25519
+            $jwt = (string)$jws->alg('EdDSA')->sign($jwk);
+        } else {
+            $jwt = JWT::encode($token, $this->config['private_key'], $algorithm);
+        }
 
         return $jwt;
     }
+
+    private function getKeyAlgorithm(string $key)
+    {
+        if (preg_match('/RSA PRIVATE KEY/', $key)) {
+            return 'RS512';
+        }
+
+        return 'Ed25519';
+    }
+
 
     /**
      * @return mixed
@@ -84,16 +119,24 @@ trait MixinSDKTrait
             ? microtime(true) * 100000
             : array_shift($this->iterator);
 
-        //载入私钥
-        $rsa = new RSA();
-        if (! $rsa->loadKey($private_key)) {
-            throw  new LoadPrivateKeyException('local private key error');
-        }
+        $algorithm = $this->getKeyAlgorithm($private_key);
+        if ($algorithm === 'Ed25519') {
+            $key_raw   = Base64Url::decode($private_key);
+            $public    = Base64Url::decode($pin_token);
+            $curve     = sodium_crypto_sign_ed25519_sk_to_curve25519($key_raw);
+            $key_bytes = sodium_crypto_scalarmult($curve, $public);
+        } else {
+            //载入私钥
+            $rsa = new RSA();
+            if (! $rsa->loadKey($private_key)) {
+                throw  new LoadPrivateKeyException('local private key error');
+            }
 
-        //使用 RSAES-OAEP + MGF1-SHA256 的方式，似乎只有这个 Phpseclib/Phpseclib 库来实现...
-        $rsa->setHash("sha256");
-        $rsa->setMGFHash("sha256");
-        $key_bytes = $rsa->_rsaes_oaep_decrypt(base64_decode($pin_token), $session_id);
+            //使用 RSAES-OAEP + MGF1-SHA256 的方式，似乎只有这个 Phpseclib/Phpseclib 库来实现...
+            $rsa->setHash("sha256");
+            $rsa->setMGFHash("sha256");
+            $key_bytes = $rsa->_rsaes_oaep_decrypt(base64_decode($pin_token), $session_id);
+        }
 
         //使用 私钥 加密 pin
         $pin_bytes = $pin.pack("P", time()).pack("P", $iterator);

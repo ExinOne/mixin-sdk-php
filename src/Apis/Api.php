@@ -251,7 +251,7 @@ class Api
     }
 
     /**
-     * @param int $expire
+     * @param bool $is_return_access_token
      */
     public function setReturnAccessToken(bool $is_return_access_token): void
     {

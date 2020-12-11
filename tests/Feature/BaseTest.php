@@ -27,7 +27,7 @@ class BaseTest extends TestCase
         $this->assertContainsOnlyInstancesOf(MixinSDK::class, [$mixinSDK]);
     }
 
-    // 测试new 出来的对象瞎 set cofnig 会不会有问题
+    // 测试new 出来的对象瞎 set config 会不会有问题
     public function test_it_can_get_MixinSDK_object_and_set_config_success0()
     {
         $config   = [
