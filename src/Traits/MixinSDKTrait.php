@@ -74,7 +74,7 @@ trait MixinSDKTrait
 
     private function getKeyAlgorithm(string $key)
     {
-        if (preg_match('/RSA PRIVATE KEY/', $key)) {
+        if (preg_match('/PRIVATE KEY/', $key)) {
             return 'RS512';
         }
 
@@ -102,6 +102,15 @@ trait MixinSDKTrait
         $session_secret = str_replace(["-----BEGIN PUBLIC KEY-----\n", "-----END PUBLIC KEY-----", "\n"], '', $pub_key);
 
         return [$pri_key, $pub_key, $session_secret];
+    }
+
+    public function generateEdDSAKey()
+    {
+        $key = JWKFactory::createOKPKey('Ed25519');
+        $pri_key = Base64Url::encode(Base64Url::decode($key->get('d')).Base64Url::decode($key->get('x')));
+        $pub_key = $key->get('x');
+
+        return [$pri_key, $pub_key, $pub_key];
     }
 
     /**

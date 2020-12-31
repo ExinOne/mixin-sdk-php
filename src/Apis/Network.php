@@ -108,9 +108,13 @@ class Network extends Api
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function createUser($fullName): array
+    public function createUser($fullName, string $key_algorithm = 'RS512'): array
     {
-        [$priKey, $pubKey, $session_secret] = $this->generateSSLKey();
+        if ($key_algorithm === 'Ed25519') {
+            [$priKey, $pubKey, $session_secret] = $this->generateEdDSAKey();
+        } else {
+            [$priKey, $pubKey, $session_secret] = $this->generateSSLKey();
+        }
         $body = [
             'session_secret' => $session_secret,
             'full_name'      => (string) $fullName,

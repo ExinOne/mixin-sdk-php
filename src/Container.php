@@ -34,7 +34,7 @@ use GuzzleHttp\Client;
  * @method  array readNetworkAsset(string $assetId): array
  * @method  array readNetworkSnapshots(int $limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
  * @method  array readNetworkSnapshot(string $snapshotId): array
- * @method  array createUser(string $fullName): array
+ * @method  array createUser(string $fullName, string $key_algorithm = 'RS512'): array
  * @method  array externalTransactions(string $asset = null, string $public_key = null, int $limit = null, string $offset = null, string $account_name = null): array
  * @method  array createAttachments(): array
  * @method  array createConversations(string $category, array $participants, string $conversation_id = null, string $name = ''): array
