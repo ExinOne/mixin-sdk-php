@@ -83,6 +83,8 @@ use GuzzleHttp\Client;
  * @method  array multisigsSign(string $request_id, string $pin = null): array
  * @method  array readFiats(): array
  * @method  array multisigsCancel(string $request_id, string $pin = null): array
+ * @method  array sendMultisigTransactions(string $asset_id, array $receivers, int $threshold, string $amount, string $pin = null, string $trace_id = null, string $memo = null): array
+ * @method  array sendMainnetTransactions(string $asset_id, string $opponent_key, string $amount, string $pin = null, string $trace_id = null, string $memo = null): array
  *
  * @see \ExinOne\MixinSDK\Apis\Message
  * @method  array sendText($user_id, $data, $category = 'CONTACT', $conversation_id = null): array

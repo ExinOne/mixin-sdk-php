@@ -14,10 +14,10 @@ class Wallet extends Api
 {
     /**
      * @param string $asset_id
-     * @param string $destination   BTC address or EOS account name like ‘eoswithmixin’
-     * @param $pin
-     * @param $label    “Mixin”, can’t be blank, max size 64
-     * @param $tag  can be blank, EOS account tag or memo
+     * @param string $destination BTC address or EOS account name like ‘eoswithmixin’
+     * @param        $pin
+     * @param        $label       “Mixin”, can’t be blank, max size 64
+     * @param        $tag         can be blank, EOS account tag or memo
      * @return array
      * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
      */
@@ -33,14 +33,14 @@ class Wallet extends Api
                     'asset_id'   => $asset_id,
                     'public_key' => $destination,
                     'label'      => $label,
-                    'pin'        => $pin == '' ? '' : $this->encryptPin((string) $pin),
+                    'pin'        => $pin == '' ? '' : $this->encryptPin((string)$pin),
                 ];
             } else {
                 $body = [
                     'asset_id'     => $asset_id,
                     'account_name' => $destination,
                     'account_tag'  => $label,
-                    'pin'          => $pin == '' ? '' : $this->encryptPin((string) $pin),
+                    'pin'          => $pin == '' ? '' : $this->encryptPin((string)$pin),
                 ];
             }
 
@@ -48,7 +48,7 @@ class Wallet extends Api
             $body = [
                 'asset_id'    => $asset_id,
                 'label'       => $label,
-                'pin'         => $pin == '' ? '' : $this->encryptPin((string) $pin),
+                'pin'         => $pin == '' ? '' : $this->encryptPin((string)$pin),
                 'destination' => $destination,
                 'tag'         => $tag,
             ];
@@ -58,7 +58,6 @@ class Wallet extends Api
     }
 
     /**
-     * @deprecated 由于支持新的 alpha 创建地址api，该方法遗弃
      * @param string $asset_id
      * @param        $public_key
      * @param        $label
@@ -68,8 +67,9 @@ class Wallet extends Api
      *
      * @return array
      * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
+     * @deprecated 由于支持新的 alpha 创建地址api，该方法遗弃
      */
-    public function createAddressRaw(string $asset_id,  $public_key,  $label,  $account_name,  $account_tag, $pin = null)
+    public function createAddressRaw(string $asset_id, $public_key, $label, $account_name, $account_tag, $pin = null)
     {
         if ($pin === null) {
             $pin = $this->config['pin'];
@@ -130,7 +130,7 @@ class Wallet extends Api
         }
 
         $body = [
-            'pin' => $pin == '' ? '' : $this->encryptPin((string) $pin),
+            'pin' => $pin == '' ? '' : $this->encryptPin((string)$pin),
         ];
 
         $url = str_replace('{$addressId}', $addressId, $this->endPointUrl);
@@ -194,7 +194,7 @@ class Wallet extends Api
 
         $body = [
             'address_id' => $addressId,
-            'amount'     => (string) $amount,
+            'amount'     => (string)$amount,
             'memo'       => $memo,
             'trace_id'   => empty($trace_id) ? Uuid::uuid4()->toString() : $trace_id,
             'pin'        => $this->encryptPin($pin),
@@ -223,7 +223,7 @@ class Wallet extends Api
         $body = [
             'asset_id'    => $assetId,
             'opponent_id' => $opponentId,
-            'amount'      => (string) $amount,
+            'amount'      => (string)$amount,
             'pin'         => $this->encryptPin($pin),
             'trace_id'    => empty($trace_id) ? Uuid::uuid4()->toString() : $trace_id,
             'memo'        => $memo,
@@ -248,7 +248,7 @@ class Wallet extends Api
      */
     public function verifyPayment(string $asset_id, string $opponent_id, $amount, string $trace_id): array
     {
-        $amount = (string) $amount;
+        $amount = (string)$amount;
         $body   = compact('asset_id', 'opponent_id', 'amount', 'trace_id');
 
         return $this->res($body);
@@ -294,7 +294,7 @@ class Wallet extends Api
      */
     public function readUserSnapshots($limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
     {
-        $limit   = empty($limit) ? $limit : (int) $limit;
+        $limit   = empty($limit) ? $limit : (int)$limit;
         $urlArgv = compact('limit', 'offset', 'asset', 'order');
 
         $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
@@ -330,7 +330,7 @@ class Wallet extends Api
      */
     public function accessTokenGetUserSnapshots(string $access_token, $limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
     {
-        $limit   = empty($limit) ? $limit : (int) $limit;
+        $limit   = empty($limit) ? $limit : (int)$limit;
         $urlArgv = compact('limit', 'offset', 'asset', 'order');
 
         $headers = [
@@ -399,7 +399,7 @@ class Wallet extends Api
      * @param string $asset_id
      * @param array  $opponent_multisig
      * @param int    $threshold
-     * @param $amount
+     * @param        $amount
      * @param string $memo
      * @param string $trace_id
      *
@@ -409,14 +409,14 @@ class Wallet extends Api
      */
     public function multisigPayment(string $asset_id, array $receivers, int $threshold, $amount, $memo = '', $trace_id = null): array
     {
-        $threshold = $threshold < 2 ? 2 : $threshold;
-        $amount   = (string) $amount;
+        $threshold         = $threshold < 2 ? 2 : $threshold;
+        $amount            = (string)$amount;
         $opponent_multisig = [
             'receivers' => $receivers,
             'threshold' => $threshold,
         ];
-        $trace_id = empty($trace_id) ? Uuid::uuid4()->toString() : $trace_id;
-        $body     = compact('asset_id', 'opponent_multisig', 'amount', 'memo', 'trace_id');
+        $trace_id          = empty($trace_id) ? Uuid::uuid4()->toString() : $trace_id;
+        $body              = compact('asset_id', 'opponent_multisig', 'amount', 'memo', 'trace_id');
 
         return $this->res($body);
     }
@@ -445,7 +445,7 @@ class Wallet extends Api
      */
     public function readMultisigs(string $offset = '', $limit = null): array
     {
-        $limit   = empty($limit) ? 100 : (int) $limit;
+        $limit   = empty($limit) ? 100 : (int)$limit;
         $urlArgv = compact('limit', 'offset');
 
         $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
@@ -555,7 +555,7 @@ class Wallet extends Api
         $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
 
         $body = [
-            'pin' => $this->encryptPin((string) $pin),
+            'pin' => $this->encryptPin((string)$pin),
         ];
 
         return $this->res($body, $url);
@@ -589,9 +589,73 @@ class Wallet extends Api
         $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
 
         $body = [
-            'pin' => $this->encryptPin((string) $pin),
+            'pin' => $this->encryptPin((string)$pin),
         ];
 
         return $this->res($body, $url);
+    }
+
+    /**
+     * 转账到多签
+     * @param string      $asset_id
+     * @param array       $receivers
+     * @param int         $threshold
+     * @param string      $amount
+     * @param string|null $pin
+     * @param string|null $trace_id
+     * @param string|null $memo
+     * @return array
+     * @throws \Exception
+     */
+    public function sendMultisigTransactions(string $asset_id, array $receivers, int $threshold, string $amount, string $pin = null, string $trace_id = null, string $memo = null): array
+    {
+        if ($pin === null) {
+            $pin = $this->config['pin'];
+        }
+
+        $opponent_multisig = [
+            'receivers' => $receivers,
+            'threshold' => $threshold,
+        ];
+
+        $body = [
+            'asset_id'          => $asset_id,
+            'opponent_multisig' => $opponent_multisig,
+            'amount'            => $amount,
+            'pin'               => $this->encryptPin($pin),
+            'trace_id'          => empty($trace_id) ? Uuid::uuid4()->toString() : $trace_id,
+            'memo'              => $memo,
+        ];
+
+        return $this->res($body);
+    }
+
+    /**
+     * 转账到主网地址
+     * @param string      $asset_id
+     * @param string      $opponent_key
+     * @param string      $amount
+     * @param string|null $pin
+     * @param string|null $trace_id
+     * @param string|null $memo
+     * @return array
+     * @throws \Exception
+     */
+    public function sendMainnetTransactions(string $asset_id, string $opponent_key, string $amount, string $pin = null, string $trace_id = null, string $memo = null): array
+    {
+        if ($pin === null) {
+            $pin = $this->config['pin'];
+        }
+
+        $body = [
+            'asset_id'     => $asset_id,
+            'opponent_key' => $opponent_key,
+            'amount'       => $amount,
+            'pin'          => $this->encryptPin($pin),
+            'trace_id'     => empty($trace_id) ? Uuid::uuid4()->toString() : $trace_id,
+            'memo'         => $memo,
+        ];
+
+        return $this->res($body);
     }
 }

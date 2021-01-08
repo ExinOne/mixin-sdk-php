@@ -200,69 +200,77 @@ return [
             'method' => 'post',
             'url'    => '/messages',
         ],
-        'read_raw_main_net_address'         => [
+        'read_raw_main_net_address'        => [
             'method' => 'post',
             'url'    => '/outputs',
         ],
-        'multisig_payment'                  => [
+        'multisig_payment'                 => [
             'method' => 'post',
             'url'    => '/payments',
         ],
-        'check_code'                        => [
+        'check_code'                       => [
             'method' => 'get',
             'url'    => '/codes/',
         ],
-        'read_multisigs'                    => [
+        'read_multisigs'                   => [
             'method' => 'get',
             'url'    => '/multisigs',
         ],
-        'access_token_post_multisigs'       => [
+        'access_token_post_multisigs'      => [
             'method' => 'post',
             'url'    => '/multisigs',
         ],
-        'access_token_post_outputs'         => [
+        'access_token_post_outputs'        => [
             'method' => 'post',
             'url'    => '/outputs',
         ],
-        'read_outputs'                      => [
+        'read_outputs'                     => [
             'method' => 'post',
             'url'    => '/outputs',
         ],
-        'external_proxy'                    => [
+        'external_proxy'                   => [
             'method' => 'post',
             'url'    => '/external/proxy',
         ],
-        'post_multisigs'                    => [
+        'post_multisigs'                   => [
             'method' => 'post',
             'url'    => '/multisigs',
         ],
-        'multisigs_sign'                    => [
+        'multisigs_sign'                   => [
             'method' => 'post',
             'url'    => '/multisigs/{$requestId}/sign',
         ],
-        'read_fiats'                        => [
+        'read_fiats'                       => [
             'method' => 'get',
             'url'    => '/fiats',
         ],
-        'multisigs_cancel'                  => [
+        'multisigs_cancel'                 => [
             'method' => 'post',
             'url'    => '/multisigs/{$requestId}/unlock',
         ],
-        'access_token_get_asset'            => [
+        'access_token_get_asset'           => [
             'method' => 'get',
             'url'    => '/assets/',
         ],
-        'add_favorite_app'            => [
+        'add_favorite_app'                 => [
             'method' => 'post',
             'url'    => '/apps/{$userId}/favorite',
         ],
-        'remove_favorite_app'            => [
+        'remove_favorite_app'              => [
             'method' => 'post',
             'url'    => '/apps/{$userId}/unfavorite',
         ],
-        'read_favorite_apps'            => [
+        'read_favorite_apps'               => [
             'method' => 'get',
             'url'    => '/users/{$userId}/apps/favorite',
+        ],
+        'send_multisig_transactions'       => [
+            'method' => 'post',
+            'url'    => '/transactions',
+        ],
+        'send_mainnet_transactions'        => [
+            'method' => 'post',
+            'url'    => '/transactions',
         ],
     ],
 ];
