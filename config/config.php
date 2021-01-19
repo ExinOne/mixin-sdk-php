@@ -212,14 +212,6 @@ return [
             'method' => 'get',
             'url'    => '/codes/',
         ],
-        'read_multisigs'                   => [
-            'method' => 'get',
-            'url'    => '/multisigs',
-        ],
-        'access_token_post_multisigs'      => [
-            'method' => 'post',
-            'url'    => '/multisigs',
-        ],
         'access_token_post_outputs'        => [
             'method' => 'post',
             'url'    => '/outputs',
@@ -232,7 +224,15 @@ return [
             'method' => 'post',
             'url'    => '/external/proxy',
         ],
+        'read_multisigs'                   => [
+            'method' => 'get',
+            'url'    => '/multisigs',
+        ],
         'post_multisigs'                   => [
+            'method' => 'post',
+            'url'    => '/multisigs',
+        ],
+        'access_token_post_multisigs'      => [
             'method' => 'post',
             'url'    => '/multisigs',
         ],
@@ -240,13 +240,13 @@ return [
             'method' => 'post',
             'url'    => '/multisigs/{$requestId}/sign',
         ],
-        'read_fiats'                       => [
-            'method' => 'get',
-            'url'    => '/fiats',
-        ],
         'multisigs_cancel'                 => [
             'method' => 'post',
             'url'    => '/multisigs/{$requestId}/unlock',
+        ],
+        'read_fiats'                       => [
+            'method' => 'get',
+            'url'    => '/fiats',
         ],
         'access_token_get_asset'           => [
             'method' => 'get',
