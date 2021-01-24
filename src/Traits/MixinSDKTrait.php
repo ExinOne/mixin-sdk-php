@@ -9,12 +9,17 @@
 namespace ExinOne\MixinSDK\Traits;
 
 use Base64Url\Base64Url;
+use ExinOne\MixinSDK\Exceptions\InvalidInputFieldException;
 use ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException;
+use ExinOne\MixinSDK\Utils\TransactionHelper;
+use ExinOne\MixinSDK\Utils\TransactionInput;
+use ExinOne\MixinSDK\Utils\TransactionOutput;
+use ExinOne\MixinSDK\Utils\Type\Transaction;
 use Firebase\JWT\JWT;
-use phpseclib\Crypt\RSA;
-use Ramsey\Uuid\Uuid;
 use Jose\Component\KeyManagement\JWKFactory;
 use Jose\Easy\Build;
+use phpseclib\Crypt\RSA;
+use Ramsey\Uuid\Uuid;
 
 /**
  * Trait MixinSDKTrait
@@ -31,6 +36,7 @@ trait MixinSDKTrait
      * @param int    $expire
      * @param string $scope
      * @param string $algorithm
+     *
      * @return string
      */
     public function getToken($method, $uri, $body, $expire = 200, $scope = 'FULL')
@@ -106,7 +112,7 @@ trait MixinSDKTrait
 
     public function generateEdDSAKey()
     {
-        $key = JWKFactory::createOKPKey('Ed25519');
+        $key     = JWKFactory::createOKPKey('Ed25519');
         $pri_key = Base64Url::encode(Base64Url::decode($key->get('d')).Base64Url::decode($key->get('x')));
         $pub_key = $key->get('x');
 
@@ -137,7 +143,7 @@ trait MixinSDKTrait
         } else {
             //载入私钥
             $rsa = new RSA();
-            if (! $rsa->loadKey($private_key)) {
+            if (!$rsa->loadKey($private_key)) {
                 throw  new LoadPrivateKeyException('local private key error');
             }
 
@@ -203,5 +209,51 @@ trait MixinSDKTrait
         $sum         = substr_replace($sum, $replacement, 16, 2);
 
         return Uuid::fromString($sum)->toString();
+    }
+
+    /**
+     * @param string              $assetId
+     * @param TransactionInput[]  $inputs
+     * @param TransactionOutput[] $outputs
+     * @param string              $memo
+     * @param int                 $version
+     *
+     * @return string
+     * @throws InvalidInputFieldException
+     */
+    public function BuildRaw(string $assetId, array $inputs, array $outputs, string $memo, int $version): string
+    {
+        // 大量的字段 和 类型检查
+        if (empty($version)) {
+            $version = 0x01;
+        } else if (empty($assetId)) {
+            throw new InvalidInputFieldException("func 'BuildRaw' need assetUuid, but your assetUuid param is empty");
+        } else if (count($inputs) === 0) {
+            throw new InvalidInputFieldException("func 'BuildRaw' need \$inputs not empty!");
+        } else if (count($outputs) === 0) {
+            throw new InvalidInputFieldException("func 'BuildRaw' need \$outputs not empty!");
+        }
+
+        // 检查 $inputs 和 $outputs 的类型
+        foreach ($inputs as $input) {
+            if (!$input instanceof TransactionInput) {
+                throw new InvalidInputFieldException("\$inputs must use 'TransactionInput' object");
+            }
+        }
+        foreach ($outputs as $output) {
+            if (!$output instanceof TransactionOutput) {
+                throw new InvalidInputFieldException("\$outputs must use 'TransactionOutput' object");
+            }
+        }
+
+        $multisigData = [
+            'version' => 0x01,
+            'asset'   => $assetId,
+            'inputs'  => $inputs,
+            'outputs' => $outputs,
+            'extra'   => bin2hex($memo),
+        ];
+
+        return TransactionHelper::buildTransaction($multisigData);
     }
 }
