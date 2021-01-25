@@ -172,6 +172,10 @@ class Api
             }
         }
 
+        if (empty($response)) {
+            $wsClient->disconnect();
+        }
+
         return [
             'content'       => json_decode(gzdecode($response), true),
             'customize_res' => [],

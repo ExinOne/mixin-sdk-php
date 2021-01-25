@@ -272,5 +272,13 @@ return [
             'method' => 'post',
             'url'    => '/transactions',
         ],
+        'read_multisigs_outputs'           => [
+            'method' => 'get',
+            'url'    => '/multisigs/outputs',
+        ],
+        'access_token_read_multisigs_outputs' => [
+            'method' => 'get',
+            'url'    => '/multisigs/outputs',
+        ],
     ],
 ];
