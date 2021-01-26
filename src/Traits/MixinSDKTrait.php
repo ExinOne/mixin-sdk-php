@@ -214,11 +214,11 @@ trait MixinSDKTrait
     }
 
     /**
-     * @param string              $assetId
+     * @param string   $assetId
      * @param Input[]  $inputs
      * @param Output[] $outputs
-     * @param string              $memo
-     * @param int                 $version
+     * @param string   $memo
+     * @param int      $version
      *
      * @return string
      * @throws InvalidInputFieldException
