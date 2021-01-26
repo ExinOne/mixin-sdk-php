@@ -40,7 +40,7 @@ class TransactionHelper
 
         // fill up outputObject
         foreach ($input_object['outputs'] as $v) {
-            if (strlen($v['mask']) > 0) {
+            if (strlen($v->Mask) > 0) {
                 $tx->AddOutput($v);
             }
         }
@@ -442,8 +442,8 @@ class BigInteger
 
 class TransactionOutput
 {
-    /** @var string */
-    public $Type = 0;
+    /** @var int */
+    public $Type = "0";
 
     /** @var BigInteger */
     public $Amount;
@@ -457,8 +457,9 @@ class TransactionOutput
     /** @var string */
     public $Mask;
 
-    public function __construct(BigInteger $amount, array $keys, string $script, string $mask, string $type)
+    public function __construct(BigInteger $amount, array $keys, string $script, string $mask, int $type = 0)
     {
+        $this->Type   = $type;
         $this->Amount = $amount;
         $this->Keys   = $keys;
         $this->Script = $script;
