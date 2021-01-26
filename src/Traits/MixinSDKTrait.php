@@ -220,7 +220,7 @@ trait MixinSDKTrait
      * @return string
      * @throws InvalidInputFieldException
      */
-    public function BuildRaw(string $assetId, array $inputs, array $outputs, string $memo, int $version): string
+    public function buildRaw(string $assetId, array $inputs, array $outputs, string $memo, int $version = 0x01): string
     {
         // 大量的字段 和 类型检查
         if (empty($version)) {

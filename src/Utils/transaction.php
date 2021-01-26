@@ -15,7 +15,7 @@ use ExinOne\MixinSDK\Exceptions\InvalidInputFieldException;
 class TransactionHelper
 {
     /**
-     * @param array $input_object
+     * @param  array  $input_object
      *
      * @return string
      * @throws InvalidInputFieldException
@@ -40,7 +40,7 @@ class TransactionHelper
 
         // fill up outputObject
         foreach ($input_object['outputs'] as $v) {
-            if (strlen($v['mask']) > 0) {
+            if (strlen($v->Mask) > 0) {
                 $tx->AddOutput($v);
             }
         }
@@ -201,6 +201,12 @@ class TransactionInput
 
     /** @var MintData */
     public $mint;
+
+    public function __construct(string $hash, int $index)
+    {
+        $this->Hash  = $hash;
+        $this->Index = $index;
+    }
 
     public function encode()
     {
@@ -436,13 +442,13 @@ class BigInteger
 
 class TransactionOutput
 {
-    /** @var string */
-    public $type = 0;
+    /** @var int */
+    public $type = "0";
 
     /** @var BigInteger */
     public $amount;
 
-    /** @var array */
+    /** @var string[] */
     public $keys;
 
     /** @var string */
@@ -450,6 +456,15 @@ class TransactionOutput
 
     /** @var string */
     public $mask;
+
+    public function __construct(BigInteger $amount, array $keys, string $script, string $mask, int $type = 0)
+    {
+        $this->Type   = $type;
+        $this->Amount = $amount;
+        $this->Keys   = $keys;
+        $this->Script = $script;
+        $this->Mask   = $mask;
+    }
 
     public function encode(): string
     {
