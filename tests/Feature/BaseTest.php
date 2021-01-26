@@ -9,9 +9,9 @@
 namespace ExinOne\MixinSDK\Tests\Feature;
 
 use ExinOne\MixinSDK\MixinSDK;
-use ExinOne\MixinSDK\Utils\BigInteger;
-use ExinOne\MixinSDK\Utils\TransactionInput;
-use ExinOne\MixinSDK\Utils\TransactionOutput;
+use ExinOne\MixinSDK\Utils\Transaction\BigInteger;
+use ExinOne\MixinSDK\Utils\Transaction\Input;
+use ExinOne\MixinSDK\Utils\Transaction\Output;
 use PHPUnit\Framework\TestCase;
 
 use ExinOne\MixinSDK\Traits\MixinSDKTrait;
@@ -191,13 +191,14 @@ final class BaseTest extends TestCase
 
     public function test_it_can_build_raw()
     {
-        include "/home/kurisucode/myRepo/mixin-sdk-php/src/Utils/transaction.php";
-        $input0  = new TransactionInput("c6d0c7282624429b8e0dd9d19b6592fa", 0);
-        $input1  = new TransactionInput("c6d0c7282624429b8e0dd9d19b6592fa", 1);
-        $output0 = new TransactionOutput(new BigInteger("0.000001"), ["c6d0c7282624429b8e0dd9d19b6592fa"], "c6d0c7282624429b8e0dd9d19b6592fa","c6d0c7282624429b8e0dd9d19b6592fa");
+        $input0  = new Input("c6d0c7282624429b8e0dd9d19b6592fa", 0);
+        $input1  = new Input("c6d0c7282624429b8e0dd9d19b6592fa", 1);
+        $output0 = new Output(new BigInteger("0.000001"), ["c6d0c7282624429b8e0dd9d19b6592fa"],
+            "c6d0c7282624429b8e0dd9d19b6592fa", "c6d0c7282624429b8e0dd9d19b6592fa");
 
         $rawString = $this->buildRaw("c6d0c7282624429b8e0dd9d19b6592fa", [$input0, $input1,], [$output0,], "xx");
 
         dump($rawString);
+        self::assertNotEmpty($rawString);
     }
 }

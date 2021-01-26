@@ -11,9 +11,9 @@ namespace ExinOne\MixinSDK\Traits;
 use Base64Url\Base64Url;
 use ExinOne\MixinSDK\Exceptions\InvalidInputFieldException;
 use ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException;
-use ExinOne\MixinSDK\Utils\TransactionHelper;
-use ExinOne\MixinSDK\Utils\TransactionInput;
-use ExinOne\MixinSDK\Utils\TransactionOutput;
+use ExinOne\MixinSDK\Utils\Transaction\Helper;
+use ExinOne\MixinSDK\Utils\Transaction\Input;
+use ExinOne\MixinSDK\Utils\Transaction\Output;
 use Firebase\JWT\JWT;
 use Jose\Component\KeyManagement\JWKFactory;
 use Jose\Easy\Build;
@@ -109,6 +109,9 @@ trait MixinSDKTrait
         return [$pri_key, $pub_key, $session_secret];
     }
 
+    /**
+     * @return array
+     */
     public function generateEdDSAKey()
     {
         $key     = JWKFactory::createOKPKey('Ed25519');
@@ -212,8 +215,8 @@ trait MixinSDKTrait
 
     /**
      * @param string              $assetId
-     * @param TransactionInput[]  $inputs
-     * @param TransactionOutput[] $outputs
+     * @param Input[]  $inputs
+     * @param Output[] $outputs
      * @param string              $memo
      * @param int                 $version
      *
@@ -235,12 +238,12 @@ trait MixinSDKTrait
 
         // 检查 $inputs 和 $outputs 的类型
         foreach ($inputs as $input) {
-            if (!$input instanceof TransactionInput) {
+            if (!$input instanceof Input) {
                 throw new InvalidInputFieldException("\$inputs must use 'TransactionInput' object");
             }
         }
         foreach ($outputs as $output) {
-            if (!$output instanceof TransactionOutput) {
+            if (!$output instanceof Output) {
                 throw new InvalidInputFieldException("\$outputs must use 'TransactionOutput' object");
             }
         }
@@ -253,6 +256,6 @@ trait MixinSDKTrait
             'extra'   => bin2hex($memo),
         ];
 
-        return TransactionHelper::buildTransaction($multisigData);
+        return Helper::buildTransaction($multisigData);
     }
 }
