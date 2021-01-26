@@ -40,7 +40,7 @@ class TransactionHelper
 
         // fill up outputObject
         foreach ($input_object['outputs'] as $v) {
-            if (strlen($v->Mask) > 0) {
+            if (strlen($v->mask) > 0) {
                 $tx->AddOutput($v);
             }
         }
@@ -89,9 +89,9 @@ class Transaction
     public function AddOutput(TransactionOutput $output)
     {
         if (is_string($output->amount)) {
-            $output->Amount = new BigInteger($output->amount);
+            $output->amount = new BigInteger($output->amount);
         } elseif (is_int($output->amount)) {
-            $output->Amount = new BigInteger((string)($output->amount));
+            $output->amount = new BigInteger((string)($output->amount));
         }
 
         $this->outputs[] = $output;
@@ -204,8 +204,8 @@ class TransactionInput
 
     public function __construct(string $hash, int $index)
     {
-        $this->Hash  = $hash;
-        $this->Index = $index;
+        $this->hash  = $hash;
+        $this->index = $index;
     }
 
     public function encode()
@@ -459,11 +459,11 @@ class TransactionOutput
 
     public function __construct(BigInteger $amount, array $keys, string $script, string $mask, int $type = 0)
     {
-        $this->Type   = $type;
-        $this->Amount = $amount;
-        $this->Keys   = $keys;
-        $this->Script = $script;
-        $this->Mask   = $mask;
+        $this->type   = $type;
+        $this->amount = $amount;
+        $this->keys   = $keys;
+        $this->script = $script;
+        $this->mask   = $mask;
     }
 
     public function encode(): string
