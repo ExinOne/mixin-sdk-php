@@ -9,7 +9,12 @@
 namespace ExinOne\MixinSDK\Tests\Feature;
 
 use ExinOne\MixinSDK\MixinSDK;
+use ExinOne\MixinSDK\Utils\BigInteger;
+use ExinOne\MixinSDK\Utils\TransactionInput;
+use ExinOne\MixinSDK\Utils\TransactionOutput;
 use PHPUnit\Framework\TestCase;
+
+use ExinOne\MixinSDK\Traits\MixinSDKTrait;
 
 /**
  * 类基础功能测试
@@ -18,8 +23,10 @@ use PHPUnit\Framework\TestCase;
  *
  * @package ExinOne\MixinSDK\Tests\Feature
  */
-class BaseTest extends TestCase
+final class BaseTest extends TestCase
 {
+    use MixinSDKTrait;
+
     public function test_it_can_get_MixinSDK_object_success1()
     {
         // 获取对象的基础测试
@@ -180,5 +187,16 @@ class BaseTest extends TestCase
         $mixinSDK = new MixinSDK(require 'testKeys.php');
         $a        = $mixinSDK->getPayUrl('ccc', 'asd', 'ddd', 'ee');
         dd($a);
+    }
+
+    public function test_it_can_build_raw()
+    {
+        $input0  = new TransactionInput("hash_placeHolder", 0);
+        $input1  = new TransactionInput("hash_placeHolder", 1);
+        $output0 = new TransactionOutput(new BigInteger("0.000001"), ["keys_placeHolder"], "script_placeHolder");
+
+        $rawString = $this->buildRaw("c6d0c728-2624-429b-8e0d-d9d19b6592fa", [$input0, $input1,], [$output0], "xx");
+
+        dump($rawString);
     }
 }
