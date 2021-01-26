@@ -166,7 +166,6 @@ class BigInteger
     }
 
     // From math/big/arith_arm64.s mulAddVWW
-    // 参考文章: https://blog.csdn.net/LaoK189/article/details/83661104
     // y: 进制
     // r: 偏移
     // x = [a1, a2 ...]
