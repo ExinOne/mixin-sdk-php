@@ -14,7 +14,6 @@ use ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException;
 use ExinOne\MixinSDK\Utils\TransactionHelper;
 use ExinOne\MixinSDK\Utils\TransactionInput;
 use ExinOne\MixinSDK\Utils\TransactionOutput;
-use ExinOne\MixinSDK\Utils\Type\Transaction;
 use Firebase\JWT\JWT;
 use Jose\Component\KeyManagement\JWKFactory;
 use Jose\Easy\Build;

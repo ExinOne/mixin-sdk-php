@@ -21,6 +21,7 @@
     "ext-openssl": "*",
     "ext-zlib": "*",
     "ext-sodium": "*",
+    "ext-bcmath": "*",
     "php": "^7.2",
     "firebase/php-jwt": "^5.0",
     "guzzlehttp/guzzle": "^6.3 || ^7.0",
