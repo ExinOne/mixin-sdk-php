@@ -22,7 +22,7 @@
     "ext-zlib": "*",
     "ext-sodium": "*",
     "ext-bcmath": "*",
-    "php": "^7.2",
+    "php": "^7.2 || ^8.0",
     "firebase/php-jwt": "^5.0",
     "guzzlehttp/guzzle": "^6.3 || ^7.0",
     "ramsey/uuid": "^3.8 || ^4",
