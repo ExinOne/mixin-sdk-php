@@ -482,28 +482,31 @@ class Wallet extends Api
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function accessTokenPostOutputs($access_token, $receivers, $index = 0): array
+    public function accessTokenPostOutputs($access_token, $receivers, $index = 0,$hint = ""): array
     {
         $headers = [
             'Authorization' => 'Bearer '.$access_token,
         ];
-
-        $body = compact('receivers', 'index');
+        if ($hint === "") {
+            $hint = Uuid::uuid4()->toString();
+        }
+        $body = compact('receivers', 'index','hint');
 
         return $this->res($body, null, $headers);
     }
 
     /**
-     * @param array $receivers
-     * @param int   $index
-     *
+     * @param  array  $receivers
+     * @param  int  $index
+     * @param  string  $hint
      * @return array
-     * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function readOutputs($receivers, $index = 0): array
+    public function readOutputs($receivers, $index = 0,$hint = ""): array
     {
-        $body = compact('receivers', 'index');
+        if ($hint === "") {
+            $hint = Uuid::uuid4()->toString();
+        }
+        $body = compact('receivers', 'index','hint');
 
         return $this->res($body);
     }
