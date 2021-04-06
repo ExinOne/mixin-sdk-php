@@ -17,13 +17,19 @@ class Helper
     /**
      * @param  MixinSDK  $sdk
      * @param  array  $inputs
-     * @param  array  $internalOutputs
+     * @param  array  $outputs
      * @param  string  $memo
+     * @param  string  $hint
      * @return string
      * @throws InvalidInputFieldException
      */
-    public static function buildTransaction(MixinSDK $sdk, array $inputs, array $internalOutputs, string $memo): string
-    {
+    public static function buildTransaction(
+        MixinSDK $sdk,
+        array $inputs,
+        array $outputs,
+        string $memo,
+        string $hint
+    ): string {
         $tx = Transaction::NewTransaction();
 
         // fill up inputObject
@@ -41,7 +47,7 @@ class Helper
             $tx->AddInput($v);
         }
 
-        $internalOutputs = self::convOutput2InternalOutput($sdk, $internalOutputs);
+        $internalOutputs = self::convOutput2InternalOutput($sdk, $outputs, $hint);
 
         // fill up outputObject
         foreach ($internalOutputs as $v) {
@@ -60,12 +66,15 @@ class Helper
     }
 
 
-    public static function convOutput2InternalOutput(MixinSDK $sdk, array $outputs): array
+    public static function convOutput2InternalOutput(MixinSDK $sdk, array $outputs, string $hint): array
     {
-        $internalOutputs = [];
+        foreach ($outputs as $k => $output) {
+            $outputs[$k]['hint'] = $hint;
+        }
 
         $respInternalOutputs = $sdk->wallet()->readBatchOutputs($outputs);
 
+        $internalOutputs = [];
         foreach ($respInternalOutputs as $k => $respInternalOutput) {
             $internalOutputs[] = [
                 'amount' => $outputs[$k]->amount,
