@@ -43,7 +43,6 @@ class Wallet extends Api
                     'pin'          => $pin == '' ? '' : $this->encryptPin((string)$pin),
                 ];
             }
-
         } else {
             $body = [
                 'asset_id'    => $asset_id,
@@ -660,5 +659,47 @@ class Wallet extends Api
         ];
 
         return $this->res($body);
+    }
+
+    /**
+     * @param string $offset
+     * @param string $limit
+     * @param string $state
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function readMultisigsOutputs(string $offset = '', $limit = '500', $state = null)
+    {
+        $limit   = empty($limit) ? 100 : (int) $limit;
+        $urlArgv = compact('limit', 'offset', 'state');
+
+        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
+
+        return $this->res([], $url);
+    }
+
+    /**
+     * @param string $offset
+     * @param string $limit
+     * @param string $state
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function accessTokenReadMultisigsOutputs(string $offset = '', $limit = '500', $state = null)
+    {
+        $headers = [
+            'Authorization' => 'Bearer '.$access_token,
+        ];
+
+        $limit   = empty($limit) ? 100 : (int) $limit;
+        $urlArgv = compact('limit', 'offset', 'state');
+
+        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
+
+        return $this->res([], $url, $headers);
     }
 }
