@@ -220,6 +220,10 @@ return [
             'method' => 'post',
             'url'    => '/outputs',
         ],
+        'read_batch_outputs'                     => [
+            'method' => 'post',
+            'url'    => '/outputs',
+        ],
         'external_proxy'                   => [
             'method' => 'post',
             'url'    => '/external/proxy',

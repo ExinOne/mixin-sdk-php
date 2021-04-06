@@ -6,12 +6,26 @@ namespace ExinOne\MixinSDK\Utils\Transaction;
 class Input
 {
     use InternalHelper;
-    
+
     /** @var string */
     public $hash;
 
     /** @var int */
     public $index;
+
+    /**
+     * @var string
+     *
+     * just sugar
+     */
+    public $asset;
+
+    /**
+     * @var int
+     */
+    public $amount;
+
+    // --- optional -----
 
     /** @var bytes */
     public $genesis;

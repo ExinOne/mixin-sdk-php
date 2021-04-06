@@ -11,7 +11,7 @@ namespace ExinOne\MixinSDK\Tests\Feature;
 use ExinOne\MixinSDK\MixinSDK;
 use ExinOne\MixinSDK\Utils\Transaction\BigInteger;
 use ExinOne\MixinSDK\Utils\Transaction\Input;
-use ExinOne\MixinSDK\Utils\Transaction\Output;
+use ExinOne\MixinSDK\Utils\Transaction\InternalOutput;
 use PHPUnit\Framework\TestCase;
 
 use ExinOne\MixinSDK\Traits\MixinSDKTrait;
@@ -193,7 +193,7 @@ final class BaseTest extends TestCase
     {
         $input0  = new Input("c6d0c7282624429b8e0dd9d19b6592fa", 0);
         $input1  = new Input("c6d0c7282624429b8e0dd9d19b6592fa", 1);
-        $output0 = new Output(new BigInteger("0.000001"), ["c6d0c7282624429b8e0dd9d19b6592fa"],
+        $output0 = new InternalOutput(new BigInteger("0.000001"), ["c6d0c7282624429b8e0dd9d19b6592fa"],
             "c6d0c7282624429b8e0dd9d19b6592fa", "c6d0c7282624429b8e0dd9d19b6592fa");
 
         $rawString = $this->buildRaw("c6d0c7282624429b8e0dd9d19b6592fa", [$input0, $input1,], [$output0,], "xx");

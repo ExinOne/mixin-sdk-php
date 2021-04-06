@@ -39,7 +39,7 @@ use GuzzleHttp\Client;
  * @method  array createAttachments(): array
  * @method  array createConversations(string $category, array $participants, string $conversation_id = null, string $name = ''): array
  * @method  array readConversations(string $conversation_id): array
- * @method  array participantsActions(string $conversation_id, array $participants, string $action ): array
+ * @method  array participantsActions(string $conversation_id, array $participants, string $action): array
  * @method  array rotateConversation(string $conversation_id): array
  * @method  array mixinNetworkChainsSyncStatus(): array
  * @method  array topAsset(): array
@@ -78,6 +78,7 @@ use GuzzleHttp\Client;
  * @method  array accessTokenPostMultisigs(string $access_token, string $raw, string $action = 'sign'): array
  * @method  array accessTokenPostOutputs($access_token, $receivers, $index = 0): array
  * @method  array readOutputs($receivers, $index = 0): array
+ * @method  array readBatchOutputs(array $receiversObj): array
  * @method  array externalProxy($params, $method = 'sendrawtransaction'): array
  * @method  array postMultisigs(string $raw, string $action = 'sign'): array
  * @method  array multisigsSign(string $request_id, string $pin = null): array
@@ -130,7 +131,7 @@ class Container
             return $auth_token;
         } elseif ($this->isHttpAsync()) {
             return $promise;
-        } elseif (! $this->isRaw() && ($content['error'] ?? 0)) {
+        } elseif (!$this->isRaw() && ($content['error'] ?? 0)) {
             // 出现异常
             $error       = $content['error'];
             $code        = isset($error['code']) ? $error['code'] : 404;
@@ -164,7 +165,7 @@ class Container
     }
 
     /**
-     * @param bool $raw
+     * @param  bool  $raw
      *
      * @return $this
      */
@@ -184,7 +185,7 @@ class Container
     }
 
     /**
-     * @param bool $is_return_access_token
+     * @param  bool  $is_return_access_token
      *
      * @return $this
      */
@@ -198,20 +199,20 @@ class Container
     }
 
     /**
-     * @param Client|false   $http_client
-     * @param \Closure|null $on_resolve
-     * @param \Closure|null $on_reject
+     * @param  Client|false  $http_client
+     * @param  \Closure|null  $on_resolve
+     * @param  \Closure|null  $on_reject
      * @return $this
      */
     public function setHttpAsync($http_client = false, \Closure $on_resolve = null, \Closure $on_reject = null)
     {
         if ($http_client) {
             $this->http_async = true;
-            if (! $on_resolve) {
+            if (!$on_resolve) {
                 $on_resolve = function () {
                 };
             }
-            if (! $on_reject) {
+            if (!$on_reject) {
                 $on_reject = function () {
                 };
             }
@@ -252,7 +253,7 @@ class Container
 
 
     /**
-     * @param int $timeout
+     * @param  int  $timeout
      *
      * @return $this
      */
@@ -264,7 +265,7 @@ class Container
     }
 
     /**
-     * @param int $expire
+     * @param  int  $expire
      *
      * @return $this
      */

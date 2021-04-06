@@ -13,8 +13,8 @@ use Ramsey\Uuid\Uuid;
 class Wallet extends Api
 {
     /**
-     * @param string $asset_id
-     * @param string $destination BTC address or EOS account name like ‘eoswithmixin’
+     * @param  string  $asset_id
+     * @param  string  $destination  BTC address or EOS account name like ‘eoswithmixin’
      * @param        $pin
      * @param        $label       “Mixin”, can’t be blank, max size 64
      * @param        $tag         can be blank, EOS account tag or memo
@@ -28,7 +28,7 @@ class Wallet extends Api
         }
 
         if (is_bool($tag)) {
-            if (! $tag) {
+            if (!$tag) {
                 $body = [
                     'asset_id'   => $asset_id,
                     'public_key' => $destination,
@@ -58,12 +58,12 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $asset_id
+     * @param  string  $asset_id
      * @param        $public_key
      * @param        $label
      * @param        $account_name
      * @param        $account_tag
-     * @param null   $pin
+     * @param  null  $pin
      *
      * @return array
      * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
@@ -88,7 +88,7 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $assetId
+     * @param  string  $assetId
      *
      * @return array
      * @throws \Exception
@@ -102,7 +102,7 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $addressId
+     * @param  string  $addressId
      *
      * @return array
      * @throws \Exception
@@ -116,7 +116,7 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $addressId
+     * @param  string  $addressId
      * @param        $pin
      *
      * @return array
@@ -149,7 +149,7 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $assetId
+     * @param  string  $assetId
      *
      * @return array
      * @throws \Exception
@@ -163,7 +163,7 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $assetId
+     * @param  string  $assetId
      *
      * @return array
      * @throws \Exception
@@ -177,11 +177,11 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $addressId
+     * @param  string  $addressId
      * @param        $amount
-     * @param string $memo
+     * @param  string  $memo
      * @param        $pin
-     * @param null   $trace_id
+     * @param  null  $trace_id
      *
      * @return array
      * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
@@ -204,12 +204,12 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $assetId
-     * @param string $opponentId
+     * @param  string  $assetId
+     * @param  string  $opponentId
      * @param        $pin
      * @param        $amount
-     * @param string $memo
-     * @param null   $trace_id
+     * @param  string  $memo
+     * @param  null  $trace_id
      *
      * @return array
      * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
@@ -237,10 +237,10 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $asset_id
-     * @param string $opponent_id
+     * @param  string  $asset_id
+     * @param  string  $opponent_id
      * @param        $amount
-     * @param string $trace_id
+     * @param  string  $trace_id
      *
      * @return array
      * @throws \Exception
@@ -255,7 +255,7 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $traceId
+     * @param  string  $traceId
      *
      * @return array
      * @throws \Exception
@@ -269,7 +269,7 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $assetId
+     * @param  string  $assetId
      *
      * @return array
      * @throws \Exception
@@ -283,17 +283,21 @@ class Wallet extends Api
     }
 
     /**
-     * @param int|null    $limit
-     * @param string|null $offset
-     * @param string      $asset
-     * @param string      $order
+     * @param  int|null  $limit
+     * @param  string|null  $offset
+     * @param  string  $asset
+     * @param  string  $order
      *
      * @return array
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function readUserSnapshots($limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
-    {
+    public function readUserSnapshots(
+        $limit = null,
+        string $offset = null,
+        string $asset = '',
+        string $order = 'DESC'
+    ): array {
         $limit   = empty($limit) ? $limit : (int)$limit;
         $urlArgv = compact('limit', 'offset', 'asset', 'order');
 
@@ -303,7 +307,7 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $snapshotId
+     * @param  string  $snapshotId
      *
      * @return array
      * @throws \Exception
@@ -318,18 +322,23 @@ class Wallet extends Api
 
 
     /**
-     * @param string      $access_token
-     * @param int|null    $limit
-     * @param string|null $offset
-     * @param string      $asset
-     * @param string      $order
+     * @param  string  $access_token
+     * @param  int|null  $limit
+     * @param  string|null  $offset
+     * @param  string  $asset
+     * @param  string  $order
      *
      * @return array
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function accessTokenGetUserSnapshots(string $access_token, $limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
-    {
+    public function accessTokenGetUserSnapshots(
+        string $access_token,
+        $limit = null,
+        string $offset = null,
+        string $asset = '',
+        string $order = 'DESC'
+    ): array {
         $limit   = empty($limit) ? $limit : (int)$limit;
         $urlArgv = compact('limit', 'offset', 'asset', 'order');
 
@@ -343,8 +352,8 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $access_token
-     * @param string $snapshot_id
+     * @param  string  $access_token
+     * @param  string  $snapshot_id
      * @return array
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
@@ -361,8 +370,8 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $access_token
-     * @param string $trace_id
+     * @param  string  $access_token
+     * @param  string  $trace_id
      *
      * @return array
      * @throws \Exception
@@ -380,7 +389,7 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $client_id
+     * @param  string  $client_id
      *
      * @return array
      * @throws \Exception
@@ -396,19 +405,25 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $asset_id
-     * @param array  $opponent_multisig
-     * @param int    $threshold
+     * @param  string  $asset_id
+     * @param  array  $opponent_multisig
+     * @param  int  $threshold
      * @param        $amount
-     * @param string $memo
-     * @param string $trace_id
+     * @param  string  $memo
+     * @param  string  $trace_id
      *
      * @return array
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function multisigPayment(string $asset_id, array $receivers, int $threshold, $amount, $memo = '', $trace_id = null): array
-    {
+    public function multisigPayment(
+        string $asset_id,
+        array $receivers,
+        int $threshold,
+        $amount,
+        $memo = '',
+        $trace_id = null
+    ): array {
         $threshold         = $threshold < 2 ? 2 : $threshold;
         $amount            = (string)$amount;
         $opponent_multisig = [
@@ -422,7 +437,7 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $code_id
+     * @param  string  $code_id
      *
      * @return array
      * @throws \Exception
@@ -436,8 +451,8 @@ class Wallet extends Api
     }
 
     /**
-     * @param string|null $offset
-     * @param int|null    $limit
+     * @param  string|null  $offset
+     * @param  int|null  $limit
      *
      * @return array
      * @throws \Exception
@@ -454,9 +469,9 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $access_token
-     * @param string $raw
-     * @param string $action
+     * @param  string  $access_token
+     * @param  string  $raw
+     * @param  string  $action
      *
      * @return array
      * @throws \Exception
@@ -474,9 +489,9 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $access_token
-     * @param array  $receivers
-     * @param int    $index
+     * @param  string  $access_token
+     * @param  array  $receivers
+     * @param  int  $index
      *
      * @return array
      * @throws \Exception
@@ -494,8 +509,8 @@ class Wallet extends Api
     }
 
     /**
-     * @param array $receivers
-     * @param int   $index
+     * @param  array  $receivers
+     * @param  int  $index
      *
      * @return array
      * @throws \Exception
@@ -509,8 +524,27 @@ class Wallet extends Api
     }
 
     /**
-     * @param array  $params
-     * @param string $method
+     * @param  array  $receiversObj
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function readBatchOutputs(array $receiversObj): array
+    {
+        /**
+         * type GhostInput struct {
+            Receivers []string `json:"receivers"`
+            Index     int      `json:"index"`
+            Hint      string   `json:"hint"`
+           }
+         */
+
+        return $this->res($receiversObj);
+    }
+
+    /**
+     * @param  array  $params
+     * @param  string  $method
      *
      * @return array
      * @throws \Exception
@@ -524,8 +558,8 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $raw
-     * @param string $action
+     * @param  string  $raw
+     * @param  string  $action
      *
      * @return array
      * @throws \Exception
@@ -539,8 +573,8 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $request_id
-     * @param string $pin
+     * @param  string  $request_id
+     * @param  string  $pin
      *
      * @return array
      * @throws \Exception
@@ -573,8 +607,8 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $request_id
-     * @param string $pin
+     * @param  string  $request_id
+     * @param  string  $pin
      *
      * @return array
      * @throws \Exception
@@ -597,18 +631,25 @@ class Wallet extends Api
 
     /**
      * 转账到多签
-     * @param string      $asset_id
-     * @param array       $receivers
-     * @param int         $threshold
-     * @param string      $amount
-     * @param string|null $pin
-     * @param string|null $trace_id
-     * @param string|null $memo
+     * @param  string  $asset_id
+     * @param  array  $receivers
+     * @param  int  $threshold
+     * @param  string  $amount
+     * @param  string|null  $pin
+     * @param  string|null  $trace_id
+     * @param  string|null  $memo
      * @return array
      * @throws \Exception
      */
-    public function sendMultisigTransactions(string $asset_id, array $receivers, int $threshold, string $amount, string $pin = null, string $trace_id = null, string $memo = null): array
-    {
+    public function sendMultisigTransactions(
+        string $asset_id,
+        array $receivers,
+        int $threshold,
+        string $amount,
+        string $pin = null,
+        string $trace_id = null,
+        string $memo = null
+    ): array {
         if ($pin === null) {
             $pin = $this->config['pin'];
         }
@@ -632,17 +673,23 @@ class Wallet extends Api
 
     /**
      * 转账到主网地址
-     * @param string      $asset_id
-     * @param string      $opponent_key
-     * @param string      $amount
-     * @param string|null $pin
-     * @param string|null $trace_id
-     * @param string|null $memo
+     * @param  string  $asset_id
+     * @param  string  $opponent_key
+     * @param  string  $amount
+     * @param  string|null  $pin
+     * @param  string|null  $trace_id
+     * @param  string|null  $memo
      * @return array
      * @throws \Exception
      */
-    public function sendMainnetTransactions(string $asset_id, string $opponent_key, string $amount, string $pin = null, string $trace_id = null, string $memo = null): array
-    {
+    public function sendMainnetTransactions(
+        string $asset_id,
+        string $opponent_key,
+        string $amount,
+        string $pin = null,
+        string $trace_id = null,
+        string $memo = null
+    ): array {
         if ($pin === null) {
             $pin = $this->config['pin'];
         }

@@ -113,7 +113,7 @@ trait InternalHelper
         $ret = '';
         if ($data instanceof Input) {
             $ret = $data->encode();
-        } elseif ($data instanceof Output) {
+        } elseif ($data instanceof InternalOutput) {
             $ret = $data->encode();
         } elseif (is_string($data)) {
             $ret = $this->encodeBytes(hex2bin($data));

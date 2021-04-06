@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace ExinOne\MixinSDK\Utils\Transaction;
 
 use ExinOne\MixinSDK\Exceptions\InvalidInputFieldException;
+use ExinOne\MixinSDK\MixinSDK;
+use phpDocumentor\Reflection\Types\Intersection;
 
 /**
  * Class TransactionHelper
@@ -13,16 +15,19 @@ use ExinOne\MixinSDK\Exceptions\InvalidInputFieldException;
 class Helper
 {
     /**
-     * @param  array  $input_object
-     *
+     * @param  MixinSDK  $sdk
+     * @param  array  $inputs
+     * @param  array  $internalOutputs
+     * @param  string  $memo
      * @return string
      * @throws InvalidInputFieldException
      */
-    public static function buildTransaction(array $input_object): string
+    public static function buildTransaction(MixinSDK $sdk, array $inputs, array $internalOutputs, string $memo): string
     {
-        $tx = Transaction::NewTransaction($input_object['asset']);
+        $tx = Transaction::NewTransaction();
+
         // fill up inputObject
-        foreach ($input_object['inputs'] as $v) {
+        foreach ($inputs as $v) {
             if (!empty($input->genesis)) {
                 throw new InvalidInputFieldException("invalid input with Genesis, it's not needed in this function");
             }
@@ -36,19 +41,42 @@ class Helper
             $tx->AddInput($v);
         }
 
+        $internalOutputs = self::convOutput2InternalOutput($sdk, $internalOutputs);
+
         // fill up outputObject
-        foreach ($input_object['outputs'] as $v) {
+        foreach ($internalOutputs as $v) {
             if (strlen($v->mask) > 0) {
                 $tx->AddOutput($v);
             }
         }
 
         // 16进制解码为bytes
-        $extra     = hex2bin($input_object['extra']);
+        $extra     = hex2bin($memo);
         $tx->extra = $extra;
 
         $signed = $tx->AsLatestVersion();
 
         return bin2hex($signed->Marshal());
     }
+
+
+    public static function convOutput2InternalOutput(MixinSDK $sdk, array $outputs): array
+    {
+        $internalOutputs = [];
+
+        $respInternalOutputs = $sdk->wallet()->readBatchOutputs($outputs);
+
+        foreach ($respInternalOutputs as $k => $respInternalOutput) {
+            $internalOutputs[] = [
+                'amount' => $outputs[$k]->amount,
+                'script' => 'fffe0'.(string)($k + 1), // TODO 这里只能支持 10个 output 以内
+                'mask'   => $respInternalOutput['mask'],
+                'keys'   => $respInternalOutput['keys'],
+            ];
+        }
+
+        return $internalOutputs;
+    }
+
+
 }

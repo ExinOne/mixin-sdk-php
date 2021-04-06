@@ -14,26 +14,24 @@ class Transaction
     /** @var Input[] */
     public $inputs = [];
 
-    /** @var Output[] */
+    /** @var InternalOutput[] */
     public $outputs = [];
 
     /** @var string */
     public $extra;
 
-    public static function NewTransaction(string $asset): self
+    public static function NewTransaction(): self
     {
-        $ret        = new self();
-        $ret->asset = $asset;
-
-        return $ret;
+        return new self();
     }
 
     public function AddInput(Input $input)
     {
+        $this->asset = $input[0]['asset'];
         $this->inputs[] = $input;
     }
 
-    public function AddOutput(Output $output)
+    public function AddOutput(InternalOutput $output)
     {
         if (is_string($output->amount)) {
             $output->amount = new BigInteger($output->amount);

@@ -13,7 +13,7 @@ use ExinOne\MixinSDK\Exceptions\InvalidInputFieldException;
 use ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException;
 use ExinOne\MixinSDK\Utils\Transaction\Helper;
 use ExinOne\MixinSDK\Utils\Transaction\Input;
-use ExinOne\MixinSDK\Utils\Transaction\Output;
+use ExinOne\MixinSDK\Utils\Transaction\InternalOutput;
 use Firebase\JWT\JWT;
 use Jose\Component\KeyManagement\JWKFactory;
 use Jose\Easy\Build;
@@ -216,7 +216,7 @@ trait MixinSDKTrait
     /**
      * @param string   $assetId
      * @param Input[]  $inputs
-     * @param Output[] $outputs
+     * @param InternalOutput[] $outputs
      * @param string   $memo
      * @param int      $version
      *
@@ -243,7 +243,7 @@ trait MixinSDKTrait
             }
         }
         foreach ($outputs as $output) {
-            if (!$output instanceof Output) {
+            if (!$output instanceof InternalOutput) {
                 throw new InvalidInputFieldException("\$outputs must use 'TransactionOutput' object");
             }
         }
