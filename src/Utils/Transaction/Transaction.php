@@ -27,7 +27,7 @@ class Transaction
 
     public function AddInput(Input $input)
     {
-        $this->asset = $input[0]['asset'];
+        $this->asset = $input->asset;
         $this->inputs[] = $input;
     }
 
