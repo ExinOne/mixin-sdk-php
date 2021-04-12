@@ -486,10 +486,11 @@ class Wallet extends Api
         $headers = [
             'Authorization' => 'Bearer '.$access_token,
         ];
-        if ($hint === "") {
-            $hint = Uuid::uuid4()->toString();
+        if ($hint !== "") {
+            $body = compact('receivers', 'index', 'hint');
+        } else {
+            $body = compact('receivers', 'index');
         }
-        $body = compact('receivers', 'index','hint');
 
         return $this->res($body, null, $headers);
     }
