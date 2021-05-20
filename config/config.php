@@ -130,6 +130,10 @@ return [
             'method' => 'get',
             'url'    => '/network/assets/top',
         ],
+        'multisig_asset'                   => [
+            'method' => 'get',
+            'url'    => '/network/assets/multisig',
+        ],
         'create_attachments'               => [
             'method' => 'post',
             'url'    => '/attachments',

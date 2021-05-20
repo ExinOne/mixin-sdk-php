@@ -235,6 +235,16 @@ class Network extends Api
     }
 
     /**
+     * @return mixed
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function mutisigAsset(): array
+    {
+        return $this->res();
+    }
+
+    /**
      * @param string $code
      *
      * @return array
