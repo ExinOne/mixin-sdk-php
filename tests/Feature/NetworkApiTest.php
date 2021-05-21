@@ -173,6 +173,13 @@ class NetworkApiTest extends TestCase
         self::assertInternalType('array', $res);
     }
 
+    public function test_it_can_read_multisig_asset_success0()
+    {
+        $res = $this->mixinSDK->network()->multisigAsset();
+        dump($res);
+        self::assertInternalType('array', $res);
+    }
+
     public function test_it_can_access_token_request_access_token_success0()
     {
         $code = '2c97aedf7e3bc90ddd9a399308caf8abb549e2c090fbdf0d2d08bf5a2c3f0389';
