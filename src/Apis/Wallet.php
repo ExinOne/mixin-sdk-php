@@ -122,7 +122,7 @@ class Wallet extends Api
      * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function deleteAddress(string $addressId, $pin): array
+    public function deleteAddress(string $addressId, $pin = null): array
     {
         if ($pin === null) {
             $pin = $this->config['pin'];
