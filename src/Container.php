@@ -58,7 +58,7 @@ use GuzzleHttp\Client;
  * @method  array createAddressRaw(string $asset_id, $public_key, $label, $account_name, $account_tag, $pin = null): array
  * @method  array readAddresses(string $assetId): array
  * @method  array readAddress(string $addressId): array
- * @method  array deleteAddress(string $addressId, $pin): array
+ * @method  array deleteAddress(string $addressId, $pin = null): array
  * @method  array readAssets(): array
  * @method  array readAsset(string $assetId): array
  * @method  array deposit(string $assetId): array
