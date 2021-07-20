@@ -664,43 +664,48 @@ class Wallet extends Api
 
     /**
      * @param string $offset
-     * @param string $limit
+     * @param array  $members
      * @param string $state
+     * @param string $threshold
+     * @param string $limit
      *
      * @return array
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function readMultisigsOutputs(string $offset = '', $limit = '500', $state = null)
+    public function readMultisigsOutputs(string $offset = '', array $members, $state = '', $threshold = 2, $limit = '500')
     {
+        sort($members);
+        $members = hash('sha3-256', implode('', $members));
         $limit   = empty($limit) ? 100 : (int) $limit;
-        $urlArgv = compact('limit', 'offset', 'state');
+        $urlArgv = compact('limit', 'offset', 'state', 'members', 'threshold');
 
         $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
-
         return $this->res([], $url);
     }
 
     /**
+     * @param string $access_token
      * @param string $offset
-     * @param string $limit
+     * @param array  $members
      * @param string $state
+     * @param string $threshold
+     * @param string $limit
      *
      * @return array
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function accessTokenReadMultisigsOutputs(string $offset = '', $limit = '500', $state = null)
+    public function accessTokenReadMultisigsOutputs($access_token, string $offset = '', array $members, $state = '', $threshold = 2, $limit = '500')
     {
         $headers = [
             'Authorization' => 'Bearer '.$access_token,
         ];
 
-        $limit   = empty($limit) ? 100 : (int) $limit;
-        $urlArgv = compact('limit', 'offset', 'state');
+        sort($members);
+        $members = hash('sha3-256', implode('', $members));
+        $body = compact('limit', 'offset', 'state', 'members', 'threshold');
 
-        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
-
-        return $this->res([], $url, $headers);
+        return $this->res($body, null, $headers);
     }
 }
