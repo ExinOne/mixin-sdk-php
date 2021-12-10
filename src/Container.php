@@ -39,7 +39,7 @@ use GuzzleHttp\Client;
  * @method  array createAttachments(): array
  * @method  array createConversations(string $category, array $participants, string $conversation_id = null, string $name = ''): array
  * @method  array readConversations(string $conversation_id): array
- * @method  array participantsActions(string $conversation_id, array $participants, string $action ): array
+ * @method  array participantsActions(string $conversation_id, array $participants, string $action): array
  * @method  array rotateConversation(string $conversation_id): array
  * @method  array mixinNetworkChainsSyncStatus(): array
  * @method  array topAsset(): array
@@ -52,6 +52,7 @@ use GuzzleHttp\Client;
  * @method  array accessTokenGetContacts(string $access_token): array
  * @method  array searchAssets(string $q): array
  * @method  array accessTokenGetAsset(string $access_token, string $assetId): array
+ * @method  array readHistoricalPrices(string $asset, string $offset): array
  *
  * @see \ExinOne\MixinSDK\Apis\Wallet
  * @method  array createAddress(string $asset_id, string $destination, $pin, $label, $tag = false): array
@@ -131,10 +132,10 @@ class Container
             return $auth_token;
         } elseif ($this->isHttpAsync()) {
             return $promise;
-        } elseif (! $this->isRaw() && ($content['error'] ?? 0)) {
+        } elseif (!$this->isRaw() && ($content['error'] ?? 0)) {
             // 出现异常
-            $error       = $content['error'];
-            $code        = isset($error['code']) ? $error['code'] : 404;
+            $error = $content['error'];
+            $code = isset($error['code']) ? $error['code'] : 404;
             $description = isset($error['description']) ? $error['description'] : '';
             $this->boomRoom($code, $description);
         } elseif ($this->isRaw()) {
@@ -199,7 +200,7 @@ class Container
     }
 
     /**
-     * @param Client|false   $http_client
+     * @param Client|false $http_client
      * @param \Closure|null $on_resolve
      * @param \Closure|null $on_reject
      * @return $this
@@ -208,11 +209,11 @@ class Container
     {
         if ($http_client) {
             $this->http_async = true;
-            if (! $on_resolve) {
+            if (!$on_resolve) {
                 $on_resolve = function () {
                 };
             }
-            if (! $on_reject) {
+            if (!$on_reject) {
                 $on_reject = function () {
                 };
             }

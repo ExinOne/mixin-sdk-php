@@ -376,4 +376,18 @@ class Network extends Api
 
         return $this->res([], $url, $headers);
     }
+
+    /**
+     * @param string $asset
+     * @param string $offset
+     * @return array
+     * @throws \Exception
+     */
+    public function readHistoricalPrices(string $asset, string $offset): array
+    {
+        $urlArgv = compact('asset', 'offset');
+        $url = $this->endPointUrl . '?' . http_build_query(delEmptyItemInArray($urlArgv));
+
+        return $this->res([], $url);
+    }
 }

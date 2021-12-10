@@ -268,6 +268,10 @@ return [
             'method' => 'get',
             'url'    => '/users/{$userId}/apps/favorite',
         ],
+        'read_historical_prices'           => [
+            'method' => 'get',
+            'url'    => '/network/ticker',
+        ],
         'send_multisig_transactions'       => [
             'method' => 'post',
             'url'    => '/transactions',
