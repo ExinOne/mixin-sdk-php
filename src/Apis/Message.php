@@ -176,8 +176,10 @@ class Message extends Api
 
     /**
      * @param array $user_ids
-     * @param       $data
-     *
+     * @param $data
+     * @param $use_http
+     * @param $type
+     * @param $conversation_id
      * @return array
      * @throws InternalErrorException
      * @throws \Wrench\Exception\FrameException
@@ -188,6 +190,11 @@ class Message extends Api
         // 如果 count 不相等的话
         if (! is_string($data) && (count($user_ids) != count($data))) {
             throw new InternalErrorException('The length of "user_ids" and "data" is not equal');
+        }
+
+        // type是数组的话也要和user_id相等
+        if (! is_string($type) && (count($user_ids) != count($type))) {
+            throw new InternalErrorException('The length of "user_ids" and "type" is not equal');
         }
 
         if ($use_http && count($user_ids) > 100) {
@@ -210,7 +217,7 @@ class Message extends Api
                 'conversation_id' => empty($conversation_id) ? $this->uniqueConversationId($v, $this->config['client_id']) : $conversation_id,
                 'recipient_id'    => $v,
                 'message_id'      => Uuid::uuid4()->toString(),
-                'category'        => $type,
+                'category'        => is_string($type) ? $type : $type[$k] ?? 'PLAIN_TEXT',
                 'data'            => base64_encode(is_string($data) ? $data : $data[$k] ?? 'default'),
             ];
 
