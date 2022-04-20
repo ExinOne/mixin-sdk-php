@@ -42,6 +42,7 @@ use GuzzleHttp\Client;
  * @method  array participantsActions(string $conversation_id, array $participants, string $action): array
  * @method  array rotateConversation(string $conversation_id): array
  * @method  array mixinNetworkChainsSyncStatus(): array
+ * @method  array chains(): array
  * @method  array topAsset(): array
  * @method  array multisigAsset(): array
  * @method  array requestAccessToken(string $code): array

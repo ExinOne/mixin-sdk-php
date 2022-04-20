@@ -205,4 +205,10 @@ class NetworkApiTest extends TestCase
         dump($res);
         self::assertInternalType('array', $res);
     }
+
+    public function test_chains(){
+        $res = $this->mixinSDK->network()->chains();
+        dump($res);
+        self::assertIsArray($res);
+    }
 }

@@ -225,6 +225,15 @@ class Network extends Api
     }
 
     /**
+     * @return array
+     * @throws \Exception
+     */
+    public function chains(): array
+    {
+        return $this->res();
+    }
+
+    /**
      * @return mixed
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException

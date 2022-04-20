@@ -126,6 +126,10 @@ return [
             'method' => 'get',
             'url'    => '/network',
         ],
+        'chains' => [
+            'method' => 'get',
+            'url'    => '/network/chains',
+        ],
         'top_asset'                        => [
             'method' => 'get',
             'url'    => '/network/assets/top',
