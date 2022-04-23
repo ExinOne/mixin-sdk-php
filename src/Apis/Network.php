@@ -399,4 +399,18 @@ class Network extends Api
 
         return $this->res([], $url);
     }
+
+    /**
+     * @param string $traceId
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function readSnapshotsByTrace(string $traceId): array
+    {
+        $url = $this->endPointUrl.$traceId;
+
+        return $this->res([], $url);
+    }
 }

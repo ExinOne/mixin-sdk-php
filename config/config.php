@@ -292,5 +292,9 @@ return [
             'method' => 'get',
             'url'    => '/multisigs/outputs',
         ],
+        'read_snapshots_by_trace'               => [
+            'method' => 'get',
+            'url'    => '/snapshots/trace/',//后面需要填参数
+        ],
     ],
 ];

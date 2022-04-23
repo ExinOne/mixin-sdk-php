@@ -54,6 +54,7 @@ use GuzzleHttp\Client;
  * @method  array searchAssets(string $q): array
  * @method  array accessTokenGetAsset(string $access_token, string $assetId): array
  * @method  array readHistoricalPrices(string $asset, string $offset): array
+ * @method  array readSnapshotsByTrace(string $traceId): array
  *
  * @see \ExinOne\MixinSDK\Apis\Wallet
  * @method  array createAddress(string $asset_id, string $destination, $pin, $label, $tag = false): array
