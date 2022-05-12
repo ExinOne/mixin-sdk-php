@@ -244,6 +244,10 @@ return [
             'method' => 'post',
             'url'    => '/multisigs',
         ],
+        'multisigs_requests'      => [
+            'method' => 'post',
+            'url'    => '/multisigs/requests',
+        ],
         'multisigs_sign'                   => [
             'method' => 'post',
             'url'    => '/multisigs/{$requestId}/sign',

@@ -542,6 +542,21 @@ class Wallet extends Api
     }
 
     /**
+     * @param string $raw
+     * @param string $action
+     *
+     * @return array
+     * @throws \Exception
+     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     */
+    public function multisigsRequests(string $raw, string $action = 'sign'): array
+    {
+        $body = compact('action', 'raw');
+
+        return $this->res($body);
+    }
+
+    /**
      * @param string $request_id
      * @param string $pin
      *
