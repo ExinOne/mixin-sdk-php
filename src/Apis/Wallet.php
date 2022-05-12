@@ -558,6 +558,72 @@ class Wallet extends Api
 
     /**
      * @param string $request_id
+     * @param string|null $pin
+     *
+     * @return array
+     * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
+     */
+    public function multisigsRequestsSign(string $request_id, string $pin = null): array
+    {
+        if ($pin === null) {
+            $pin = $this->config['pin'];
+        }
+
+        $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
+
+        $body = [
+            'pin' => $this->encryptPin((string)$pin),
+        ];
+
+        return $this->res($body, $url);
+    }
+
+    /**
+     * @param string $request_id
+     * @param string|null $pin
+     *
+     * @return array
+     * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
+     */
+    public function multisigsRequestsCancel(string $request_id, string $pin = null): array
+    {
+        if ($pin === null) {
+            $pin = $this->config['pin'];
+        }
+
+        $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
+
+        $body = [
+            'pin' => $this->encryptPin((string)$pin),
+        ];
+
+        return $this->res($body, $url);
+    }
+
+    /**
+     * @param string $request_id
+     * @param string|null $pin
+     *
+     * @return array
+     * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
+     */
+    public function multisigsRequestsUnlock(string $request_id, string $pin = null): array
+    {
+        if ($pin === null) {
+            $pin = $this->config['pin'];
+        }
+
+        $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
+
+        $body = [
+            'pin' => $this->encryptPin((string)$pin),
+        ];
+
+        return $this->res($body, $url);
+    }
+
+    /**
+     * @param string $request_id
      * @param string $pin
      *
      * @return array

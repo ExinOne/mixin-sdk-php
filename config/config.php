@@ -248,6 +248,18 @@ return [
             'method' => 'post',
             'url'    => '/multisigs/requests',
         ],
+        'multisigs_requests_sign'      => [
+            'method' => 'post',
+            'url'    => '/multisigs/requests/{$requestId}/sign',
+        ],
+        'multisigs_requests_cancel'      => [
+            'method' => 'post',
+            'url'    => '/multisigs/requests/{$requestId}/cancel',
+        ],
+        'multisigs_requests_unlock'      => [
+            'method' => 'post',
+            'url'    => '/multisigs/requests/{$requestId}/unlock',
+        ],
         'multisigs_sign'                   => [
             'method' => 'post',
             'url'    => '/multisigs/{$requestId}/sign',
