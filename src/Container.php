@@ -85,7 +85,6 @@ use GuzzleHttp\Client;
  * @method  array multisigsRequestsSign(string $request_id, string $pin = null): array
  * @method  array multisigsRequestsUnlock(string $request_id, string $pin = null): array
  * @method  array multisigsRequestsCancel(string $request_id, string $pin = null): array
- * @method  array multisigsRequestsAction(string $request_id, $action = 'sign'): array
  * @method  array accessTokenMultisigsRequestsAction(string $access_token, string $request_id, $action = 'sign'): array
  * @method  array readFiats(): array
  * @method  array multisigsCancel(string $request_id, string $pin = null): array

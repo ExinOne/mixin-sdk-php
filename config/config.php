@@ -312,10 +312,6 @@ return [
             'method' => 'get',
             'url'    => '/snapshots/trace/',//后面需要填参数
         ],
-        'multisigs_requests_action' => [
-            'method' => 'post',
-            'url'    => '/multisigs/requests/{$requestId}/{$action}',
-        ],
         'access_token_multisigs_requests_action' => [
             'method' => 'post',
             'url'    => '/multisigs/requests/{$requestId}/{$action}',

@@ -795,20 +795,6 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $request_id
-     * @param string $action
-     *
-     * @return array
-     * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
-     */
-    public function multisigsRequestsAction(string $request_id, $action = 'sign'): array
-    {
-        $url = str_replace(['{$requestId}','{$action}'], [$request_id, $action], $this->endPointUrl);
-
-        return $this->res($body, $url);
-    }
-
-    /**
      * @param string $access_token
      * @param string $request_id
      * @param string $action
