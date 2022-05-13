@@ -778,10 +778,15 @@ class Wallet extends Api
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function readMultisigsOutputs(string $offset = '', array $members, $state = '', $threshold = 2, $limit = '500')
+    public function readMultisigsOutputs(string $offset = '', array $members = [], $state = '', $threshold = 2, $limit = '500')
     {
-        sort($members);
-        $members = hash('sha3-256', implode('', $members));
+        if (!empty($members)) {
+            sort($members);
+            $members = hash('sha3-256', implode('', $members));
+        } else {
+            $members = null;
+        }
+
         $limit   = empty($limit) ? 100 : (int) $limit;
         $urlArgv = compact('limit', 'offset', 'state', 'members', 'threshold');
 
@@ -801,14 +806,19 @@ class Wallet extends Api
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function accessTokenReadMultisigsOutputs($access_token, string $offset = '', array $members, $state = '', $threshold = 2, $limit = '500')
+    public function accessTokenReadMultisigsOutputs($access_token, string $offset = '', array $members = [], $state = '', $threshold = 2, $limit = '500')
     {
         $headers = [
             'Authorization' => 'Bearer '.$access_token,
         ];
 
-        sort($members);
-        $members = hash('sha3-256', implode('', $members));
+        if (!empty($members)) {
+            sort($members);
+            $members = hash('sha3-256', implode('', $members));
+        } else {
+            $members = null;
+        }
+
         $body = compact('limit', 'offset', 'state', 'members', 'threshold');
 
         return $this->res($body, null, $headers);
