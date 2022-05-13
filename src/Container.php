@@ -78,17 +78,15 @@ use GuzzleHttp\Client;
  * @method  array readRawMainNetAddress(string $client_id): array
  * @method  array multisigPayment(string $asset_id, array $receivers, int $threshold, $amount, $memo = '', $trace_id = null): array
  * @method  array checkCode($code_id): array
- * @method  array readMultisigs(string $offset = '', $limit = null): array
- * @method  array accessTokenPostMultisigs(string $access_token, string $raw, string $action = 'sign'): array
  * @method  array accessTokenPostOutputs($access_token, $receivers, $index = 0): array
  * @method  array readOutputs($receivers, $index = 0): array
  * @method  array externalProxy($params, $method = 'sendrawtransaction'): array
- * @method  array postMultisigs(string $raw, string $action = 'sign'): array
  * @method  array multisigsRequests(string $raw, string $action = 'sign'): array
  * @method  array multisigsRequestsSign(string $request_id, string $pin = null): array
  * @method  array multisigsRequestsUnlock(string $request_id, string $pin = null): array
  * @method  array multisigsRequestsCancel(string $request_id, string $pin = null): array
- * @method  array multisigsSign(string $request_id, string $pin = null): array
+ * @method  array multisigsRequestsAction(string $request_id, $action = 'sign'): array
+ * @method  array accessTokenMultisigsRequestsAction(string $access_token, string $request_id, $action = 'sign'): array
  * @method  array readFiats(): array
  * @method  array multisigsCancel(string $request_id, string $pin = null): array
  * @method  array sendMultisigTransactions(string $asset_id, array $receivers, int $threshold, string $amount, string $pin = null, string $trace_id = null, string $memo = null): array

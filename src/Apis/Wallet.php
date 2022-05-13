@@ -435,6 +435,7 @@ class Wallet extends Api
     }
 
     /**
+     * @deprecated
      * @param string|null $offset
      * @param int|null    $limit
      *
@@ -453,6 +454,7 @@ class Wallet extends Api
     }
 
     /**
+     * @deprecated
      * @param string $access_token
      * @param string $raw
      * @param string $action
@@ -527,6 +529,7 @@ class Wallet extends Api
     }
 
     /**
+     * @deprecated
      * @param string $raw
      * @param string $action
      *
@@ -623,6 +626,7 @@ class Wallet extends Api
     }
 
     /**
+     * @deprecated
      * @param string $request_id
      * @param string $pin
      *
@@ -788,5 +792,38 @@ class Wallet extends Api
         $body = compact('limit', 'offset', 'state', 'members', 'threshold');
 
         return $this->res($body, null, $headers);
+    }
+
+    /**
+     * @param string $request_id
+     * @param string $action
+     *
+     * @return array
+     * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
+     */
+    public function multisigsRequestsAction(string $request_id, $action = 'sign'): array
+    {
+        $url = str_replace(['{$requestId}','{$action}'], [$request_id, $action], $this->endPointUrl);
+
+        return $this->res($body, $url);
+    }
+
+    /**
+     * @param string $access_token
+     * @param string $request_id
+     * @param string $action
+     *
+     * @return array
+     * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
+     */
+    public function accessTokenMultisigsRequestsAction(string $access_token, string $request_id, $action = 'sign'): array
+    {
+        $headers = [
+            'Authorization' => 'Bearer '.$access_token,
+        ];
+
+        $url = str_replace(['{$requestId}','{$action}'], [$request_id, $action], $this->endPointUrl);
+
+        return $this->res($body, $url, $headers);
     }
 }
