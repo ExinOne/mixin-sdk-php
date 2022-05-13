@@ -82,6 +82,7 @@ use GuzzleHttp\Client;
  * @method  array readOutputs($receivers, $index = 0): array
  * @method  array externalProxy($params, $method = 'sendrawtransaction'): array
  * @method  array multisigsRequests(string $raw, string $action = 'sign'): array
+ * @method  array accessTokenMultisigsRequests(string $access_token, string $raw, string $action = 'sign'): array
  * @method  array multisigsRequestsSign(string $request_id, string $pin = null): array
  * @method  array multisigsRequestsUnlock(string $request_id, string $pin = null): array
  * @method  array multisigsRequestsCancel(string $request_id, string $pin = null): array

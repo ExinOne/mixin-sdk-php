@@ -316,5 +316,9 @@ return [
             'method' => 'post',
             'url'    => '/multisigs/requests/{$requestId}/{$action}',
         ],
+        'access_token_multisigs_requests' => [
+            'method' => 'post',
+            'url'    => '/multisigs/requests',
+        ],
     ],
 ];
