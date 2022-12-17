@@ -43,6 +43,25 @@ class Message extends Api
         return $this->webSocketRes($message);
     }
 
+    public function sendPost(string $user_id, string $data, string $category = 'CONTACT', string $conversation_id = null, string $recipient_id = null): array
+    {
+        $message = [
+            'id'     => Uuid::uuid4()->toString(),
+            'action' => 'CREATE_MESSAGE',
+            'params' => [
+                'conversation_id' => $category == 'CONTACT' && empty($conversation_id)
+                    ? $this->uniqueConversationId($user_id, $this->config['client_id'])
+                    : $conversation_id,
+                'message_id'      => Uuid::uuid4()->toString(),
+                'category'        => 'PLAIN_POST',
+                'data'            => base64_encode($data),
+                'recipient_id'    => $recipient_id,
+            ],
+        ];
+
+        return $this->webSocketRes($message);
+    }
+
     // TODO
     //public function sendImage(): array
     //{
