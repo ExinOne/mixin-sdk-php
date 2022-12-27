@@ -395,6 +395,30 @@ class Wallet extends Api
     }
 
     /**
+     * @param array       $client_ids
+     * @param int|null    $index
+     * @param string|null $hint
+     * @return array
+     * @throws \Exception
+     */
+    public function generateGhostKeys(array $client_ids, int $index = null, string $hint = null): array
+    {
+        $body = [
+            'receivers' => $client_ids,
+        ];
+
+        if ($index !== null) {
+            $body['index'] = $index;
+        }
+
+        if ($hint !== null) {
+            $body['hint'] = $hint;
+        }
+
+        return $this->res($body);
+    }
+
+    /**
      * @param string $asset_id
      * @param array  $opponent_multisig
      * @param int    $threshold

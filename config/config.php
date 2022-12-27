@@ -6,309 +6,313 @@ return [
 
     // api endpoints
     'endpoints' => [
-        'read_profile'                     => [
+        'read_profile'                           => [
             'method' => 'get',
             'url'    => '/me',
         ],
-        'update_profile'                   => [
+        'update_profile'                         => [
             'method' => 'post',
             'url'    => '/me',
         ],
-        'update_preferences'               => [
+        'update_preferences'                     => [
             'method' => 'post',
             'url'    => '/me/preferences',
         ],
-        'read_user'                        => [
+        'read_user'                              => [
             'method' => 'get',
             'url'    => '/users/',  //后面需要填参数
         ],
-        'read_users'                       => [
+        'read_users'                             => [
             'method' => 'post',
             'url'    => '/users/fetch',
         ],
-        'search_user'                      => [
+        'search_user'                            => [
             'method' => 'get',
             'url'    => '/search/',  //后面需要填参数
         ],
-        'update_pin'                       => [
+        'update_pin'                             => [
             'method' => 'post',
             'url'    => '/pin/update',
         ],
-        'verify_pin'                       => [
+        'verify_pin'                             => [
             'method' => 'post',
             'url'    => '/pin/verify',
         ],
-        'rotate_qrcode'                    => [
+        'rotate_qrcode'                          => [
             'method' => 'get',
             'url'    => '/me/code',
         ],
-        'deposit'                          => [
+        'deposit'                                => [
             'method' => 'get',
             'url'    => '/assets/',  //后面需要填参数
         ],
-        'withdrawal'                       => [
+        'withdrawal'                             => [
             'method' => 'post',
             'url'    => '/withdrawals',
         ],
-        'transfer'                         => [
+        'transfer'                               => [
             'method' => 'post',
             'url'    => '/transfers',
         ],
-        'verify_payment'                   => [
+        'verify_payment'                         => [
             'method' => 'post',
             'url'    => '/payments',
         ],
-        'read_transfer'                    => [
+        'read_transfer'                          => [
             'method' => 'get',
             'url'    => '/transfers/trace/{$traceId}',
         ],
-        'create_address'                   => [
+        'create_address'                         => [
             'method' => 'post',
             'url'    => '/addresses',
         ],
-        'create_address_raw'               => [
+        'create_address_raw'                     => [
             'method' => 'post',
             'url'    => '/addresses',
         ],
-        'read_addresses'                   => [
+        'read_addresses'                         => [
             'method' => 'get',
             'url'    => '/assets/{$assetId}/addresses',
         ],
-        'delete_address'                   => [
+        'delete_address'                         => [
             'method' => 'post',
             'url'    => '/addresses/{$addressId}/delete',
         ],
-        'read_address'                     => [
+        'read_address'                           => [
             'method' => 'get',
             'url'    => '/addresses/',  //后面需要填参数
         ],
-        'read_assets'                      => [
+        'read_assets'                            => [
             'method' => 'get',
             'url'    => '/assets',
         ],
-        'read_asset'                       => [
+        'read_asset'                             => [
             'method' => 'get',
             'url'    => '/assets/',  //后面需要填参数
         ],
-        'read_asset_fee'                   => [
+        'read_asset_fee'                         => [
             'method' => 'get',
             'url'    => '/assets/{$assetId}/fee',
         ],
-        'read_friends'                     => [
+        'read_friends'                           => [
             'method' => 'get',
             'url'    => '/friends',
         ],
-        'read_network_asset'               => [
+        'read_network_asset'                     => [
             'method' => 'get',
             'url'    => '/network/assets/',  //后面需要填参数
         ],
-        'read_network_snapshots'           => [
+        'read_network_snapshots'                 => [
             'method' => 'get',
             'url'    => '/network/snapshots',
         ],
-        'read_network_snapshot'            => [
+        'read_network_snapshot'                  => [
             'method' => 'get',
             'url'    => '/network/snapshots/',  //后面需要填参数
         ],
-        'read_user_snapshots'              => [
+        'read_user_snapshots'                    => [
             'method' => 'get',
             'url'    => '/snapshots',
         ],
-        'read_user_snapshot'               => [
+        'read_user_snapshot'                     => [
             'method' => 'get',
             'url'    => '/snapshots/',  //后面需要填参数
         ],
-        'create_user'                      => [
+        'create_user'                            => [
             'method' => 'post',
             'url'    => '/users',
         ],
-        'mixin_network_chains_sync_status' => [
+        'mixin_network_chains_sync_status'       => [
             'method' => 'get',
             'url'    => '/network',
         ],
-        'chains' => [
+        'chains'                                 => [
             'method' => 'get',
             'url'    => '/network/chains',
         ],
-        'top_asset'                        => [
+        'top_asset'                              => [
             'method' => 'get',
             'url'    => '/network/assets/top',
         ],
-        'multisig_asset'                   => [
+        'multisig_asset'                         => [
             'method' => 'get',
             'url'    => '/network/assets/multisig',
         ],
-        'create_attachments'               => [
+        'create_attachments'                     => [
             'method' => 'post',
             'url'    => '/attachments',
         ],
-        'create_conversations'             => [
+        'create_conversations'                   => [
             'method' => 'post',
             'url'    => '/conversations',
         ],
-        'read_conversations'               => [
+        'read_conversations'                     => [
             'method' => 'get',
             'url'    => '/conversations/', //后面需要填参数
         ],
-        'participants_actions'             => [
+        'participants_actions'                   => [
             'method' => 'post',
             'url'    => '/conversations/{$conversationId}/participants/{$action}',
         ],
-        'rotate_conversation'              => [
+        'rotate_conversation'                    => [
             'method' => 'post',
             'url'    => '/conversations/{$conversationId}/rotate',
         ],
-        'external_transactions'            => [
+        'external_transactions'                  => [
             'method' => 'get',
             'url'    => '/external/transactions',
         ],
 
         //
-        'request_access_token'             => [
+        'request_access_token'                   => [
             'method' => 'post',
             'url'    => '/oauth/token',
         ],
-        'access_token_get_info'            => [
+        'access_token_get_info'                  => [
             'method' => 'get',
             'url'    => '/me',
         ],
-        'access_token_get_assets'          => [
+        'access_token_get_assets'                => [
             'method' => 'get',
             'url'    => '/assets',
         ],
-        'access_token_get_addresses'       => [
+        'access_token_get_addresses'             => [
             'method' => 'get',
             'url'    => '/assets/{$assetId}/addresses',
         ],
-        'access_token_get_address'         => [
+        'access_token_get_address'               => [
             'method' => 'get',
             'url'    => '/addresses/',  //后面需要填参数
         ],
-        'access_token_get_contacts'        => [
+        'access_token_get_contacts'              => [
             'method' => 'get',
             'url'    => '/friends',
         ],
-        'access_token_get_user_snapshots'  => [
+        'access_token_get_user_snapshots'        => [
             'method' => 'get',
             'url'    => '/snapshots',
         ],
-        'access_token_get_user_snapshot'   => [
+        'access_token_get_user_snapshot'         => [
             'method' => 'get',
             'url'    => '/snapshots/',  //后面需要填参数
         ],
-        'access_token_get_transfer'        => [
+        'access_token_get_transfer'              => [
             'method' => 'get',
             'url'    => '/transfers/trace/{$traceId}',
         ],
-        'search_assets'                    => [
+        'search_assets'                          => [
             'method' => 'get',
             'url'    => '/network/assets/search/', //后面需要填参数
         ],
-        'send_batch_message'               => [
+        'send_batch_message'                     => [
             'method' => 'post',
             'url'    => '/messages',
         ],
-        'read_raw_main_net_address'        => [
+        'read_raw_main_net_address'              => [
             'method' => 'post',
             'url'    => '/outputs',
         ],
-        'multisig_payment'                 => [
+        'generate_ghost_keys'                    => [
+            'method' => 'post',
+            'url'    => '/outputs',
+        ],
+        'multisig_payment'                       => [
             'method' => 'post',
             'url'    => '/payments',
         ],
-        'check_code'                       => [
+        'check_code'                             => [
             'method' => 'get',
             'url'    => '/codes/',
         ],
-        'access_token_post_outputs'        => [
+        'access_token_post_outputs'              => [
             'method' => 'post',
             'url'    => '/outputs',
         ],
-        'read_outputs'                     => [
+        'read_outputs'                           => [
             'method' => 'post',
             'url'    => '/outputs',
         ],
-        'external_proxy'                   => [
+        'external_proxy'                         => [
             'method' => 'post',
             'url'    => '/external/proxy',
         ],
-        'read_multisigs'                   => [
+        'read_multisigs'                         => [
             'method' => 'get',
             'url'    => '/multisigs',
         ],
-        'post_multisigs'                   => [
+        'post_multisigs'                         => [
             'method' => 'post',
             'url'    => '/multisigs',
         ],
-        'access_token_post_multisigs'      => [
+        'access_token_post_multisigs'            => [
             'method' => 'post',
             'url'    => '/multisigs',
         ],
-        'multisigs_requests'      => [
+        'multisigs_requests'                     => [
             'method' => 'post',
             'url'    => '/multisigs/requests',
         ],
-        'multisigs_requests_sign'      => [
+        'multisigs_requests_sign'                => [
             'method' => 'post',
             'url'    => '/multisigs/requests/{$requestId}/sign',
         ],
-        'multisigs_requests_cancel'      => [
+        'multisigs_requests_cancel'              => [
             'method' => 'post',
             'url'    => '/multisigs/requests/{$requestId}/cancel',
         ],
-        'multisigs_requests_unlock'      => [
+        'multisigs_requests_unlock'              => [
             'method' => 'post',
             'url'    => '/multisigs/requests/{$requestId}/unlock',
         ],
-        'multisigs_sign'                   => [
+        'multisigs_sign'                         => [
             'method' => 'post',
             'url'    => '/multisigs/{$requestId}/sign',
         ],
-        'multisigs_cancel'                 => [
+        'multisigs_cancel'                       => [
             'method' => 'post',
             'url'    => '/multisigs/{$requestId}/unlock',
         ],
-        'read_fiats'                       => [
+        'read_fiats'                             => [
             'method' => 'get',
             'url'    => '/fiats',
         ],
-        'access_token_get_asset'           => [
+        'access_token_get_asset'                 => [
             'method' => 'get',
             'url'    => '/assets/',
         ],
-        'add_favorite_app'                 => [
+        'add_favorite_app'                       => [
             'method' => 'post',
             'url'    => '/apps/{$userId}/favorite',
         ],
-        'remove_favorite_app'              => [
+        'remove_favorite_app'                    => [
             'method' => 'post',
             'url'    => '/apps/{$userId}/unfavorite',
         ],
-        'read_favorite_apps'               => [
+        'read_favorite_apps'                     => [
             'method' => 'get',
             'url'    => '/users/{$userId}/apps/favorite',
         ],
-        'read_historical_prices'           => [
+        'read_historical_prices'                 => [
             'method' => 'get',
             'url'    => '/network/ticker',
         ],
-        'send_multisig_transactions'       => [
+        'send_multisig_transactions'             => [
             'method' => 'post',
             'url'    => '/transactions',
         ],
-        'send_mainnet_transactions'        => [
+        'send_mainnet_transactions'              => [
             'method' => 'post',
             'url'    => '/transactions',
         ],
-        'read_multisigs_outputs'           => [
+        'read_multisigs_outputs'                 => [
             'method' => 'get',
             'url'    => '/multisigs/outputs',
         ],
-        'access_token_read_multisigs_outputs' => [
+        'access_token_read_multisigs_outputs'    => [
             'method' => 'get',
             'url'    => '/multisigs/outputs',
         ],
-        'read_snapshots_by_trace'               => [
+        'read_snapshots_by_trace'                => [
             'method' => 'get',
             'url'    => '/snapshots/trace/',//后面需要填参数
         ],
@@ -316,7 +320,7 @@ return [
             'method' => 'post',
             'url'    => '/multisigs/requests/{$requestId}/{$action}',
         ],
-        'access_token_multisigs_requests' => [
+        'access_token_multisigs_requests'        => [
             'method' => 'post',
             'url'    => '/multisigs/requests',
         ],

@@ -76,6 +76,7 @@ use GuzzleHttp\Client;
  * @method  array accessTokenGetUserSnapshot(string $access_token, string $snapshot_id): array
  * @method  array accessTokenGetTransfer(string $access_token, string $trace_id): array
  * @method  array readRawMainNetAddress(string $client_id): array
+ * @method  array generateGhostKeys(array $client_ids, int $index = null, string $hint = null): array
  * @method  array multisigPayment(string $asset_id, array $receivers, int $threshold, $amount, $memo = '', $trace_id = null): array
  * @method  array checkCode($code_id): array
  * @method  array accessTokenPostOutputs($access_token, $receivers, $index = 0): array
