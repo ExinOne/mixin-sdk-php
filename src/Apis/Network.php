@@ -129,14 +129,26 @@ class Network extends Api
      * @param int|null    $limit
      * @param string|null $offset
      * @param string|null $tag
+     * @param string|null $transaction_hash
+     * @param string|null $source
+     * @param string|null $user
      * @return array
      * @throws \Exception
      */
-    public function externalTransactions(string $asset = null, string $destination = null, $limit = null, string $offset = null, string $tag = null): array
+    public function externalTransactions(
+        string $asset = null, 
+        string $destination = null, 
+        $limit = null, 
+        string $offset = null, 
+        string $tag = null,
+        string $transaction_hash = null,
+        string $source = null,
+        string $user = null
+    ): array
     {
         $limit = empty($limit) ? $limit : (int) $limit;
 
-        $urlArgv = compact('asset', 'limit', 'offset', 'destination', 'tag');
+        $urlArgv = compact('asset', 'limit', 'offset', 'destination', 'tag', 'transaction_hash', 'source', 'user');
 
         $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
 
