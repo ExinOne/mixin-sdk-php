@@ -283,6 +283,17 @@ class Container
     }
 
     /**
+     * @param string $aud
+     * @return $this
+     */
+    public function setAud(string $aud)
+    {
+        $this->detailClass->setAud($aud);
+
+        return $this;
+    }
+
+    /**
      * @param $iterator
      *
      * @return $this

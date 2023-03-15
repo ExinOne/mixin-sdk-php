@@ -36,6 +36,8 @@ class Api
 
     protected $expire = 200;
 
+    protected $aud = null;
+
     protected $is_return_access_token = false;
 
     protected $http_async = false;
@@ -97,7 +99,7 @@ class Api
             ? null
             : json_encode($body);
 
-        $auth_token = $this->getToken(strtoupper($method), $url, $body, $this->expire);
+        $auth_token = $this->getToken(strtoupper($method), $url, $body, $this->expire, 'FULL', $this->aud);
 
         // headers
         $headers = array_merge([
@@ -252,6 +254,14 @@ class Api
     public function setExpire(int $expire): void
     {
         $this->expire = $expire;
+    }
+
+    /**
+     * @param string $aud
+     */
+    public function setAud(string $aud): void
+    {
+        $this->aud = $aud;
     }
 
     /**
