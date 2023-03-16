@@ -34,11 +34,11 @@ trait MixinSDKTrait
      *
      * @param int    $expire
      * @param string $scope
-     * @param string $algorithm
+     * @param string $aud
      *
      * @return string
      */
-    public function getToken($method, $uri, $body, $expire = 200, $scope = 'FULL')
+    public function getToken($method, $uri, $body, $expire = 200, $scope = 'FULL', $aud = null)
     {
         $token = [
             "uid" => $this->config['client_id'],
@@ -49,6 +49,10 @@ trait MixinSDKTrait
             "sig" => bin2hex(hash('sha256', $method.$uri.$body, true)),
             'scp' => $scope,
         ];
+
+        if ($aud) {
+            $token['aud'] = $aud;
+        }
 
         $algorithm = $this->getKeyAlgorithm($this->config['private_key']);
         if ($algorithm === 'Ed25519') {
