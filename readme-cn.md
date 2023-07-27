@@ -149,7 +149,7 @@ $mixinSdk->use('myConfig-A')->user()->readProfile();
 | `MixinSDK::network()->participantsActions(string $conversation_id, array $participants, string $action = "ADD")`                                                                                                                   | 管理群聊                                            | Network | [link](https://developers.mixin.one/docs/api/conversations/group)            |
 | `MixinSDK::network()->rotateConversation(string $conversation_id)`                                                                                                                   | 刷新群邀请链接                                            | Network | [link](https://developers.mixin.one/docs/api/conversations/create)            |
 | `MixinSDK::network()->searchAssets($q)`                                                                                                                   | 搜索资产                                            | Network | [link](https://developers.mixin.one/docs/api/assets/asset)            |
-| `MixinSDK::network()->readHistoricalPrices(string $asset, string $offset)`                                                                                                                   | 获取历史价格                                            | Network | [link](https://developers.mixin.one/docs/api/network/ticker/)            |
+| `MixinSDK::network()->readHistoricalPrices(string $asset, string $offset)`                                                                                                                   | 获取历史价格                                            | Network | [link](https://developers.mixin.one/docs/api/network/ticker)            |
 | **---**                                                                                                                                                   | **---**                                         | **---** |                                                                                                                          |
 | **---**                                                                                                                                                   | **--**                                          | **--**  |                                                                                                                          |
 | `MixinSDK::message()->sendText($user_id, $data, $category, $conversation_id, $recipient_id)`                                                              | 发送文本消息                                          | Message | [link](https://developers.mixin.one/docs/api/messages/send)   |
@@ -183,7 +183,7 @@ try {
 }
 ```
 
-[MixinNetwork Error Codes](https://developers.mixin.one/api/alpha-mixin-network/errors/)
+[MixinNetwork Error Codes](https://developers.mixin.one/docs/api/error-codes)
 
 ### 其他的异常
 
@@ -196,7 +196,7 @@ try {
 
 ## WARNING
 
-1. 进行如下操作可以配置 `iterator`, 在加密 PIN 时会使用到这个变量。在大部分时候，这个变量基本不需要修改。如果需要修改这个变量，请务必知道你在做什么。[关于 iterator 更详细的说明](https://developers.mixin.one/api/alpha-mixin-network/encrypted-pin/)
+1. 进行如下操作可以配置 `iterator`, 在加密 PIN 时会使用到这个变量。在大部分时候，这个变量基本不需要修改。如果需要修改这个变量，请务必知道你在做什么。[关于 iterator 更详细的说明](https://developers.mixin.one/docs/dapp/guide/pin#encrypting-pin)
    
    ```php
     $mixinSdk->wallet()->setIterator($iterator)->transfer($asset_id, $opponent_id, $pin, $amount, $memo);

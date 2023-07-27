@@ -149,7 +149,7 @@ $mixinSdk->use('myConfig-A')->user()->readProfile();
 | `MixinSDK::network()->participantsActions(string $conversation_id, array $participants, string $action = "ADD")`                                                                                                                   | Manage groups                                            | Network | [link](https://developers.mixin.one/docs/api/conversations/group)            |
 | `MixinSDK::network()->rotateConversation(string $conversation_id)`                                                                                                                   | Rotate Conversation                                            | Network | [link](https://developers.mixin.one/docs/api/conversations/create)            |
 | `MixinSDK::network()->searchAssets(string $snapshotId)`                                                                                                   | search assets                                                           | Network | [link](https://developers.mixin.one/docs/api/assets/asset)                                            |
-| `MixinSDK::network()->readHistoricalPrices(string $asset, string $offset)`                                                                                                                   | get the historical price of a given asset_id                                            | Network | [link](https://developers.mixin.one/docs/api/network/ticker/)            |
+| `MixinSDK::network()->readHistoricalPrices(string $asset, string $offset)`                                                                                                                   | get the historical price of a given asset_id                                            | Network | [link](https://developers.mixin.one/docs/api/network/ticker)            |
 | **---**                                                                                                                                                   | **--**                                                                  | **--**  |                                                                                                                        |
 | **---**                                                                                                                                                   | **--**                                                                  | **--**  |                                                                                                                        |
 | **---**                                                                                                                                                   | **--**                                                                  | **--**  |                                                                                                                        |
@@ -184,7 +184,7 @@ try {
 }
 ```
 
-[MixinNetwork Error Codes](https://developers.mixin.one/api/alpha-mixin-network/errors/)
+[MixinNetwork Error Codes](https://developers.mixin.one/docs/api/error-codes)
 
 ### Other Exceptions
 
@@ -197,7 +197,7 @@ try {
 
 ## WARNING
 
-1. You can config `iterator` in the following way. The `iterator` is used when a PIN is encrypted. Generally, `iterator` should not be modified. If you want ot modify this variable,  be sure to know what you are doing. [More details on iterator](https://developers.mixin.one/api/alpha-mixin-network/encrypted-pin/)
+1. You can config `iterator` in the following way. The `iterator` is used when a PIN is encrypted. Generally, `iterator` should not be modified. If you want ot modify this variable,  be sure to know what you are doing. [More details on iterator](https://developers.mixin.one/docs/dapp/guide/pin#encrypting-pin)
    
    ```php
     $iterator = [time()];
