@@ -9,6 +9,7 @@
 namespace ExinOne\MixinSDK\Apis;
 
 use ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException;
+use ExinOne\MixinSDK\Exceptions\SafeURLNotExistException;
 use ExinOne\MixinSDK\Traits\MixinSDKTrait;
 use GuzzleHttp\Client;
 use Wrench\Protocol\Protocol;
@@ -26,6 +27,8 @@ class Api
 
     protected $endPointUrl;
 
+    protected $safeEndPontUrl;
+
     protected $endPointMethod;
 
     protected $iterator;
@@ -39,6 +42,8 @@ class Api
     protected $aud = null;
 
     protected $is_return_access_token = false;
+
+    protected $is_safe_mainnet = false;
 
     protected $http_async = false;
 
@@ -54,29 +59,29 @@ class Api
     /**
      * Api constructor.
      *
-     * @param $config
+     * @param        $config
      * @param string $base_uri
-     * @param int $timeout
+     * @param int    $timeout
      */
     public function __construct($config, string $base_uri = null, int $timeout = null)
     {
-        $this->packageConfig = require(__DIR__ . '/../../config/config.php');
+        $this->packageConfig = require(__DIR__.'/../../config/config.php');
 
         $this->base_uri = $base_uri ?: $this->packageConfig['base_uri'];
         if ($timeout) {
             $this->timeout = $timeout;
         }
-        $this->config = $config;
+        $this->config      = $config;
         $this->http_client = new Client([
             'base_uri' => $this->base_uri,
-            'timeout' => $this->timeout,
-            'version' => 1.3,
+            'timeout'  => $this->timeout,
+            'version'  => 1.3,
         ]);
     }
 
     /**
-     * @param null $body
-     * @param null $url
+     * @param null  $body
+     * @param null  $url
      * @param array $customizeHeaders
      * @param array $customizeRes
      *
@@ -91,7 +96,7 @@ class Api
 
         // 请求目标的Url
         $url = empty($url)
-            ? $this->endPointUrl
+            ? $this->getEndPointUrl()
             : $url;
 
         // body
@@ -104,7 +109,7 @@ class Api
         // headers
         $headers = array_merge([
             'Content-Type'  => 'application/json',
-            'Authorization' => 'Bearer ' . $auth_token,
+            'Authorization' => 'Bearer '.$auth_token,
         ], $customizeHeaders);
 
         if ($this->is_return_access_token) {
@@ -120,7 +125,7 @@ class Api
         $method  = strtolower($method);
         $timeout = $this->timeout;
 
-        if (!$this->http_async) {
+        if (! $this->http_async) {
             $response = $this->http_client->$method($url, compact('headers', 'body', 'timeout'));
             $content  = json_decode($response->getBody()->getContents(), true);
             $promise  = null;
@@ -150,7 +155,7 @@ class Api
     public function webSocketRes($message)
     {
         $wsClient = new WSClient('wss://blaze.mixin.one/', 'https://google.com');
-        $wsClient->addRequestHeader('Authorization', 'Bearer ' . $this->getToken('GET', '/', ''));
+        $wsClient->addRequestHeader('Authorization', 'Bearer '.$this->getToken('GET', '/', ''));
         $wsClient->addRequestHeader('protocol', 'Mixin-Blaze-1');
 
         // 重试操作
@@ -238,6 +243,7 @@ class Api
         $this->useFunction    = $useFunction;
         $this->endPointUrl    = $this->packageConfig['endpoints'][camel2Underline($this->useFunction)]['url'] ?? null;
         $this->endPointMethod = $this->packageConfig['endpoints'][camel2Underline($this->useFunction)]['method'] ?? null;
+        $this->safeEndPontUrl = $this->packageConfig['endpoints'][camel2Underline($this->useFunction)]['safe_url'] ?? null;
     }
 
     /**
@@ -264,6 +270,23 @@ class Api
         $this->aud = $aud;
     }
 
+    public function setSafeMainnet(bool $is_safe_mainnet = true): void
+    {
+        $this->is_safe_mainnet = $is_safe_mainnet;
+    }
+
+    public function getEndPointUrl(): string
+    {
+        if ($this->is_safe_mainnet) {
+            if (! $this->safeEndPontUrl) {
+                throw new SafeURLNotExistException("{$this->useFunction} has no corresponding SAFE method");
+            }
+            return $this->safeEndPontUrl;
+        }
+
+        return $this->endPointUrl;
+    }
+
     /**
      * @param bool $is_return_access_token
      */
@@ -281,7 +304,7 @@ class Api
     }
 
     /**
-     * @param Client|null $http_client
+     * @param Client|null   $http_client
      * @param \Closure|null $on_resolve
      * @param \Closure|null $on_reject
      * @return void

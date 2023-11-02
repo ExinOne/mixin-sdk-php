@@ -137,10 +137,10 @@ class Container
             return $auth_token;
         } elseif ($this->isHttpAsync()) {
             return $promise;
-        } elseif (!$this->isRaw() && ($content['error'] ?? 0)) {
+        } elseif (! $this->isRaw() && ($content['error'] ?? 0)) {
             // 出现异常
-            $error = $content['error'];
-            $code = isset($error['code']) ? $error['code'] : 404;
+            $error       = $content['error'];
+            $code        = isset($error['code']) ? $error['code'] : 404;
             $description = isset($error['description']) ? $error['description'] : '';
             $this->boomRoom($code, $description);
         } elseif ($this->isRaw()) {
@@ -205,7 +205,7 @@ class Container
     }
 
     /**
-     * @param Client|false $http_client
+     * @param Client|false  $http_client
      * @param \Closure|null $on_resolve
      * @param \Closure|null $on_reject
      * @return $this
@@ -214,11 +214,11 @@ class Container
     {
         if ($http_client) {
             $this->http_async = true;
-            if (!$on_resolve) {
+            if (! $on_resolve) {
                 $on_resolve = function () {
                 };
             }
-            if (!$on_reject) {
+            if (! $on_reject) {
                 $on_reject = function () {
                 };
             }
@@ -289,6 +289,17 @@ class Container
     public function setAud(string $aud)
     {
         $this->detailClass->setAud($aud);
+
+        return $this;
+    }
+
+    /**
+     * @param bool $is_safe_mainnet
+     * @return $this
+     */
+    public function setSafeMainnet(bool $is_safe_mainnet = true)
+    {
+        $this->detailClass->setSafeMainnet($is_safe_mainnet);
 
         return $this;
     }

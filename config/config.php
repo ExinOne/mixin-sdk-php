@@ -7,8 +7,9 @@ return [
     // api endpoints
     'endpoints' => [
         'read_profile'                           => [
-            'method' => 'get',
-            'url'    => '/me',
+            'method'   => 'get',
+            'url'      => '/me',
+            'safe_url' => '/safe/me',
         ],
         'update_profile'                         => [
             'method' => 'post',
@@ -83,12 +84,14 @@ return [
             'url'    => '/addresses/',  //后面需要填参数
         ],
         'read_assets'                            => [
-            'method' => 'get',
-            'url'    => '/assets',
+            'method'   => 'get',
+            'url'      => '/assets',
+            'safe_url' => '/safe/assets',
         ],
         'read_asset'                             => [
-            'method' => 'get',
-            'url'    => '/assets/',  //后面需要填参数
+            'method'   => 'get',
+            'url'      => '/assets/',  //后面需要填参数
+            'safe_url' => '/safe/assets/',  //后面需要填参数
         ],
         'read_asset_fee'                         => [
             'method' => 'get',
@@ -111,16 +114,19 @@ return [
             'url'    => '/network/snapshots/',  //后面需要填参数
         ],
         'read_user_snapshots'                    => [
-            'method' => 'get',
-            'url'    => '/snapshots',
+            'method'   => 'get',
+            'url'      => '/snapshots',
+            'safe_url' => '/safe/snapshots',
         ],
         'read_user_snapshot'                     => [
-            'method' => 'get',
-            'url'    => '/snapshots/',  //后面需要填参数
+            'method'   => 'get',
+            'url'      => '/snapshots/',  //后面需要填参数
+            'safe_url' => '/safe/snapshots/', //后面需要填参数
         ],
         'create_user'                            => [
-            'method' => 'post',
-            'url'    => '/users',
+            'method'   => 'post',
+            'url'      => '/users',
+            'safe_url' => '/safe/users',
         ],
         'mixin_network_chains_sync_status'       => [
             'method' => 'get',
@@ -169,8 +175,9 @@ return [
             'url'    => '/oauth/token',
         ],
         'access_token_get_info'                  => [
-            'method' => 'get',
-            'url'    => '/me',
+            'method'   => 'get',
+            'url'      => '/me',
+            'safe_url' => '/safe/me',
         ],
         'access_token_get_assets'                => [
             'method' => 'get',
@@ -189,12 +196,14 @@ return [
             'url'    => '/friends',
         ],
         'access_token_get_user_snapshots'        => [
-            'method' => 'get',
-            'url'    => '/snapshots',
+            'method'   => 'get',
+            'url'      => '/snapshots',
+            'safe_url' => '/safe/snapshots',
         ],
         'access_token_get_user_snapshot'         => [
-            'method' => 'get',
-            'url'    => '/snapshots/',  //后面需要填参数
+            'method'   => 'get',
+            'url'      => '/snapshots/',  //后面需要填参数
+            'safe_url' => '/safe/snapshots/', //后面需要填参数
         ],
         'access_token_get_transfer'              => [
             'method' => 'get',
@@ -297,12 +306,14 @@ return [
             'url'    => '/network/ticker',
         ],
         'send_multisig_transactions'             => [
-            'method' => 'post',
-            'url'    => '/transactions',
+            'method'   => 'post',
+            'url'      => '/transactions',
+            'safe_url' => '/safe/transactions',
         ],
         'send_mainnet_transactions'              => [
-            'method' => 'post',
-            'url'    => '/transactions',
+            'method'   => 'post',
+            'url'      => '/transactions',
+            'safe_url' => '/safe/transactions',
         ],
         'read_multisigs_outputs'                 => [
             'method' => 'get',

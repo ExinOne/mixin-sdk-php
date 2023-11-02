@@ -95,7 +95,7 @@ class Wallet extends Api
      */
     public function readAddresses(string $assetId): array
     {
-        $url = str_replace('{$assetId}', $assetId, $this->endPointUrl);
+        $url = str_replace('{$assetId}', $assetId, $this->getEndPointUrl());
 
         return $this->res([], $url);
     }
@@ -109,7 +109,7 @@ class Wallet extends Api
      */
     public function readAddress(string $addressId): array
     {
-        $url = $this->endPointUrl.$addressId;
+        $url = $this->getEndPointUrl().$addressId;
 
         return $this->res([], $url);
     }
@@ -132,7 +132,7 @@ class Wallet extends Api
             'pin' => $pin == '' ? '' : $this->encryptPin((string)$pin),
         ];
 
-        $url = str_replace('{$addressId}', $addressId, $this->endPointUrl);
+        $url = str_replace('{$addressId}', $addressId, $this->getEndPointUrl());
 
         return $this->res($body, $url);
     }
@@ -156,7 +156,7 @@ class Wallet extends Api
      */
     public function readAsset(string $assetId): array
     {
-        $url = $this->endPointUrl.$assetId;
+        $url = $this->getEndPointUrl().$assetId;
 
         return $this->res([], $url);
     }
@@ -170,7 +170,7 @@ class Wallet extends Api
      */
     public function deposit(string $assetId): array
     {
-        $url = $this->endPointUrl.$assetId;
+        $url = $this->getEndPointUrl().$assetId;
 
         return $this->res([], $url);
     }
@@ -262,7 +262,7 @@ class Wallet extends Api
      */
     public function readTransfer(string $traceId): array
     {
-        $url = str_replace('{$traceId}', $traceId, $this->endPointUrl);
+        $url = str_replace('{$traceId}', $traceId, $this->getEndPointUrl());
 
         return $this->res([], $url);
     }
@@ -276,7 +276,7 @@ class Wallet extends Api
      */
     public function readAssetFee(string $assetId): array
     {
-        $url = str_replace('{$assetId}', $assetId, $this->endPointUrl);
+        $url = str_replace('{$assetId}', $assetId, $this->getEndPointUrl());
 
         return $this->res(null, $url);
     }
@@ -296,7 +296,7 @@ class Wallet extends Api
         $limit   = empty($limit) ? $limit : (int)$limit;
         $urlArgv = compact('limit', 'offset', 'asset', 'order');
 
-        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
+        $url = $this->getEndPointUrl().'?'.http_build_query(delEmptyItemInArray($urlArgv));
 
         return $this->res([], $url);
     }
@@ -310,7 +310,7 @@ class Wallet extends Api
      */
     public function readUserSnapshot(string $snapshotId): array
     {
-        $url = $this->endPointUrl.$snapshotId;
+        $url = $this->getEndPointUrl().$snapshotId;
 
         return $this->res([], $url);
     }
@@ -336,7 +336,7 @@ class Wallet extends Api
             'Authorization' => 'Bearer '.$access_token,
         ];
 
-        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
+        $url = $this->getEndPointUrl().'?'.http_build_query(delEmptyItemInArray($urlArgv));
 
         return $this->res([], $url, $headers);
     }
@@ -350,7 +350,7 @@ class Wallet extends Api
      */
     public function accessTokenGetUserSnapshot(string $access_token, string $snapshot_id): array
     {
-        $url = $this->endPointUrl.$snapshot_id;
+        $url = $this->getEndPointUrl().$snapshot_id;
 
         $headers = [
             'Authorization' => 'Bearer '.$access_token,
@@ -369,7 +369,7 @@ class Wallet extends Api
      */
     public function accessTokenGetTransfer(string $access_token, string $trace_id): array
     {
-        $url = str_replace('{$traceId}', $trace_id, $this->endPointUrl);
+        $url = str_replace('{$traceId}', $trace_id, $this->getEndPointUrl());
 
         $headers = [
             'Authorization' => 'Bearer '.$access_token,
@@ -453,32 +453,31 @@ class Wallet extends Api
      */
     public function checkCode($code_id): array
     {
-        $url = $this->endPointUrl.$code_id;
+        $url = $this->getEndPointUrl().$code_id;
 
         return $this->res([], $url);
     }
 
     /**
-     * @deprecated
      * @param string|null $offset
      * @param int|null    $limit
      *
      * @return array
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @deprecated
      */
     public function readMultisigs(string $offset = '', $limit = null): array
     {
         $limit   = empty($limit) ? 100 : (int)$limit;
         $urlArgv = compact('limit', 'offset');
 
-        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
+        $url = $this->getEndPointUrl().'?'.http_build_query(delEmptyItemInArray($urlArgv));
 
         return $this->res([], $url);
     }
 
     /**
-     * @deprecated
      * @param string $access_token
      * @param string $raw
      * @param string $action
@@ -486,6 +485,7 @@ class Wallet extends Api
      * @return array
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @deprecated
      */
     public function accessTokenPostMultisigs(string $access_token, string $raw, string $action = 'sign'): array
     {
@@ -507,7 +507,7 @@ class Wallet extends Api
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function accessTokenPostOutputs($access_token, $receivers, $index = 0,$hint = ""): array
+    public function accessTokenPostOutputs($access_token, $receivers, $index = 0, $hint = ""): array
     {
         $headers = [
             'Authorization' => 'Bearer '.$access_token,
@@ -522,17 +522,17 @@ class Wallet extends Api
     }
 
     /**
-     * @param  array  $receivers
-     * @param  int  $index
-     * @param  string  $hint
+     * @param array  $receivers
+     * @param int    $index
+     * @param string $hint
      * @return array
      */
-    public function readOutputs($receivers, $index = 0,$hint = ""): array
+    public function readOutputs($receivers, $index = 0, $hint = ""): array
     {
         if ($hint === "") {
             $hint = Uuid::uuid4()->toString();
         }
-        $body = compact('receivers', 'index','hint');
+        $body = compact('receivers', 'index', 'hint');
 
         return $this->res($body);
     }
@@ -553,13 +553,13 @@ class Wallet extends Api
     }
 
     /**
-     * @deprecated
      * @param string $raw
      * @param string $action
      *
      * @return array
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @deprecated
      */
     public function postMultisigs(string $raw, string $action = 'sign'): array
     {
@@ -604,7 +604,7 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $request_id
+     * @param string      $request_id
      * @param string|null $pin
      *
      * @return array
@@ -616,7 +616,7 @@ class Wallet extends Api
             $pin = $this->config['pin'];
         }
 
-        $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
+        $url = str_replace('{$requestId}', $request_id, $this->getEndPointUrl());
 
         $body = [
             'pin' => $this->encryptPin((string)$pin),
@@ -626,7 +626,7 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $request_id
+     * @param string      $request_id
      * @param string|null $pin
      *
      * @return array
@@ -638,7 +638,7 @@ class Wallet extends Api
             $pin = $this->config['pin'];
         }
 
-        $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
+        $url = str_replace('{$requestId}', $request_id, $this->getEndPointUrl());
 
         $body = [
             'pin' => $this->encryptPin((string)$pin),
@@ -648,7 +648,7 @@ class Wallet extends Api
     }
 
     /**
-     * @param string $request_id
+     * @param string      $request_id
      * @param string|null $pin
      *
      * @return array
@@ -660,7 +660,7 @@ class Wallet extends Api
             $pin = $this->config['pin'];
         }
 
-        $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
+        $url = str_replace('{$requestId}', $request_id, $this->getEndPointUrl());
 
         $body = [
             'pin' => $this->encryptPin((string)$pin),
@@ -670,13 +670,13 @@ class Wallet extends Api
     }
 
     /**
-     * @deprecated
      * @param string $request_id
      * @param string $pin
      *
      * @return array
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @deprecated
      */
     public function multisigsSign(string $request_id, string $pin = null): array
     {
@@ -684,7 +684,7 @@ class Wallet extends Api
             $pin = $this->config['pin'];
         }
 
-        $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
+        $url = str_replace('{$requestId}', $request_id, $this->getEndPointUrl());
 
         $body = [
             'pin' => $this->encryptPin((string)$pin),
@@ -718,7 +718,7 @@ class Wallet extends Api
             $pin = $this->config['pin'];
         }
 
-        $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
+        $url = str_replace('{$requestId}', $request_id, $this->getEndPointUrl());
 
         $body = [
             'pin' => $this->encryptPin((string)$pin),
@@ -804,17 +804,17 @@ class Wallet extends Api
      */
     public function readMultisigsOutputs(string $offset = '', array $members = [], $state = '', $threshold = 2, $limit = '500')
     {
-        if (!empty($members)) {
+        if (! empty($members)) {
             sort($members);
             $members = hash('sha3-256', implode('', $members));
         } else {
             $members = null;
         }
 
-        $limit   = empty($limit) ? 100 : (int) $limit;
+        $limit   = empty($limit) ? 100 : (int)$limit;
         $urlArgv = compact('limit', 'offset', 'state', 'members', 'threshold');
 
-        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
+        $url = $this->getEndPointUrl().'?'.http_build_query(delEmptyItemInArray($urlArgv));
         return $this->res([], $url);
     }
 
@@ -836,7 +836,7 @@ class Wallet extends Api
             'Authorization' => 'Bearer '.$access_token,
         ];
 
-        if (!empty($members)) {
+        if (! empty($members)) {
             sort($members);
             $members = hash('sha3-256', implode('', $members));
         } else {
@@ -862,7 +862,7 @@ class Wallet extends Api
             'Authorization' => 'Bearer '.$access_token,
         ];
 
-        $url = str_replace(['{$requestId}','{$action}'], [$request_id, $action], $this->endPointUrl);
+        $url = str_replace(['{$requestId}', '{$action}'], [$request_id, $action], $this->getEndPointUrl());
 
         return $this->res($body, $url, $headers);
     }
