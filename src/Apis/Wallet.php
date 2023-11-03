@@ -8,6 +8,7 @@
 
 namespace ExinOne\MixinSDK\Apis;
 
+use ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException;
 use Ramsey\Uuid\Uuid;
 
 class Wallet extends Api
@@ -91,7 +92,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function readAddresses(string $assetId): array
     {
@@ -105,7 +106,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function readAddress(string $addressId): array
     {
@@ -120,7 +121,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function deleteAddress(string $addressId, $pin = null): array
     {
@@ -140,7 +141,7 @@ class Wallet extends Api
     /**
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function readAssets(): array
     {
@@ -152,7 +153,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function readAsset(string $assetId): array
     {
@@ -166,7 +167,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function deposit(string $assetId): array
     {
@@ -243,7 +244,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function verifyPayment(string $asset_id, string $opponent_id, $amount, string $trace_id): array
     {
@@ -258,7 +259,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function readTransfer(string $traceId): array
     {
@@ -272,7 +273,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function readAssetFee(string $assetId): array
     {
@@ -289,7 +290,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function readUserSnapshots($limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
     {
@@ -306,7 +307,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function readUserSnapshot(string $snapshotId): array
     {
@@ -325,7 +326,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function accessTokenGetUserSnapshots(string $access_token, $limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
     {
@@ -346,7 +347,7 @@ class Wallet extends Api
      * @param string $snapshot_id
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function accessTokenGetUserSnapshot(string $access_token, string $snapshot_id): array
     {
@@ -365,7 +366,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function accessTokenGetTransfer(string $access_token, string $trace_id): array
     {
@@ -383,7 +384,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function readRawMainNetAddress(string $client_id): array
     {
@@ -428,7 +429,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function multisigPayment(string $asset_id, array $receivers, int $threshold, $amount, $memo = '', $trace_id = null): array
     {
@@ -449,7 +450,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function checkCode($code_id): array
     {
@@ -464,7 +465,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      * @deprecated
      */
     public function readMultisigs(string $offset = '', $limit = null): array
@@ -484,7 +485,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      * @deprecated
      */
     public function accessTokenPostMultisigs(string $access_token, string $raw, string $action = 'sign'): array
@@ -505,7 +506,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function accessTokenPostOutputs($access_token, $receivers, $index = 0, $hint = ""): array
     {
@@ -543,7 +544,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function externalProxy($params, $method = 'sendrawtransaction'): array
     {
@@ -558,7 +559,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      * @deprecated
      */
     public function postMultisigs(string $raw, string $action = 'sign'): array
@@ -574,7 +575,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function multisigsRequests(string $raw, string $action = 'sign'): array
     {
@@ -590,7 +591,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function accessTokenMultisigsRequests(string $access_token, string $raw, string $action = 'sign'): array
     {
@@ -675,7 +676,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      * @deprecated
      */
     public function multisigsSign(string $request_id, string $pin = null): array
@@ -697,7 +698,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function readFiats(): array
     {
@@ -710,7 +711,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function multisigsCancel(string $request_id, string $pin = null): array
     {
@@ -800,7 +801,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function readMultisigsOutputs(string $offset = '', array $members = [], $state = '', $threshold = 2, $limit = '500')
     {
@@ -828,7 +829,7 @@ class Wallet extends Api
      *
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
+     * @throws MixinNetworkRequestException
      */
     public function accessTokenReadMultisigsOutputs($access_token, string $offset = '', array $members = [], $state = '', $threshold = 2, $limit = '500')
     {
@@ -856,7 +857,7 @@ class Wallet extends Api
      * @return array
      * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
      */
-    public function accessTokenMultisigsRequestsAction(string $access_token, string $request_id, $action = 'sign'): array
+    public function accessTokenMultisigsRequestsAction(string $access_token, string $request_id, string $action = 'sign'): array
     {
         $headers = [
             'Authorization' => 'Bearer '.$access_token,
@@ -864,6 +865,77 @@ class Wallet extends Api
 
         $url = str_replace(['{$requestId}', '{$action}'], [$request_id, $action], $this->getEndPointUrl());
 
-        return $this->res($body, $url, $headers);
+        return $this->res(null, $url, $headers);
+    }
+
+    /**
+     * @param string $chain_uuid
+     * @return array
+     * @throws \Exception
+     */
+    public function safeDepositEntries(string $chain_uuid): array
+    {
+        $body = [
+            'chain_id' => $chain_uuid,
+        ];
+
+        return $this->res($body);
+    }
+
+    /**
+     * @param string $request_id
+     * @param string $raw
+     * @return array
+     * @throws \Exception
+     */
+    public function safeRequestTransaction(string $request_id, string $raw): array
+    {
+        $body = [
+            'request_id' => $request_id,
+            'raw'        => $raw,
+        ];
+
+        return $this->res($body);
+    }
+
+    /**
+     * @param string $request_id
+     * @param string $raw
+     * @return array{"views": string[]}
+     * @throws \Exception
+     */
+    public function safePostTransaction(string $request_id, string $raw): array
+    {
+        $body = [
+            'request_id' => $request_id,
+            'raw'        => $raw,
+        ];
+
+        return $this->res($body);
+    }
+
+    public function safeTransactionDetail(string $id): array
+    {
+        $url = $this->getEndPointUrl().$id;
+
+        return $this->res([], $url);
+    }
+
+    public function safeGhostKeys(array $receiver_uuids, string $receiver_hint, array $sender_uuids, string $sender_hint): array
+    {
+        $body = [
+            [
+                'receivers' => $receiver_uuids,
+                'index'     => 0,
+                'hint'      => $receiver_hint,
+            ],
+            [
+                'receivers' => $sender_uuids,
+                'index'     => 1,
+                'hint'      => $sender_hint,
+            ],
+        ];
+
+        return $this->res($body);
     }
 }

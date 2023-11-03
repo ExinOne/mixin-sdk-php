@@ -77,7 +77,7 @@ class User extends Api
      */
     public function addFavoriteApp(string $user_id): array
     {
-        $url = str_replace('{$userId}', $user_id, $this->endPointUrl);
+        $url = str_replace('{$userId}', $user_id, $this->getEndPointUrl());
         return $this->res([], $url);
     }
 
@@ -88,7 +88,7 @@ class User extends Api
      */
     public function removeFavoriteApp(string $user_id): array
     {
-        $url = str_replace('{$userId}', $user_id, $this->endPointUrl);
+        $url = str_replace('{$userId}', $user_id, $this->getEndPointUrl());
         return $this->res([], $url);
     }
 
@@ -102,7 +102,7 @@ class User extends Api
         if (! $user_id) {
             $user_id = $this->config['client_id'];
         }
-        $url = str_replace('{$userId}', $user_id, $this->endPointUrl);
+        $url = str_replace('{$userId}', $user_id, $this->getEndPointUrl());
         return $this->res([], $url);
     }
 }

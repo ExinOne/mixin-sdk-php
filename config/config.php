@@ -124,9 +124,8 @@ return [
             'safe_url' => '/safe/snapshots/', //后面需要填参数
         ],
         'create_user'                            => [
-            'method'   => 'post',
-            'url'      => '/users',
-            'safe_url' => '/safe/users',
+            'method' => 'post',
+            'url'    => '/users',
         ],
         'mixin_network_chains_sync_status'       => [
             'method' => 'get',
@@ -165,8 +164,9 @@ return [
             'url'    => '/conversations/{$conversationId}/rotate',
         ],
         'external_transactions'                  => [
-            'method' => 'get',
-            'url'    => '/external/transactions',
+            'method'   => 'get',
+            'url'      => '/external/transactions',
+            'safe_url' => '/safe/deposits',
         ],
 
         //
@@ -306,22 +306,22 @@ return [
             'url'    => '/network/ticker',
         ],
         'send_multisig_transactions'             => [
-            'method'   => 'post',
-            'url'      => '/transactions',
-            'safe_url' => '/safe/transactions',
+            'method' => 'post',
+            'url'    => '/transactions',
         ],
         'send_mainnet_transactions'              => [
-            'method'   => 'post',
-            'url'      => '/transactions',
-            'safe_url' => '/safe/transactions',
+            'method' => 'post',
+            'url'    => '/transactions',
         ],
         'read_multisigs_outputs'                 => [
-            'method' => 'get',
-            'url'    => '/multisigs/outputs',
+            'method'   => 'get',
+            'url'      => '/multisigs/outputs',
+            'safe_url' => '/safe/outputs',
         ],
         'access_token_read_multisigs_outputs'    => [
-            'method' => 'get',
-            'url'    => '/multisigs/outputs',
+            'method'   => 'get',
+            'url'      => '/multisigs/outputs',
+            'safe_url' => '/safe/outputs',
         ],
         'read_snapshots_by_trace'                => [
             'method' => 'get',
@@ -334,6 +334,36 @@ return [
         'access_token_multisigs_requests'        => [
             'method' => 'post',
             'url'    => '/multisigs/requests',
+        ],
+        'safe_deposit_entries'                   => [
+            'method'   => 'post',
+            'url'      => '/safe/deposit/entries',
+            'safe_url' => '/safe/deposit/entries',
+        ],
+        'safe_request_transaction'               => [
+            'method'   => 'post',
+            'url'      => '/safe/transaction/requests',
+            'safe_url' => '/safe/transaction/requests',
+        ],
+        'safe_post_transaction'                  => [
+            'method'   => 'post',
+            'url'      => '/safe/transactions',
+            'safe_url' => '/safe/transactions',
+        ],
+        'safe_transaction_detail'                => [
+            'method'   => 'get',
+            'url'      => '/safe/transactions/', //后面需要填参数
+            'safe_url' => '/safe/transactions/', //后面需要填参数
+        ],
+        'safe_ghost_keys'                        => [
+            'method'   => 'post',
+            'url'      => '/safe/keys',
+            'safe_url' => '/safe/keys',
+        ],
+        'safe_create_user'                       => [
+            'method'   => 'post',
+            'url'      => '/safe/users',
+            'safe_url' => '/safe/users',
         ],
     ],
 ];

@@ -21,7 +21,7 @@ class Network extends Api
      */
     public function readUser(string $userId): array
     {
-        $url = $this->endPointUrl.$userId;
+        $url = $this->getEndPointUrl().$userId;
 
         return $this->res(null, $url);
     }
@@ -47,7 +47,7 @@ class Network extends Api
      */
     public function searchUser($item): array
     {
-        $url = $this->endPointUrl.(string) $item;
+        $url = $this->getEndPointUrl().(string)$item;
 
         return $this->res([], $url);
     }
@@ -61,7 +61,7 @@ class Network extends Api
      */
     public function readNetworkAsset(string $assetId): array
     {
-        $url = $this->endPointUrl.$assetId;
+        $url = $this->getEndPointUrl().$assetId;
 
         return $this->res([], $url);
     }
@@ -78,11 +78,11 @@ class Network extends Api
      */
     public function readNetworkSnapshots($limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
     {
-        $limit = empty($limit) ? $limit : (int) $limit;
+        $limit = empty($limit) ? $limit : (int)$limit;
 
         $urlArgv = compact('limit', 'offset', 'asset', 'order');
 
-        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
+        $url = $this->getEndPointUrl().'?'.http_build_query(delEmptyItemInArray($urlArgv));
 
         return $this->res([], $url);
     }
@@ -96,7 +96,7 @@ class Network extends Api
      */
     public function readNetworkSnapshot(string $snapshotId): array
     {
-        $url = $this->endPointUrl.$snapshotId;
+        $url = $this->getEndPointUrl().$snapshotId;
 
         return $this->res([], $url);
     }
@@ -117,7 +117,7 @@ class Network extends Api
         }
         $body = [
             'session_secret' => $session_secret,
-            'full_name'      => (string) $fullName,
+            'full_name'      => (string)$fullName,
         ];
 
         return $this->res($body, null, [], compact('priKey', 'pubKey'));
@@ -136,21 +136,21 @@ class Network extends Api
      * @throws \Exception
      */
     public function externalTransactions(
-        string $asset = null, 
-        string $destination = null, 
-        $limit = null, 
-        string $offset = null, 
+        string $asset = null,
+        string $destination = null,
+               $limit = null,
+        string $offset = null,
         string $tag = null,
         string $transaction_hash = null,
         string $source = null,
         string $user = null
     ): array
     {
-        $limit = empty($limit) ? $limit : (int) $limit;
+        $limit = empty($limit) ? $limit : (int)$limit;
 
         $urlArgv = compact('asset', 'limit', 'offset', 'destination', 'tag', 'transaction_hash', 'source', 'user');
 
-        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
+        $url = $this->getEndPointUrl().'?'.http_build_query(delEmptyItemInArray($urlArgv));
 
         return $this->res([], $url);
     }
@@ -200,14 +200,14 @@ class Network extends Api
      */
     public function readConversations(string $conversation_id): array
     {
-        $url = $this->endPointUrl.$conversation_id;
+        $url = $this->getEndPointUrl().$conversation_id;
 
         return $this->res([], $url);
     }
 
     /**
      * @param string $conversation_id
-     * @param array $participants
+     * @param array  $participants
      * @param string $action
      * @return array
      * @throws \Exception
@@ -216,13 +216,13 @@ class Network extends Api
     {
         $body = $participants;
 
-        $url = str_replace(['{$conversationId}','{$action}'], [$conversation_id, $action], $this->endPointUrl);
+        $url = str_replace(['{$conversationId}', '{$action}'], [$conversation_id, $action], $this->getEndPointUrl());
         return $this->res($body, $url);
     }
 
     public function rotateConversation(string $conversation_id): array
     {
-        $url = str_replace('{$conversationId}', $conversation_id, $this->endPointUrl);
+        $url = str_replace('{$conversationId}', $conversation_id, $this->getEndPointUrl());
         return $this->res(null, $url);
     }
 
@@ -328,7 +328,7 @@ class Network extends Api
             'Authorization' => 'Bearer '.$access_token,
         ];
 
-        $url = str_replace('{$assetId}', $assetId, $this->endPointUrl);
+        $url = str_replace('{$assetId}', $assetId, $this->getEndPointUrl());
 
         return $this->res([], $url, $headers);
     }
@@ -347,7 +347,7 @@ class Network extends Api
             'Authorization' => 'Bearer '.$access_token,
         ];
 
-        $url = $this->endPointUrl.$addressId;
+        $url = $this->getEndPointUrl().$addressId;
 
         return $this->res([], $url, $headers);
     }
@@ -376,7 +376,7 @@ class Network extends Api
      */
     public function searchAssets(string $q): array
     {
-        $url = $this->endPointUrl.$q;
+        $url = $this->getEndPointUrl().$q;
         return $this->res([], $url);
     }
 
@@ -389,7 +389,7 @@ class Network extends Api
      */
     public function accessTokenGetAsset(string $access_token, string $assetId): array
     {
-        $url = $this->endPointUrl.$assetId;
+        $url = $this->getEndPointUrl().$assetId;
 
         $headers = [
             'Authorization' => 'Bearer '.$access_token,
@@ -407,7 +407,7 @@ class Network extends Api
     public function readHistoricalPrices(string $asset, string $offset): array
     {
         $urlArgv = compact('asset', 'offset');
-        $url = $this->endPointUrl . '?' . http_build_query(delEmptyItemInArray($urlArgv));
+        $url     = $this->getEndPointUrl().'?'.http_build_query(delEmptyItemInArray($urlArgv));
 
         return $this->res([], $url);
     }
@@ -421,8 +421,28 @@ class Network extends Api
      */
     public function readSnapshotsByTrace(string $traceId): array
     {
-        $url = $this->endPointUrl.$traceId;
+        $url = $this->getEndPointUrl().$traceId;
 
         return $this->res([], $url);
+    }
+
+    /**
+     * @param string $public_key
+     * @param string $signature
+     * @param string $pin
+     * @param string $salt
+     * @return array
+     * @throws \Exception
+     */
+    public function safeCreateUser(string $public_key, string $signature, string $pin, string $salt)
+    {
+        $body = [
+            'public_key'  => $public_key,
+            'signature'   => $signature,
+            'pin_base64'  => $pin,
+            'salt_base64' => $salt,
+        ];
+
+        return $this->res($body);
     }
 }
