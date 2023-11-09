@@ -5,6 +5,7 @@ namespace ExinOne\MixinSDK;
 use ExinOne\MixinSDK\Exceptions\ClassNotFoundException;
 use ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException;
 use ExinOne\MixinSDK\Exceptions\NotFoundConfigException;
+use ExinOne\MixinSDK\Traits\MixinSDKTrait;
 
 /**
  * @method  Container user()
@@ -187,5 +188,10 @@ class MixinSDK
         }
 
         return "https://mixin.one/pay?recipient={$client_id}&asset={$asset_id}&amount={$amount}&trace={$trace_id}&memo={$memo}";
+    }
+
+    public static function createEd25519PrivateKey(): string
+    {
+        return MixinSDKTrait::createEd25519PrivateKey();
     }
 }

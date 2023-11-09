@@ -146,7 +146,7 @@ class Container
         } elseif ($this->isRaw()) {
             return array_merge($content ?? [], $customize_res);
         } else {
-            return array_merge($content['data'] ?? [], $customize_res);
+            return array_merge($content['data'] ?? [], $customize_res ?? null);
         }
     }
 

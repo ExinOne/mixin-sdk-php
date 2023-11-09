@@ -9,12 +9,14 @@
 namespace ExinOne\MixinSDK\Traits;
 
 use Base64Url\Base64Url;
+use ExinOne\MixinSDK\Exceptions\InternalErrorException;
 use ExinOne\MixinSDK\Exceptions\InvalidInputFieldException;
 use ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException;
 use ExinOne\MixinSDK\Utils\Transaction\Helper;
 use ExinOne\MixinSDK\Utils\Transaction\Input;
 use ExinOne\MixinSDK\Utils\Transaction\Output;
 use Firebase\JWT\JWT;
+use Jose\Component\Core\JWK;
 use Jose\Component\KeyManagement\JWKFactory;
 use Jose\Easy\Build;
 use phpseclib\Crypt\RSA;
@@ -126,7 +128,7 @@ trait MixinSDKTrait
     }
 
     /**
-     * @param $pin
+     * @param string $pin 六位数字，或者是经过pack("J", 1)处理的TIP PIN的公钥，或者是TIP PIN签名的内容
      *
      * @return string
      * @throws LoadPrivateKeyException
@@ -149,7 +151,7 @@ trait MixinSDKTrait
         } else {
             //载入私钥
             $rsa = new RSA();
-            if (!$rsa->loadKey($private_key)) {
+            if (! $rsa->loadKey($private_key)) {
                 throw  new LoadPrivateKeyException('local private key error');
             }
 
@@ -163,6 +165,23 @@ trait MixinSDKTrait
         $pin_bytes = $pin.pack("P", time()).pack("P", $iterator);
 
         return $this->encrypt_openssl($pin_bytes, $key_bytes);
+    }
+
+    public function encryptTIPPin(string $pin, string $action, ...$params)
+    {
+        if (strlen($pin) > 6) {
+            $context = hash_init('sha256');
+            hash_update($context, $action);
+            foreach ($params as $p) {
+                hash_update($context, $p);
+            }
+            // true表示返回原始二进制数据
+            $hash = hash_final($context, true);
+            $sig  = self::signWithEd25519(Base64Url::decode($pin), $hash);
+        } else {
+            $sig = $pin;
+        }
+        return $this->encryptPin($sig);
     }
 
     /**+
@@ -242,12 +261,12 @@ trait MixinSDKTrait
 
         // 检查 $inputs 和 $outputs 的类型
         foreach ($inputs as $input) {
-            if (!$input instanceof Input) {
+            if (! $input instanceof Input) {
                 throw new InvalidInputFieldException("\$inputs must use 'TransactionInput' object");
             }
         }
         foreach ($outputs as $output) {
-            if (!$output instanceof Output) {
+            if (! $output instanceof Output) {
                 throw new InvalidInputFieldException("\$outputs must use 'TransactionOutput' object");
             }
         }
@@ -261,5 +280,69 @@ trait MixinSDKTrait
         ];
 
         return Helper::buildTransaction($multisigData);
+    }
+
+    public static function getKeysFromString(string $private_key): ?JWK
+    {
+        try {
+            // return JWKFactory::createFromKey($private_key, null, [
+            //     'use' => 'sig',
+            //     'alg' => 'EdDSA',
+            //     'kty' => 'OKP',
+            //     'crv' => 'Ed25519',
+            // ]);
+            return JWKFactory::createFromValues([
+                'kty' => 'OKP',
+                'crv' => 'Ed25519',
+                'd'   => $private_key,
+            ]);
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * 注意得到的公钥是base64url编码的
+     * @param string $private_key
+     * @return string
+     * @throws \SodiumException
+     */
+    public static function getPublicFromEd25519PrivateKey(string $private_key): string
+    {
+        $key_pair = sodium_crypto_sign_seed_keypair(Base64Url::decode($private_key));
+
+        return Base64Url::encode(sodium_crypto_sign_publickey($key_pair));
+    }
+
+    /**
+     * fixme 整体都应该传输binary 64字节的seed与public的结合作为私钥，这样解公钥更快
+     * 注意得到的私钥是base64url编码的
+     * @return string
+     * @throws InternalErrorException
+     */
+    public static function createEd25519PrivateKey(): string
+    {
+        $store = JWKFactory::createOKPKey('Ed25519');
+
+        $private = $store->get('d');
+        if ($store->get('x') !== self::getPublicFromEd25519PrivateKey($private)) {
+            throw new InternalErrorException('error creating ed25519 private key, calculated public key mismatch');
+        }
+
+        return $private;
+    }
+
+    /**
+     * @param string $bin_private
+     * @param string $to_sign
+     * @return string
+     * @throws \SodiumException
+     */
+    public static function signWithEd25519(string $bin_private, string $to_sign): string
+    {
+        $pair       = sodium_crypto_sign_seed_keypair($bin_private);
+        $secret_key = sodium_crypto_sign_secretkey($pair);
+
+        return sodium_crypto_sign_detached($to_sign, $secret_key);
     }
 }
