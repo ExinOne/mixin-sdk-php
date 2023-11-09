@@ -177,7 +177,7 @@ trait MixinSDKTrait
             }
             // true表示返回原始二进制数据
             $hash = hash_final($context, true);
-            $sig  = self::signWithEd25519(Base64Url::decode($pin), $hash);
+            $sig  = self::signWithEd25519($pin, $hash);
         } else {
             $sig = $pin;
         }
@@ -282,66 +282,36 @@ trait MixinSDKTrait
         return Helper::buildTransaction($multisigData);
     }
 
-    public static function getKeysFromString(string $private_key): ?JWK
-    {
-        try {
-            // return JWKFactory::createFromKey($private_key, null, [
-            //     'use' => 'sig',
-            //     'alg' => 'EdDSA',
-            //     'kty' => 'OKP',
-            //     'crv' => 'Ed25519',
-            // ]);
-            return JWKFactory::createFromValues([
-                'kty' => 'OKP',
-                'crv' => 'Ed25519',
-                'd'   => $private_key,
-            ]);
-        } catch (\Exception $e) {
-            return null;
-        }
-    }
-
     /**
      * 注意得到的公钥是base64url编码的
-     * @param string $private_key
+     * @param string $key_pair
      * @return string
      * @throws \SodiumException
      */
-    public static function getPublicFromEd25519PrivateKey(string $private_key): string
+    public static function getPublicFromEd25519KeyPair(string $key_pair): string
     {
-        $key_pair = sodium_crypto_sign_seed_keypair(Base64Url::decode($private_key));
-
         return Base64Url::encode(sodium_crypto_sign_publickey($key_pair));
     }
 
     /**
-     * fixme 整体都应该传输binary 64字节的seed与public的结合作为私钥，这样解公钥更快
      * 注意得到的私钥是base64url编码的
      * @return string
      * @throws InternalErrorException
      */
     public static function createEd25519PrivateKey(): string
     {
-        $store = JWKFactory::createOKPKey('Ed25519');
-
-        $private = $store->get('d');
-        if ($store->get('x') !== self::getPublicFromEd25519PrivateKey($private)) {
-            throw new InternalErrorException('error creating ed25519 private key, calculated public key mismatch');
-        }
-
-        return $private;
+        return Base64Url::encode(sodium_crypto_sign_keypair());
     }
 
     /**
-     * @param string $bin_private
-     * @param string $to_sign
+     * @param string $key_pair 96位的base64url编码的key pair
+     * @param string $to_sign  待签名的内容
      * @return string
      * @throws \SodiumException
      */
-    public static function signWithEd25519(string $bin_private, string $to_sign): string
+    public static function signWithEd25519(string $key_pair, string $to_sign): string
     {
-        $pair       = sodium_crypto_sign_seed_keypair($bin_private);
-        $secret_key = sodium_crypto_sign_secretkey($pair);
+        $secret_key = sodium_crypto_sign_secretkey(Base64Url::decode($key_pair));
 
         return sodium_crypto_sign_detached($to_sign, $secret_key);
     }
