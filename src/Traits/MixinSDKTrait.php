@@ -133,8 +133,11 @@ trait MixinSDKTrait
      * @return string
      * @throws LoadPrivateKeyException
      */
-    public function encryptPin($pin)
+    public function encryptPin(string $pin)
     {
+        if (! $pin) {
+            throw new LoadPrivateKeyException('missing pin');
+        }
         $private_key = $this->config['private_key'];
         $pin_token   = $this->config['pin_token'];
         $session_id  = $this->config['session_id'];
@@ -173,7 +176,9 @@ trait MixinSDKTrait
             $context = hash_init('sha256');
             hash_update($context, $action);
             foreach ($params as $p) {
-                hash_update($context, $p);
+                if (! empty($p)) {
+                    hash_update($context, (string)$p);
+                }
             }
             // true表示返回原始二进制数据
             $hash = hash_final($context, true);
@@ -284,13 +289,13 @@ trait MixinSDKTrait
 
     /**
      * 注意得到的公钥是base64url编码的
-     * @param string $key_pair
+     * @param string $key_pair 96位的base64url编码的key pair
      * @return string
      * @throws \SodiumException
      */
     public static function getPublicFromEd25519KeyPair(string $key_pair): string
     {
-        return Base64Url::encode(sodium_crypto_sign_publickey($key_pair));
+        return Base64Url::encode(sodium_crypto_sign_publickey(Base64Url::decode($key_pair)));
     }
 
     /**
@@ -314,5 +319,23 @@ trait MixinSDKTrait
         $secret_key = sodium_crypto_sign_secretkey(Base64Url::decode($key_pair));
 
         return sodium_crypto_sign_detached($to_sign, $secret_key);
+    }
+
+    public static function isTIPPin(string $pin): bool
+    {
+        return strlen($pin) > 6;
+    }
+
+    public static function formatConfigFromCreateUser(array $info): array
+    {
+        return [
+            'mixin_id'      => $info['identity_number'],
+            'client_id'     => $info['user_id'],
+            'client_secret' => '',
+            'pin'           => '',
+            'pin_token'     => $info['pin_token_base64'],
+            'session_id'    => $info['session_id'],
+            'private_key'   => $info['priKey'],
+        ];
     }
 }

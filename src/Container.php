@@ -34,7 +34,7 @@ use GuzzleHttp\Client;
  * @method  array readNetworkAsset(string $assetId): array
  * @method  array readNetworkSnapshots(int $limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
  * @method  array readNetworkSnapshot(string $snapshotId): array
- * @method  array createUser(string $fullName, string $key_algorithm = 'RS512'): array
+ * @method  array createUser($fullName, string $key_algorithm = 'RS512'): array
  * @method  array externalTransactions(string $asset = null, string $destination = null, $limit = null, string $offset = null, string $tag = null, string $transaction_hash = null, string $source = null, string $user = null): array
  * @method  array createAttachments(): array
  * @method  array createConversations(string $category, array $participants, string $conversation_id = null, string $name = ''): array
@@ -57,11 +57,11 @@ use GuzzleHttp\Client;
  * @method  array readSnapshotsByTrace(string $traceId): array
  *
  * @see \ExinOne\MixinSDK\Apis\Wallet
- * @method  array createAddress(string $asset_id, string $destination, $pin, $label, $tag = false): array
+ * @method  array createAddress(string $asset_id, string $destination, ?string $pin, string $label, string $tag = ''): array
  * @method  array createAddressRaw(string $asset_id, $public_key, $label, $account_name, $account_tag, $pin = null): array
  * @method  array readAddresses(string $assetId): array
  * @method  array readAddress(string $addressId): array
- * @method  array deleteAddress(string $addressId, $pin = null): array
+ * @method  array deleteAddress(string $address_id, string $pin = null): array
  * @method  array readAssets(): array
  * @method  array readAsset(string $assetId): array
  * @method  array deposit(string $assetId): array
@@ -86,7 +86,7 @@ use GuzzleHttp\Client;
  * @method  array accessTokenMultisigsRequests(string $access_token, string $raw, string $action = 'sign'): array
  * @method  array multisigsRequestsSign(string $request_id, string $pin = null): array
  * @method  array multisigsRequestsUnlock(string $request_id, string $pin = null): array
- * @method  array multisigsRequestsCancel(string $request_id, string $pin = null): array
+ * @method  array multisigsRequestsCancel(string $request_id): array
  * @method  array accessTokenMultisigsRequestsAction(string $access_token, string $request_id, $action = 'sign'): array
  * @method  array readFiats(): array
  * @method  array multisigsCancel(string $request_id, string $pin = null): array

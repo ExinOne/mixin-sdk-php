@@ -15,15 +15,19 @@ use ExinOne\MixinSDK\Traits\MixinSDKTrait;
 class Pin extends Api
 {
     /**
-     * @param string $old_pin 六位数字PIN码，或者base64url编码的TIP私钥
-     * @param string $pin     六位数字PIN码，或者base64url编码的TIP私钥
+     * @param string|null $old_pin 六位数字PIN码，或者base64url编码的TIP私钥
+     * @param string      $pin     六位数字PIN码，或者base64url编码的TIP私钥
      *
      * @return array
      * @throws \ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function updatePin(string $old_pin, string $pin): array
+    public function updatePin($old_pin, string $pin): array
     {
+        if ($old_pin === null) {
+            $old_pin = $this->config['pin'];
+        }
+
         if (strlen($old_pin) > 6) {
             throw new InvalidInputFieldException('TIP pin does not support update');
         } elseif ($old_pin == '') {

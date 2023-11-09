@@ -86,3 +86,5 @@ fabric.properties
 composer.lock
 
 test.php
+
+test_keys_*.php
