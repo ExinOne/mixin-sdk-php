@@ -6,6 +6,7 @@ use ExinOne\MixinSDK\Exceptions\ClassNotFoundException;
 use ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException;
 use ExinOne\MixinSDK\Exceptions\NotFoundConfigException;
 use ExinOne\MixinSDK\Traits\MixinSDKTrait;
+use ExinOne\MixinSDK\Utils\TIPService;
 
 /**
  * @method  Container user()
@@ -192,6 +193,6 @@ class MixinSDK
 
     public static function createEd25519PrivateKey(): string
     {
-        return MixinSDKTrait::createEd25519PrivateKey();
+        return TIPService::createEd25519PrivateKey();
     }
 }

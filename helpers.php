@@ -8,6 +8,7 @@
 
 use ExinOne\MixinSDK\Exceptions\NotSupportTIPPINException;
 use ExinOne\MixinSDK\Traits\MixinSDKTrait;
+use ExinOne\MixinSDK\Utils\TIPService;
 
 if (! function_exists('camel2Underline')) {
     /**
@@ -47,7 +48,7 @@ if (! function_exists('assertTIPPIN')) {
      */
     function assertTIPPIN(string $pin, string $err_msg)
     {
-        if (MixinSDKTrait::isTIPPin($pin)) {
+        if (TIPService::isTIPPin($pin)) {
             throw new NotSupportTIPPINException($err_msg);
         }
     }

@@ -11,6 +11,7 @@ namespace ExinOne\MixinSDK\Apis;
 use ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException;
 use ExinOne\MixinSDK\Exceptions\NotSupportTIPPINException;
 use ExinOne\MixinSDK\Traits\MixinSDKTrait;
+use ExinOne\MixinSDK\Utils\TIPService;
 use Ramsey\Uuid\Uuid;
 
 class Wallet extends Api
@@ -37,7 +38,7 @@ class Wallet extends Api
             'tag'         => $tag,
         ];
 
-        if (MixinSDKTrait::isTIPPin($pin)) {
+        if (TIPService::isTIPPin($pin)) {
             $body['pin_base64'] = $this->encryptTIPPin($pin, "TIP:ADDRESS:ADD:", $asset_id, $destination, $tag, $label);
         } else {
             $body['pin'] = $this->encryptPin($pin);
@@ -120,7 +121,7 @@ class Wallet extends Api
             $pin = $this->config['pin'];
         }
 
-        if (MixinSDKTrait::isTIPPin($pin)) {
+        if (TIPService::isTIPPin($pin)) {
             $body['pin_base64'] = $this->encryptTIPPin($pin, "TIP:ADDRESS:REMOVE:", $address_id);
         } else {
             $body['pin'] = $this->encryptPin($pin);
@@ -194,7 +195,7 @@ class Wallet extends Api
             'trace_id'   => $trace_id,
         ];
 
-        if (MixinSDKTrait::isTIPPin($pin)) {
+        if (TIPService::isTIPPin($pin)) {
             $body['pin_base64'] = $this->encryptTIPPin($pin, 'TIP:WITHDRAWAL:CREATE:', $address_id, $amount, $fee, $trace_id, $memo);
         } else {
             $body['pin'] = $this->encryptPin($pin);
@@ -234,7 +235,7 @@ class Wallet extends Api
             'memo'        => $memo,
         ];
 
-        if (MixinSDKTrait::isTIPPin($pin)) {
+        if (TIPService::isTIPPin($pin)) {
             $body['pin_base64'] = $this->encryptTIPPin($pin, 'TIP:TRANSFER:CREATE:', $asset_id, $opponent_id, $amount, $trace_id, $memo);
         } else {
             $body['pin'] = $this->encryptPin($pin);
@@ -631,7 +632,7 @@ class Wallet extends Api
 
         $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
 
-        if (MixinSDKTrait::isTIPPin($pin)) {
+        if (TIPService::isTIPPin($pin)) {
             $body = [
                 'pin_base64' => $this->encryptTIPPin($pin, "TIP:MULTISIG:REQUEST:SIGN:", $request_id),
             ];
@@ -673,7 +674,7 @@ class Wallet extends Api
 
         $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
 
-        if (MixinSDKTrait::isTIPPin($pin)) {
+        if (TIPService::isTIPPin($pin)) {
             $body = [
                 'pin_base64' => $this->encryptTIPPin($pin, 'TIP:MULTISIG:REQUEST:UNLOCK:', $request_id),
             ];
@@ -782,7 +783,7 @@ class Wallet extends Api
             'memo'              => $memo,
         ];
 
-        if (MixinSDKTrait::isTIPPin($pin)) {
+        if (TIPService::isTIPPin($pin)) {
             $body['pin_base64'] = $this->encryptTIPPin($pin, "TIP:TRANSACTION:CREATE:", $asset_id, implode('', $receivers), $threshold, $amount, $trace_id, $memo);
         } else {
             $body['pin'] = $this->encryptPin($pin);
@@ -818,7 +819,7 @@ class Wallet extends Api
             'memo'         => $memo,
         ];
 
-        if (MixinSDKTrait::isTIPPin($pin)) {
+        if (TIPService::isTIPPin($pin)) {
             $body['pin_base64'] = $this->encryptTIPPin($pin, "TIP:TRANSACTION:CREATE:", $asset_id, $opponent_key, $amount, $trace_id, $memo);
         } else {
             $body['pin'] = $this->encryptPin($pin);
@@ -900,6 +901,6 @@ class Wallet extends Api
 
         $url = str_replace(['{$requestId}', '{$action}'], [$request_id, $action], $this->endPointUrl);
 
-        return $this->res($body, $url, $headers);
+        return $this->res([], $url, $headers);
     }
 }

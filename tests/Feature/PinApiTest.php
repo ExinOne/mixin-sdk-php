@@ -9,7 +9,8 @@
 namespace ExinOne\MixinSDK\Tests\Feature;
 
 use ExinOne\MixinSDK\MixinSDK;
-use ExinOne\MixinSDK\Traits\MixinSDKTrait;
+use ExinOne\MixinSDK\Utils\MixinService;
+use ExinOne\MixinSDK\Utils\TIPService;
 use PHPUnit\Framework\TestCase;
 
 class PinApiTest extends TestCase
@@ -26,13 +27,13 @@ class PinApiTest extends TestCase
     {
         $user = $this->mixin_sdk->network()->createUser('test_change_pin', 'Ed25519');
         dump($user);
-        $config    = MixinSDKTrait::formatConfigFromCreateUser($user);
+        $config    = MixinService::formatConfigFromCreateUser($user);
         $digit_pin = '114514';
         $res       = $this->mixin_sdk->use('test_change_pin', $config)->pin()->updatePin('', $digit_pin);
         dump($res);
         $res = $this->mixin_sdk->use('test_change_pin', $config)->pin()->verifyPin($digit_pin);
         dump($res);
-        $tip_pin = MixinSDKTrait::createEd25519PrivateKey();
+        $tip_pin = TIPService::createEd25519PrivateKey();
         dump($tip_pin);
         $res = $this->mixin_sdk->use('test_change_pin', $config)->pin()->updatePin($digit_pin, $tip_pin);
         dump($res);
