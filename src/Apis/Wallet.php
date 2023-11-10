@@ -8,6 +8,7 @@
 
 namespace ExinOne\MixinSDK\Apis;
 
+use Brick\Math\BigDecimal;
 use ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException;
 use ExinOne\MixinSDK\Exceptions\NotSupportTIPPINException;
 use ExinOne\MixinSDK\Traits\MixinSDKTrait;
@@ -226,6 +227,8 @@ class Wallet extends Api
         }
 
         $trace_id = empty($trace_id) ? Uuid::uuid4()->toString() : $trace_id;
+
+        $amount = (string)BigDecimal::of($amount)->stripTrailingZeros();
 
         $body = [
             'asset_id'    => $asset_id,
@@ -775,6 +778,8 @@ class Wallet extends Api
 
         $trace_id = empty($trace_id) ? Uuid::uuid4()->toString() : $trace_id;
 
+        $amount = (string)BigDecimal::of($amount)->stripTrailingZeros();
+
         $body = [
             'asset_id'          => $asset_id,
             'opponent_multisig' => $opponent_multisig,
@@ -810,6 +815,8 @@ class Wallet extends Api
         }
 
         $trace_id = empty($trace_id) ? Uuid::uuid4()->toString() : $trace_id;
+
+        $amount = (string)BigDecimal::of($amount)->stripTrailingZeros();
 
         $body = [
             'asset_id'     => $asset_id,
