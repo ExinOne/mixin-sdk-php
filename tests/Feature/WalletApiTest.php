@@ -108,12 +108,11 @@ class WalletApiTest extends TestCase
     public function test_it_can_transfer_success0()
     {
         $asset_id    = '965e5c6e-434c-3fa9-b780-c50f43cd955c';
-        $opponent_id = '17d1c125-aada-46b0-897d-3cb2a29eb011';
-        $amount      = 0.01;
-        $pin         = $this->mixin_sdk->getConfig('default')['pin'];
+        $opponent_id = '2ef7c59f-bf5c-41b3-bb67-2d2c4d6b925c';
+        $amount      = "0.010000";
         $memo        = 'sdkfjklsdjfklsjdfkl';
 
-        $res = $this->mixin_sdk->wallet()->transfer($asset_id, $opponent_id, $pin, $amount, $memo);
+        $res = $this->mixin_sdk->wallet()->transfer($asset_id, $opponent_id, null, $amount, $memo);
         dump($res);
         self::assertInternalType('array', $res);
     }

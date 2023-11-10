@@ -189,6 +189,9 @@ class Wallet extends Api
 
         $trace_id = empty($trace_id) ? Uuid::uuid4()->toString() : $trace_id;
 
+        $amount = (string)BigDecimal::of($amount)->stripTrailingZeros();
+        $fee    = (string)BigDecimal::of($fee)->stripTrailingZeros();
+
         $body = [
             'address_id' => $address_id,
             'amount'     => $amount,
