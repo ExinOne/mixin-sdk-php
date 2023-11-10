@@ -11,7 +11,7 @@ class MixinService
             'client_id'     => $info['user_id'],
             'client_secret' => '',
             'pin'           => '',
-            'pin_token'     => $info['pin_token_base64'],
+            'pin_token'     => $info['pin_token_base64'] ?: $info['pin_token'],
             'session_id'    => $info['session_id'],
             'private_key'   => $info['priKey'],
         ];
