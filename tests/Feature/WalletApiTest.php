@@ -305,6 +305,28 @@ class WalletApiTest extends TestCase
         self::assertIsNumeric($res[0]['amount']);
     }
 
+    public function test_fetch_keys()
+    {
+        $info = [
+            [
+                'receivers' => ['2ef7c59f-bf5c-41b3-bb67-2d2c4d6b925c'],
+                'index'     => 0,
+                'hint'      => Uuid::uuid4()->toString(),
+            ],
+            [
+                'receivers' => [$this->mixin_sdk_safe->config['default']['client_id']],
+                'index'     => 0,
+                'hint'      => Uuid::uuid4()->toString(),
+            ]
+        ];
+
+        $keys = $this->mixin_sdk_safe->wallet()->safeFetchKeys($info);
+
+        dump($keys);
+
+        self::assertEquals(count($keys), count($info));
+    }
+
     public function test_safe_mainnet_transfer_success()
     {
         $asset_hash = '6d2a7b89fcaca190f711043aeb5d6c274d6db49900257c1bd2e91aa24185d10c'; // asset ROAY
@@ -377,16 +399,7 @@ class WalletApiTest extends TestCase
 
         $request_id = Uuid::uuid4()->toString();
 
-        $req = [
-            [
-                'request_id' => $request_id,
-                'raw'        => (new Encoder())->encodeTransaction($transaction),
-            ]
-        ];
-
-        dump('raw request', $req);
-
-        $trans = $this->mixin_sdk_safe->wallet()->safeRequestTransaction($req);
+        $trans = $this->mixin_sdk_safe->wallet()->safeRequestTransaction($transaction, $request_id);
 
         dump('request transaction', $trans);
 

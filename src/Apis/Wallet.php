@@ -985,28 +985,21 @@ class Wallet extends Api
         return $this->res($receiver_info);
     }
 
-    /**
-     * @param array{
-     *      request_id: string,
-     *      raw: string,
-     *  } $request_info
-     * @return array
-     * @throws \Exception
-     */
-    public function safeRequestTransaction(array $request_info): array
+    public function safeRequestTransaction(array $transaction, string $request_id): array
     {
-        // 简单的参数校验
-        foreach ($request_info as $index => $info) {
-            if (! isset($info['request_id'])) {
-                throw new InvalidInputFieldException("field `request_id`(string) is required in element {$index}");
-            }
-            if (! isset($info['raw'])) {
-                throw new InvalidInputFieldException("field `raw`(string) is required in element {$index}");
-            }
-        }
+        $body = [
+            [
+                'request_id' => $request_id,
+                'raw'        => (new Encoder())->encodeTransaction($transaction),
+            ],
+        ];
 
-        return $this->res($request_info);
+        return $this->res($body);
     }
+
+    //todo safeRequestTransactions
+
+    //todo safeSendTransactions
 
     /**
      * @param array       $transaction
