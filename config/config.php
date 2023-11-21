@@ -314,7 +314,7 @@ return [
         ],
         'read_snapshots_by_trace'                => [
             'method' => 'get',
-            'url'    => '/snapshots/trace/',//后面需要填参数
+            'url'    => '/snapshots/trace/', //后面需要填参数
         ],
         'access_token_multisigs_requests_action' => [
             'method' => 'post',
@@ -323,6 +323,47 @@ return [
         'access_token_multisigs_requests'        => [
             'method' => 'post',
             'url'    => '/multisigs/requests',
+        ],
+        // Sequencer API
+        'safe_read_profile'                      => [
+            'method' => 'get',
+            'url'    => '/safe/me',
+        ],
+        'safe_register'                          => [
+            'method' => 'post',
+            'url'    => '/safe/users',
+        ],
+        'safe_fetch_deposit_entries'             => [
+            'method' => 'post',
+            'url'    => '/safe/deposit/entries',
+        ],
+        'safe_read_deposits'                     => [
+            'method' => 'get',
+            'url'    => '/safe/deposits',
+        ],
+        'safe_read_outputs'                      => [
+            'method' => 'get',
+            'url'    => '/safe/outputs',
+        ],
+        'safe_fetch_keys'                        => [
+            'method' => 'post',
+            'url'    => '/safe/keys',
+        ],
+        'safe_request_transaction'               => [
+            'method' => 'post',
+            'url'    => '/safe/transaction/requests',
+        ],
+        'safe_send_transaction'                  => [
+            'method' => 'post',
+            'url'    => '/safe/transactions',
+        ],
+        'safe_read_transaction'                  => [
+            'method' => 'get',
+            'url'    => '/safe/transactions/', //后面需要填参数
+        ],
+        'safe_read_snapshots'                    => [
+            'method' => 'get',
+            'url'    => '/safe/snapshots',
         ],
     ],
 ];

@@ -123,6 +123,7 @@ class Api
         if (!$this->http_async) {
             $response = $this->http_client->$method($url, compact('headers', 'body', 'timeout'));
             $content  = json_decode($response->getBody()->getContents(), true);
+            $headers = $response->getHeaders();
             $promise  = null;
         } else {
             $promise = $this->http_client
@@ -134,6 +135,7 @@ class Api
         // 获取内容
         return [
             'content'       => $content,
+            'headers'       => $headers,
             'customize_res' => $customizeRes,
             'auth_token'    => $auth_token,
             'promise'       => $promise,

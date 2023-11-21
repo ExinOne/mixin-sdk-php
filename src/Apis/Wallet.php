@@ -8,11 +8,17 @@
 
 namespace ExinOne\MixinSDK\Apis;
 
+use Base64Url\Base64Url;
 use Brick\Math\BigDecimal;
+use ExinOne\MixinSDK\Exceptions\EncodeFailException;
+use ExinOne\MixinSDK\Exceptions\EncodeNotYetImplementedException;
+use ExinOne\MixinSDK\Exceptions\InvalidInputFieldException;
 use ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException;
 use ExinOne\MixinSDK\Exceptions\NotSupportTIPPINException;
 use ExinOne\MixinSDK\Traits\MixinSDKTrait;
+use ExinOne\MixinSDK\Utils\Blake3;
 use ExinOne\MixinSDK\Utils\TIPService;
+use ExinOne\MixinSDK\Utils\TransactionV5\Encoder;
 use Ramsey\Uuid\Uuid;
 
 class Wallet extends Api
@@ -313,10 +319,10 @@ class Wallet extends Api
      */
     public function readUserSnapshots($limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
     {
-        $limit   = empty($limit) ? $limit : (int)$limit;
-        $urlArgv = compact('limit', 'offset', 'asset', 'order');
+        $limit    = empty($limit) ? $limit : (int)$limit;
+        $url_argv = compact('limit', 'offset', 'asset', 'order');
 
-        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
+        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($url_argv));
 
         return $this->res([], $url);
     }
@@ -349,14 +355,14 @@ class Wallet extends Api
      */
     public function accessTokenGetUserSnapshots(string $access_token, $limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
     {
-        $limit   = empty($limit) ? $limit : (int)$limit;
-        $urlArgv = compact('limit', 'offset', 'asset', 'order');
+        $limit    = empty($limit) ? $limit : (int)$limit;
+        $url_argv = compact('limit', 'offset', 'asset', 'order');
 
         $headers = [
             'Authorization' => 'Bearer '.$access_token,
         ];
 
-        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
+        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($url_argv));
 
         return $this->res([], $url, $headers);
     }
@@ -489,10 +495,10 @@ class Wallet extends Api
      */
     public function readMultisigs(string $offset = '', $limit = null): array
     {
-        $limit   = empty($limit) ? 100 : (int)$limit;
-        $urlArgv = compact('limit', 'offset');
+        $limit    = empty($limit) ? 100 : (int)$limit;
+        $url_argv = compact('limit', 'offset');
 
-        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
+        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($url_argv));
 
         return $this->res([], $url);
     }
@@ -858,10 +864,10 @@ class Wallet extends Api
             $members = null;
         }
 
-        $limit   = empty($limit) ? 100 : (int)$limit;
-        $urlArgv = compact('limit', 'offset', 'state', 'members', 'threshold');
+        $limit    = empty($limit) ? 100 : (int)$limit;
+        $url_argv = compact('limit', 'offset', 'state', 'members', 'threshold');
 
-        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($urlArgv));
+        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($url_argv));
         return $this->res([], $url);
     }
 
@@ -912,5 +918,181 @@ class Wallet extends Api
         $url = str_replace(['{$requestId}', '{$action}'], [$request_id, $action], $this->endPointUrl);
 
         return $this->res([], $url, $headers);
+    }
+
+    public function safeFetchDepositEntries(string $chain_uuid, array $members, int $threshold): array
+    {
+        $body = [
+            'members'   => $members,
+            'threshold' => $threshold,
+            'chain_id'  => $chain_uuid,
+        ];
+        return $this->res($body);
+    }
+
+    public function safeReadDeposits(string $asset_uuid = null, string $destination = null, string $tag = null, string $offset = null, int $limit = 500): array
+    {
+        $asset    = $asset_uuid;
+        $url_argv = compact('asset', 'destination', 'tag', 'offset', 'limit');
+
+        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($url_argv));
+
+        return $this->res([], $url);
+    }
+
+    public function safeReadOutputs(array $members_array = null, int $threshold = null, int $offset_sequence = null, int $limit = 500, string $asset_hash = null, string $state = null, string $order = 'ASC'): array
+    {
+        $members = null;
+        if (is_array($members_array)) {
+            sort($members_array);
+            $members = hash('sha3-256', implode('', $members_array));
+        }
+
+        $offset = $offset_sequence;
+
+        $asset = $asset_hash;
+
+        $url_argv = compact('members', 'threshold', 'offset', 'limit', 'asset', 'state', 'order');
+
+        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($url_argv));
+
+        return $this->res([], $url);
+    }
+
+    /**
+     * @param array{
+     *     receivers: string[],
+     *     index: int,
+     *     hint: string
+     * } $receiver_info
+     * @return array
+     * @throws \Exception
+     */
+    public function safeFetchKeys(array $receiver_info): array
+    {
+        // 简单的参数校验
+        foreach ($receiver_info as $index => $info) {
+            if (! isset($info['receivers'])) {
+                throw new InvalidInputFieldException("field `receivers`(array) is required in element {$index}");
+            }
+            if (! isset($info['index'])) {
+                throw new InvalidInputFieldException("field `index`(int) is required in element {$index}");
+            }
+            if (! isset($info['hint'])) {
+                throw new InvalidInputFieldException("field `hint`(string) is required in element {$index}");
+            }
+        }
+        return $this->res($receiver_info);
+    }
+
+    /**
+     * @param array{
+     *      request_id: string,
+     *      raw: string,
+     *  } $request_info
+     * @return array
+     * @throws \Exception
+     */
+    public function safeRequestTransaction(array $request_info): array
+    {
+        // 简单的参数校验
+        foreach ($request_info as $index => $info) {
+            if (! isset($info['request_id'])) {
+                throw new InvalidInputFieldException("field `request_id`(string) is required in element {$index}");
+            }
+            if (! isset($info['raw'])) {
+                throw new InvalidInputFieldException("field `raw`(string) is required in element {$index}");
+            }
+        }
+
+        return $this->res($request_info);
+    }
+
+    /**
+     * @param array       $transaction
+     * @param array       $views
+     * @param string|null $spent_key
+     * @return array
+     * @throws InvalidInputFieldException
+     * @throws EncodeFailException
+     * @throws EncodeNotYetImplementedException
+     * @throws \SodiumException
+     */
+    public function safeSendTransaction(array $transaction, array $views, string $trace_id = null, string $spent_key = null): array
+    {
+        $inputs = $transaction['inputs'] ?? [];
+        if (! $inputs) {
+            throw new InvalidInputFieldException('MISSING_INPUTS');
+        }
+        if (count($inputs) !== count($views)) {
+            throw new InvalidInputFieldException('INPUTS_AND_VIEWS_NOT_MATCH');
+        }
+
+        $raw = (new Encoder())->encodeTransaction($transaction);
+        $msg = (new Blake3())->hash(hex2bin($raw));
+
+        if (! $spent_key) {
+            $spent_key = $this->config['safe_key'] ?? null;
+        }
+        if ($spent_key === null) {
+            throw new InvalidInputFieldException('NEED_SPENT_KEY_TO_PERFORM_TRANSACTION');
+        }
+
+        $raw_key = substr(Base64Url::decode($spent_key), 0, 32);
+
+        $spent_y = hash("sha512", $raw_key, true);
+
+        $y = TIPService::getBytesWithClamping(substr($spent_y, 0, 32));
+
+        $signatures_map = [];
+        foreach ($inputs as $i => $input) {
+            if (! ($views[$i] ?? null)) {
+                throw new InvalidInputFieldException('MISSING_VIEW');
+            }
+
+            $seed = hex2bin($views[$i]);
+
+            // $seed = sodium_crypto_core_ristretto255_scalar_add($seed, $y);
+            $seed = \ParagonIE_Sodium_Core_Ed25519::scalar_add($seed, $y);
+
+            $pub = TIPService::getPublicKeyFromEd25519KeyPair($seed);
+
+            $new_key = $seed.$pub;
+
+            $sig = bin2hex(TIPService::signWithMixinEd25519($new_key, hex2bin($msg)));
+
+            $signatures_map[$i] = [0 => $sig]; // for 1/1 bot transaction
+        }
+
+        $transaction['signatures_map'] = $signatures_map;
+
+        if (! $trace_id) {
+            $trace_id = Uuid::uuid4()->toString();
+        }
+        $body = [
+            [
+                'request_id' => $trace_id,
+                'raw'        => (new Encoder())->encodeTransaction($transaction),
+            ]
+        ];
+
+        return $this->res($body);
+    }
+
+    public function safeReadTransaction(string $request_id): array
+    {
+        $url = $this->endPointUrl.$request_id;
+
+        return $this->res([], $url);
+    }
+
+    public function safeReadSnapshots(string $asset_uuid = null, string $app = null, string $opponent = null, string $offset = null, int $limit = 500): array
+    {
+        $asset    = $asset_uuid;
+        $url_argv = compact('asset', 'app', 'opponent', 'offset', 'limit');
+
+        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($url_argv));
+
+        return $this->res([], $url);
     }
 }

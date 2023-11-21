@@ -26,6 +26,7 @@ use GuzzleHttp\Client;
  * @method  array addFavoriteApp(string $user_id): array
  * @method  array removeFavoriteApp(string $user_id): array
  * @method  array readFavoriteApps(string $user_id = null): array
+ * @method  array safeRegister(string $safe_private_key, string $pin = null): array
  *
  * @see \ExinOne\MixinSDK\Apis\Network
  * @method  array readUser(string $userId): array
@@ -92,6 +93,14 @@ use GuzzleHttp\Client;
  * @method  array multisigsCancel(string $request_id, string $pin = null): array
  * @method  array sendMultisigTransactions(string $asset_id, array $receivers, int $threshold, string $amount, string $pin = null, string $trace_id = null, string $memo = null): array
  * @method  array sendMainnetTransactions(string $asset_id, string $opponent_key, string $amount, string $pin = null, string $trace_id = null, string $memo = null): array
+ * @method  array safeFetchDepositEntries(string $chain_uuid, array $members, int $threshold): array
+ * @method  array safeReadDeposits(string $asset_uuid = null, string $destination = null, string $tag = null, string $offset = null, int $limit = 500): array
+ * @method  array safeReadOutputs(array $members_array = null, int $threshold = null, int $offset_sequence = null, int $limit = 500, string $asset_hash = null, string $state = null, string $order = 'ASC'): array
+ * @method  array safeFetchKeys(array $receiver_info): array
+ * @method  array safeRequestTransaction(array $request_info): array
+ * @method  array safeSendTransaction(array $transaction, array $views, string $trace_id = null, string $spent_key = null): array
+ * @method  array safeReadTransaction(string $request_id): array
+ * @method  array safeReadSnapshots(string $asset_uuid = null, string $app = null, string $opponent = null, string $offset = null, int $limit = 500): array
  *
  * @see \ExinOne\MixinSDK\Apis\Message
  * @method  array sendText($user_id, $data, $category = 'CONTACT', $conversation_id = null): array
@@ -137,10 +146,10 @@ class Container
             return $auth_token;
         } elseif ($this->isHttpAsync()) {
             return $promise;
-        } elseif (!$this->isRaw() && ($content['error'] ?? 0)) {
+        } elseif (! $this->isRaw() && ($content['error'] ?? 0)) {
             // 出现异常
-            $error = $content['error'];
-            $code = isset($error['code']) ? $error['code'] : 404;
+            $error       = $content['error'];
+            $code        = isset($error['code']) ? $error['code'] : 404;
             $description = isset($error['description']) ? $error['description'] : '';
             $this->boomRoom($code, $description);
         } elseif ($this->isRaw()) {
@@ -205,7 +214,7 @@ class Container
     }
 
     /**
-     * @param Client|false $http_client
+     * @param Client|false  $http_client
      * @param \Closure|null $on_resolve
      * @param \Closure|null $on_reject
      * @return $this
@@ -214,11 +223,11 @@ class Container
     {
         if ($http_client) {
             $this->http_async = true;
-            if (!$on_resolve) {
+            if (! $on_resolve) {
                 $on_resolve = function () {
                 };
             }
-            if (!$on_reject) {
+            if (! $on_reject) {
                 $on_reject = function () {
                 };
             }

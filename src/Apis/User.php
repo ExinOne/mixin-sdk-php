@@ -8,6 +8,12 @@
 
 namespace ExinOne\MixinSDK\Apis;
 
+use Base64Url\Base64Url;
+use ExinOne\MixinSDK\Exceptions\NeedTIPPINException;
+use ExinOne\MixinSDK\Exceptions\NotFoundConfigException;
+use ExinOne\MixinSDK\Utils\TIPService;
+use Ramsey\Uuid\Uuid;
+
 class User extends Api
 {
     /**
@@ -16,6 +22,11 @@ class User extends Api
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
     public function readProfile(): array
+    {
+        return $this->res();
+    }
+
+    public function safeReadProfile(): array
     {
         return $this->res();
     }
@@ -104,5 +115,35 @@ class User extends Api
         }
         $url = str_replace('{$userId}', $user_id, $this->endPointUrl);
         return $this->res([], $url);
+    }
+
+    public function safeRegister(string $safe_private_key, string $pin = null): array
+    {
+        if ($pin === null) {
+            $pin = $this->config['pin'];
+        }
+
+        $client_id = $this->config['client_id'];
+
+        if (! $client_id) {
+            throw new NotFoundConfigException('missing parameter client_id');
+        }
+
+        if (! TIPService::isTIPPin($pin)) {
+            throw new NeedTIPPINException('please upgrade to TIP PIN before register');
+        }
+
+        $public_base64url = TIPService::getPublicFromEd25519KeyPair($safe_private_key);
+        $public_bin       = Base64Url::decode($public_base64url);
+        $public_hex       = bin2hex($public_bin);
+        $sig_raw          = TIPService::signWithEd25519($safe_private_key, hash('sha3-256', $client_id, true));
+
+        $body = [
+            'public_key' => $public_hex,
+            'signature'  => Base64Url::encode($sig_raw),
+            'pin_base64' => $this->encryptTIPPin($pin, 'SEQUENCER:REGISTER:', $client_id, $public_hex),
+        ];
+
+        return $this->res($body);
     }
 }

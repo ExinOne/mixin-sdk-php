@@ -8,18 +8,26 @@
 
 namespace ExinOne\MixinSDK\Tests\Feature;
 
+use Brick\Math\BigDecimal;
 use ExinOne\MixinSDK\MixinSDK;
+use ExinOne\MixinSDK\Utils\MixinService;
+use ExinOne\MixinSDK\Utils\TIPService;
+use ExinOne\MixinSDK\Utils\TransactionV5\Encoder;
 use PHPUnit\Framework\TestCase;
+use Ramsey\Uuid\Uuid;
 
 class WalletApiTest extends TestCase
 {
 
     protected $mixin_sdk;
 
+    protected $mixin_sdk_safe;
+
     public function __construct(?string $name = null, array $data = [], string $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        $this->mixin_sdk = new MixinSDK(require 'test_keys_ed25519.php');
+        $this->mixin_sdk      = new MixinSDK(require 'test_keys_ed25519.php');
+        $this->mixin_sdk_safe = new MixinSDK(require 'test_safe_keys.php');
     }
 
     public function test_it_can_create_address_success0()
@@ -205,4 +213,227 @@ class WalletApiTest extends TestCase
         self::assertInternalType('array', $res);
     }
 
+    public function test_safe_fetch_deposit_entries_success0()
+    {
+        $members    = [$this->mixin_sdk_safe->config['default']['client_id']];
+        $chain_uuid = '25dabac5-056a-48ff-b9f9-f67395dc407c';
+        $threshold  = 1;
+
+        $res = $this->mixin_sdk_safe->wallet()->safeFetchDepositEntries($chain_uuid, $members, $threshold);
+        dump($res);
+        self::assertEquals($res[0]['type'], 'deposit_entry');
+    }
+
+    public function test_safe_read_deposits_success0()
+    {
+        $res = $this->mixin_sdk_safe->wallet()->safeReadDeposits('25dabac5-056a-48ff-b9f9-f67395dc407c');
+        dump('res', $res);
+
+        self::assertIsArray($res);
+    }
+
+    public function test_migrate_to_safe_network()
+    {
+        $info = $this->mixin_sdk->network()->createUser('test', 'Ed25519');
+
+        $config = MixinService::formatConfigFromCreateUser($info);
+
+        // transfer asset
+        $this->mixin_sdk->wallet()->transfer('69b2d237-1eb2-3b6c-8e1d-3876e507b263', $config['client_id'], null, 12345, 'test');
+
+        $sub_user_tip_pin = TIPService::createEd25519PrivateKey();
+
+        dump('sub_user_tip_pin', $sub_user_tip_pin);
+
+        (new MixinSDK($config))
+            ->pin()
+            ->updatePin('', $sub_user_tip_pin);
+
+        $config['pin'] = $sub_user_tip_pin;
+
+        dump('config', $config);
+
+        $sub_user_safe_pin = TIPService::createEd25519PrivateKey();
+
+        dump('sub_user_safe_pin', $sub_user_safe_pin);
+
+        // 迁移至 safe
+        $res = (new MixinSDK($config))->user()->safeRegister($sub_user_safe_pin);
+
+        dump('migrate to safe', $res);
+
+        $safe_network_migration_uuid = '84c9dfb1-bfcf-4cb4-8404-cc5a1354005b';
+
+        // 转账给迁移机器人
+        $res = (new MixinSDK($config))->wallet()->transfer('69b2d237-1eb2-3b6c-8e1d-3876e507b263', $safe_network_migration_uuid, null, 10, 'memo:parse_me');
+
+        dump('migrate asset', $res);
+    }
+
+    public function test_transfer_old_mainnet_asset_to_safe_user()
+    {
+        $res = $this->mixin_sdk->wallet()->transfer('69b2d237-1eb2-3b6c-8e1d-3876e507b263', $this->mixin_sdk_safe->config['default']['client_id'], null, 12345, 'test');
+
+        dump($res);
+
+        self::assertEquals('transfer', $res['type']);
+    }
+
+    public function test_migrate_old_mainnet_asset_to_safe()
+    {
+        $res = $this->mixin_sdk_safe->wallet()->readAsset('69b2d237-1eb2-3b6c-8e1d-3876e507b263');
+
+        dump($res);
+
+        $safe_network_migration_uuid = '84c9dfb1-bfcf-4cb4-8404-cc5a1354005b';
+
+        $trace_id = Uuid::uuid4()->toString();
+
+        $res = $this->mixin_sdk_safe->wallet()->transfer('69b2d237-1eb2-3b6c-8e1d-3876e507b263', $safe_network_migration_uuid, null, 12, 'test', $trace_id);
+
+        dump('transfer result:', $res);
+
+        self::assertEquals($res['trace_id'], $trace_id);
+    }
+
+    public function test_read_safe_mainnet_outputs_success()
+    {
+        $res = $this->mixin_sdk_safe->wallet()->safeReadOutputs([$this->mixin_sdk_safe->config['default']['client_id']], 1);
+
+        dump($res);
+
+        self::assertIsNumeric($res[0]['amount']);
+    }
+
+    public function test_safe_mainnet_transfer_success()
+    {
+        $asset_hash = '6d2a7b89fcaca190f711043aeb5d6c274d6db49900257c1bd2e91aa24185d10c'; // asset ROAY
+        $res        = $this->mixin_sdk_safe->wallet()->safeReadOutputs([$this->mixin_sdk_safe->config['default']['client_id']], 1, null, 10, $asset_hash, 'unspent');
+        dump($res);
+        $input = $res[0];
+
+        // opponent
+        $hint          = Uuid::uuid4()->toString();
+        $opponent_info = [
+            [
+                'receivers' => ['2ef7c59f-bf5c-41b3-bb67-2d2c4d6b925c'],
+                'index'     => 0,
+                'hint'      => $hint,
+            ]
+        ];
+
+        dump('opponent hint uuid', $hint);
+        $opponent_keys = $this->mixin_sdk_safe->wallet()->safeFetchKeys($opponent_info);
+
+        dump('opponent ghost keys', $opponent_keys);
+
+        // target
+        $hint     = Uuid::uuid4()->toString();
+        $bot_info = [
+            [
+                'receivers' => [$this->mixin_sdk_safe->config['default']['client_id']],
+                'index'     => 0,
+                'hint'      => $hint,
+            ]
+        ];
+
+        dump('bot hint uuid', $hint);
+        $bot_keys = $this->mixin_sdk_safe->wallet()->safeFetchKeys($bot_info);
+
+        dump('bot ghost keys', $opponent_keys);
+
+        $transfer_amount = '1.1';
+
+        $transaction = [
+            'version' => 5,
+            'asset'   => $asset_hash,
+            'extra'   => bin2hex('test'), // <= 512
+            'outputs' => [
+                [
+                    'type'   => 0,
+                    'amount' => $transfer_amount,
+                    //todo 收款人长度超过10的话待测试
+                    'script' => "fffe0".count($opponent_info[0]['receivers']),
+                    'keys'   => $opponent_keys[0]['keys'],
+                    'mask'   => $opponent_keys[0]['mask'],
+                ],
+                [
+                    'type'   => 0,
+                    'amount' => (string)BigDecimal::of($input['amount'])->minus($transfer_amount)->stripTrailingZeros(),
+                    'script' => "fffe0".count($bot_info[0]['receivers']),
+                    'keys'   => $bot_keys[0]['keys'],
+                    'mask'   => $bot_keys[0]['mask'],
+                ]
+            ],
+            'inputs'  => [
+                [
+                    'hash'  => $input['transaction_hash'],
+                    'index' => $input['output_index'],
+                ]
+            ],
+        ];
+
+        dump('transaction', $transaction);
+
+        $request_id = Uuid::uuid4()->toString();
+
+        $req = [
+            [
+                'request_id' => $request_id,
+                'raw'        => (new Encoder())->encodeTransaction($transaction),
+            ]
+        ];
+
+        dump('raw request', $req);
+
+        $trans = $this->mixin_sdk_safe->wallet()->safeRequestTransaction($req);
+
+        dump('request transaction', $trans);
+
+        self::assertEquals($trans[0]['request_id'], $request_id);
+
+        $res = $this->mixin_sdk_safe->wallet()->setRaw(true)->safeSendTransaction($transaction, $trans[0]['views'], $request_id);
+
+        dump('send transaction', $res);
+    }
+
+    public function test_sign_mixin_ed25519()
+    {
+        $transaction = [
+            "version" => 5,
+            "asset"   => "6d2a7b89fcaca190f711043aeb5d6c274d6db49900257c1bd2e91aa24185d10c",
+            "extra"   => "74657374",
+            "hash"    => "7a161cc0f0c61c2f11a7d92f08ceecfc45a1d20a59c3ce04f1ad421528dfbd27",
+            "inputs"  => [
+                [
+                    "hash"  => "7f555768fb407e2d9f8f37d10058929bb43d810148122598b21b5673cedc6421",
+                    "index" => 0,
+                ],
+            ],
+            "outputs" => [
+                [
+                    "amount" => "1.10000000",
+                    "keys"   => [
+                        "ba207da0d05bc72e0ad583ed92c9cd842c21beb77426e80d369a7fb84a11da28",
+                    ],
+                    "mask"   => "ee03ed1f8bfb20aad934368fbc025a8ad5bee04a79a4a05fb32fe1e4982b90c8",
+                    "script" => "fffe01",
+                    "type"   => 0,
+                ],
+                [
+                    "amount" => "9.90000000",
+                    "keys"   => [
+                        "81ba99270e649697eb63905d0ce2569f86b405534b42eb463e6a290f826c44bb",
+                    ],
+                    "mask"   => "3c8e47aae35c770c50d8445a55bc2e34dbb17a328d455753d53a7c1669b4ed3b",
+                    "script" => "fffe01",
+                    "type"   => 0,
+                ],
+            ],
+        ];
+
+        $res = $this->mixin_sdk_safe->wallet()->setRaw(true)->safeSendTransaction($transaction, ["f122fbb9e26479f9c764415bc84046f9594e79967ad0ab9ac0cb76a1c2b0800c"], "12dcb8a2-90e3-479c-a83a-323088cc5fd1");
+
+        dump('send transaction', $res);
+    }
 }
