@@ -334,35 +334,22 @@ class WalletApiTest extends TestCase
         dump($res);
         $input = $res[0];
 
-        // opponent
-        $hint          = Uuid::uuid4()->toString();
-        $opponent_info = [
+        $data = [
             [
                 'receivers' => ['2ef7c59f-bf5c-41b3-bb67-2d2c4d6b925c'],
                 'index'     => 0,
-                'hint'      => $hint,
-            ]
-        ];
-
-        dump('opponent hint uuid', $hint);
-        $opponent_keys = $this->mixin_sdk_safe->wallet()->safeFetchKeys($opponent_info);
-
-        dump('opponent ghost keys', $opponent_keys);
-
-        // target
-        $hint     = Uuid::uuid4()->toString();
-        $bot_info = [
+                'hint'      => Uuid::uuid4()->toString(),
+            ],
             [
                 'receivers' => [$this->mixin_sdk_safe->config['default']['client_id']],
-                'index'     => 0,
-                'hint'      => $hint,
-            ]
+                'index'     => 1,
+                'hint'      => Uuid::uuid4()->toString(),
+            ],
         ];
 
-        dump('bot hint uuid', $hint);
-        $bot_keys = $this->mixin_sdk_safe->wallet()->safeFetchKeys($bot_info);
+        $keys = $this->mixin_sdk_safe->wallet()->safeFetchKeys($data);
 
-        dump('bot ghost keys', $opponent_keys);
+        dump('ghost keys', $keys);
 
         $transfer_amount = '1.1';
 
@@ -375,16 +362,16 @@ class WalletApiTest extends TestCase
                     'type'   => 0,
                     'amount' => $transfer_amount,
                     //todo 收款人长度超过10的话待测试
-                    'script' => "fffe0".count($opponent_info[0]['receivers']),
-                    'keys'   => $opponent_keys[0]['keys'],
-                    'mask'   => $opponent_keys[0]['mask'],
+                    'script' => "fffe0".count($data[0]['receivers']),
+                    'keys'   => $keys[0]['keys'],
+                    'mask'   => $keys[0]['mask'],
                 ],
                 [
                     'type'   => 0,
                     'amount' => (string)BigDecimal::of($input['amount'])->minus($transfer_amount)->stripTrailingZeros(),
-                    'script' => "fffe0".count($bot_info[0]['receivers']),
-                    'keys'   => $bot_keys[0]['keys'],
-                    'mask'   => $bot_keys[0]['mask'],
+                    'script' => "fffe0".count($data[1]['receivers']),
+                    'keys'   => $keys[1]['keys'],
+                    'mask'   => $keys[1]['mask'],
                 ]
             ],
             'inputs'  => [
