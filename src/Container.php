@@ -123,6 +123,8 @@ class Container
 
     protected $raw = false;
 
+    protected $is_with_headers = false;
+
     protected $is_return_access_token = false;
 
     protected $http_async = false;
@@ -139,7 +141,7 @@ class Container
         $this->detailClass->init($name);
 
         // 调用对象的$name 方法,获得需要发送的 header 和 body
-        ['content' => $content, 'customize_res' => $customize_res, 'auth_token' => $auth_token, 'promise' => $promise]
+        ['content' => $content, 'customize_res' => $customize_res, 'auth_token' => $auth_token, 'promise' => $promise, 'headers' => $headers]
             = call_user_func_array([$this->detailClass, $name], $arguments);
 
         if ($this->isReturnAccessToken()) {
@@ -153,7 +155,11 @@ class Container
             $description = isset($error['description']) ? $error['description'] : '';
             $this->boomRoom($code, $description);
         } elseif ($this->isRaw()) {
-            return array_merge($content ?? [], $customize_res);
+            $_h = [];
+            if ($this->is_with_headers) {
+                $_h = ['headers' => $headers];
+            }
+            return array_merge($content ?? [], $customize_res, $_h);
         } else {
             return array_merge($content['data'] ?? [], $customize_res ?? null);
         }
@@ -197,6 +203,18 @@ class Container
     public function isRaw(): bool
     {
         return $this->raw;
+    }
+
+    /**
+     * only works when is raw
+     *
+     * @return $this
+     */
+    public function setWithHeaders(bool $is_with_headers = true)
+    {
+        $this->is_with_headers = $is_with_headers;
+
+        return $this;
     }
 
     /**

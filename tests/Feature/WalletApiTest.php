@@ -12,7 +12,6 @@ use Brick\Math\BigDecimal;
 use ExinOne\MixinSDK\MixinSDK;
 use ExinOne\MixinSDK\Utils\MixinService;
 use ExinOne\MixinSDK\Utils\TIPService;
-use ExinOne\MixinSDK\Utils\TransactionV5\Encoder;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 
@@ -435,5 +434,59 @@ class WalletApiTest extends TestCase
         $res = $this->mixin_sdk_safe->wallet()->setRaw(true)->safeSendTransaction($transaction, ["f122fbb9e26479f9c764415bc84046f9594e79967ad0ab9ac0cb76a1c2b0800c"], "12dcb8a2-90e3-479c-a83a-323088cc5fd1");
 
         dump('send transaction', $res);
+    }
+
+    public function test_safe_read_snapshots_success()
+    {
+        $res = $this->mixin_sdk_safe->wallet()->safeReadSnapshots(null, '628bbb72-e53f-37f6-ba49-c4a070494a70');
+
+        dump($res);
+
+        self::assertIsArray($res);
+    }
+
+
+    public function test_set_with_headers_success()
+    {
+        $res = $this->mixin_sdk_safe->wallet()->setRaw(true)->setWithHeaders()->safeReadSnapshots(null, '628bbb72-e53f-37f6-ba49-c4a070494a70');
+
+        dump($res);
+
+        self::assertIsArray($res['headers']);
+        self::assertIsString($res['headers']['X-Request-Id'][0]);
+    }
+
+    public function test_multiple_safe_register()
+    {
+        $info = $this->mixin_sdk->network()->createUser('test', 'Ed25519');
+
+        $config = MixinService::formatConfigFromCreateUser($info);
+
+        $sub_user_tip_pin = TIPService::createEd25519PrivateKey();
+
+        dump('sub_user_tip_pin', $sub_user_tip_pin);
+
+        (new MixinSDK($config))
+            ->pin()
+            ->updatePin('', $sub_user_tip_pin);
+
+        $config['pin'] = $sub_user_tip_pin;
+
+        dump('config', $config);
+
+        $sub_user_safe_pin = TIPService::createEd25519PrivateKey();
+
+        dump('sub_user_safe_pin', $sub_user_safe_pin);
+
+        // 迁移至 safe
+        $res = (new MixinSDK($config))->user()->safeRegister($sub_user_safe_pin);
+
+        dump('migrate to safe 1', $res);
+
+        // 重复迁移 safe
+        // 目前这里会报错
+        $res = (new MixinSDK($config))->user()->safeRegister($sub_user_safe_pin);
+
+        dump('migrate to safe 2', $res);
     }
 }
