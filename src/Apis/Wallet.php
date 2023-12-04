@@ -959,6 +959,27 @@ class Wallet extends Api
         return $this->res([], $url);
     }
 
+    public function safeAccessTokenReadOutputs(string $access_token, array $members_array = null, int $threshold = null, int $offset_sequence = null, int $limit = 500, string $asset_hash = null, string $state = null, string $order = 'ASC'): array
+    {
+        $members = null;
+        if (is_array($members_array)) {
+            sort($members_array);
+            $members = hash('sha3-256', implode('', $members_array));
+        }
+
+        $offset = $offset_sequence;
+
+        $asset = $asset_hash;
+
+        $url_argv = compact('members', 'threshold', 'offset', 'limit', 'asset', 'state', 'order');
+
+        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($url_argv));
+
+        return $this->res([], $url, [
+            'Authorization' => 'Bearer '.$access_token,
+        ]);
+    }
+
     /**
      * @param array{
      *     receivers: string[],
@@ -1079,6 +1100,15 @@ class Wallet extends Api
         return $this->res([], $url);
     }
 
+    public function safeAccessTokenReadTransaction(string $access_token, string $request_id): array
+    {
+        $url = $this->endPointUrl.$request_id;
+
+        return $this->res([], $url, [
+            'Authorization' => 'Bearer '.$access_token,
+        ]);
+    }
+
     public function safeReadSnapshots(string $asset_uuid = null, string $app = null, string $opponent = null, string $offset = null, int $limit = 500): array
     {
         $asset    = $asset_uuid;
@@ -1087,5 +1117,17 @@ class Wallet extends Api
         $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($url_argv));
 
         return $this->res([], $url);
+    }
+
+    public function safeAccessTokenReadSnapshots(string $access_token, string $asset_uuid = null, string $app = null, string $opponent = null, string $offset = null, int $limit = 500): array
+    {
+        $asset    = $asset_uuid;
+        $url_argv = compact('asset', 'app', 'opponent', 'offset', 'limit');
+
+        $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($url_argv));
+
+        return $this->res([], $url, [
+            'Authorization' => 'Bearer '.$access_token,
+        ]);
     }
 }
