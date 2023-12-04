@@ -101,6 +101,9 @@ use GuzzleHttp\Client;
  * @method  array safeSendTransaction(array $transaction, array $views, string $trace_id = null, string $spent_key = null): array
  * @method  array safeReadTransaction(string $request_id): array
  * @method  array safeReadSnapshots(string $asset_uuid = null, string $app = null, string $opponent = null, string $offset = null, int $limit = 500): array
+ * @method  array accessTokenSafeReadOutputs(string $access_token, array $members_array = null, int $threshold = null, int $offset_sequence = null, int $limit = 500, string $asset_hash = null, string $state = null, string $order = 'ASC'): array
+ * @method  array accessTokenSafeReadTransaction(string $access_token, string $request_id): array
+ * @method  array accessTokenSafeReadSnapshots(string $access_token, string $asset_uuid = null, string $app = null, string $opponent = null, string $offset = null, int $limit = 500): array
  *
  * @see \ExinOne\MixinSDK\Apis\Message
  * @method  array sendText($user_id, $data, $category = 'CONTACT', $conversation_id = null): array

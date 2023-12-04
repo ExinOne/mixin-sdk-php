@@ -345,6 +345,10 @@ return [
             'method' => 'get',
             'url'    => '/safe/outputs',
         ],
+        'access_token_safe_read_outputs'         => [
+            'method' => 'get',
+            'url'    => '/safe/outputs',
+        ],
         'safe_fetch_keys'                        => [
             'method' => 'post',
             'url'    => '/safe/keys',
@@ -361,7 +365,15 @@ return [
             'method' => 'get',
             'url'    => '/safe/transactions/', //后面需要填参数
         ],
+        'access_token_safe_read_transaction'     => [
+            'method' => 'get',
+            'url'    => '/safe/transactions/', //后面需要填参数
+        ],
         'safe_read_snapshots'                    => [
+            'method' => 'get',
+            'url'    => '/safe/snapshots',
+        ],
+        'access_token_safe_read_snapshots'       => [
             'method' => 'get',
             'url'    => '/safe/snapshots',
         ],

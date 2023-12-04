@@ -959,7 +959,7 @@ class Wallet extends Api
         return $this->res([], $url);
     }
 
-    public function safeAccessTokenReadOutputs(string $access_token, array $members_array = null, int $threshold = null, int $offset_sequence = null, int $limit = 500, string $asset_hash = null, string $state = null, string $order = 'ASC'): array
+    public function accessTokenSafeReadOutputs(string $access_token, array $members_array = null, int $threshold = null, int $offset_sequence = null, int $limit = 500, string $asset_hash = null, string $state = null, string $order = 'ASC'): array
     {
         $members = null;
         if (is_array($members_array)) {
@@ -1100,7 +1100,7 @@ class Wallet extends Api
         return $this->res([], $url);
     }
 
-    public function safeAccessTokenReadTransaction(string $access_token, string $request_id): array
+    public function accessTokenSafeReadTransaction(string $access_token, string $request_id): array
     {
         $url = $this->endPointUrl.$request_id;
 
@@ -1119,7 +1119,7 @@ class Wallet extends Api
         return $this->res([], $url);
     }
 
-    public function safeAccessTokenReadSnapshots(string $access_token, string $asset_uuid = null, string $app = null, string $opponent = null, string $offset = null, int $limit = 500): array
+    public function accessTokenSafeReadSnapshots(string $access_token, string $asset_uuid = null, string $app = null, string $opponent = null, string $offset = null, int $limit = 500): array
     {
         $asset    = $asset_uuid;
         $url_argv = compact('asset', 'app', 'opponent', 'offset', 'limit');
