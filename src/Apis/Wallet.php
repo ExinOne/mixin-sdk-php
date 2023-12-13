@@ -1119,6 +1119,12 @@ class Wallet extends Api
         return $this->res([], $url);
     }
 
+    public function safeReadAssets(): array
+    {
+        $url = $this->endPointUrl;
+        return $this->res([], $url);
+    }
+
     public function accessTokenSafeReadSnapshots(string $access_token, string $asset_uuid = null, string $app = null, string $opponent = null, string $offset = null, int $limit = 500): array
     {
         $asset    = $asset_uuid;

@@ -373,6 +373,10 @@ return [
             'method' => 'get',
             'url'    => '/safe/snapshots',
         ],
+        'safe_read_assets'                    => [
+            'method' => 'get',
+            'url'    => '/safe/assets',
+        ],
         'access_token_safe_read_snapshots'       => [
             'method' => 'get',
             'url'    => '/safe/snapshots',

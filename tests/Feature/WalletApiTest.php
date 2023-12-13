@@ -445,6 +445,14 @@ class WalletApiTest extends TestCase
         self::assertIsArray($res);
     }
 
+    public function test_safe_read_assets_success()
+    {
+        $res = $this->mixin_sdk_safe->wallet()->safeReadAssets();
+
+        dump($res);
+
+        self::assertIsArray($res);
+    }
 
     public function test_set_with_headers_success()
     {
