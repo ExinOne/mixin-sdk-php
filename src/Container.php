@@ -156,7 +156,8 @@ class Container
             $error       = $content['error'];
             $code        = isset($error['code']) ? $error['code'] : 404;
             $description = isset($error['description']) ? $error['description'] : '';
-            $this->boomRoom($code, $description);
+            $extra       = isset($error['extra']) ? $error['extra'] : '';
+            $this->boomRoom($code, $description, $extra, $headers);
         } elseif ($this->isRaw()) {
             $_h = [];
             if ($this->is_with_headers) {
@@ -343,8 +344,10 @@ class Container
      *
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function boomRoom($errorCode, $description)
+    public function boomRoom($errorCode, $description, $extra, $headers = [])
     {
-        throw new MixinNetworkRequestException($description, $errorCode);
+        $extra = json_encode($extra);
+        $id = $headers['X-Request-Id'][0] ?? '';
+        throw new MixinNetworkRequestException("{$description}, {$extra}, {$id}", $errorCode);
     }
 }
