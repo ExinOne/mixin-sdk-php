@@ -5,6 +5,7 @@ namespace ExinOne\MixinSDK\Utils;
 use Base64Url\Base64Url;
 use ExinOne\MixinSDK\Exceptions\InternalErrorException;
 use ParagonIE\Sodium\Core\Ed25519;
+use ParagonIE_Sodium_Core32_Ed25519 as Ed25519_32;
 
 class TIPService
 {
@@ -121,8 +122,20 @@ class TIPService
         return Ed25519::sc_reduce($bin_key);
     }
 
-    public static function getPublicKeyFromEd25519KeyPair(string $bin_seed): string
+    /**
+     * 目前极端情况下可能计算出错误的结果
+     * @param string $bin_seed
+     * @param bool   $use_32_bits 使用32位计算，速度会非常慢，但可能计算出正确的结果
+     * @return string
+     * @throws \SodiumException
+     */
+    public static function getPublicKeyFromEd25519KeyPair(string $bin_seed, bool $use_32_bits = false): string
     {
+        if ($use_32_bits) {
+            return Ed25519_32::ge_p3_tobytes(
+                Ed25519_32::ge_scalarmult_base($bin_seed)
+            );
+        }
         return Ed25519::ge_p3_tobytes(
             Ed25519::ge_scalarmult_base($bin_seed)
         );

@@ -12,6 +12,7 @@ use Base64Url\Base64Url;
 use Brick\Math\BigDecimal;
 use ExinOne\MixinSDK\Exceptions\EncodeFailException;
 use ExinOne\MixinSDK\Exceptions\EncodeNotYetImplementedException;
+use ExinOne\MixinSDK\Exceptions\InternalErrorException;
 use ExinOne\MixinSDK\Exceptions\InvalidInputFieldException;
 use ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException;
 use ExinOne\MixinSDK\Exceptions\NotSupportTIPPINException;
@@ -1025,14 +1026,17 @@ class Wallet extends Api
     /**
      * @param array       $transaction
      * @param array       $views
+     * @param string|null $trace_id
      * @param string|null $spent_key
+     * @param bool        $use_32_bits
      * @return array
-     * @throws InvalidInputFieldException
      * @throws EncodeFailException
      * @throws EncodeNotYetImplementedException
+     * @throws InvalidInputFieldException
+     * @throws InternalErrorException
      * @throws \SodiumException
      */
-    public function safeSendTransaction(array $transaction, array $views, string $trace_id = null, string $spent_key = null): array
+    public function safeSendTransaction(array $transaction, array $views, string $trace_id = null, string $spent_key = null, bool $use_32_bits = false): array
     {
         $inputs = $transaction['inputs'] ?? [];
         if (! $inputs) {
@@ -1069,7 +1073,7 @@ class Wallet extends Api
             // $seed = sodium_crypto_core_ristretto255_scalar_add($seed, $y);
             $seed = \ParagonIE_Sodium_Core_Ed25519::scalar_add($seed, $y);
 
-            $pub = TIPService::getPublicKeyFromEd25519KeyPair($seed);
+            $pub = TIPService::getPublicKeyFromEd25519KeyPair($seed, $use_32_bits);
 
             $new_key = $seed.$pub;
 
