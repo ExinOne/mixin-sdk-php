@@ -200,7 +200,7 @@ try {
    
    ```php
     $mixinSdk->wallet()->setIterator($iterator)->transfer($asset_id, $opponent_id, $pin, $amount, $memo);
-    // 默认使用 microtime(true) * 100000 作为 iterator
+    // 默认使用 ( microtime(true) . 随机数 ) * 1000000000 作为 iterator
    ```
 
 2. 设定 Http Request 超时时间

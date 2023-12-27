@@ -9,6 +9,8 @@
 namespace ExinOne\MixinSDK\Traits;
 
 use Base64Url\Base64Url;
+use Brick\Math\BigDecimal;
+use Brick\Math\RoundingMode;
 use ExinOne\MixinSDK\Exceptions\InvalidInputFieldException;
 use ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException;
 use ExinOne\MixinSDK\Utils\TIPService;
@@ -141,7 +143,11 @@ trait MixinSDKTrait
         $pin_token   = $this->config['pin_token'];
         $session_id  = $this->config['session_id'];
         $iterator    = empty($this->iterator)
-            ? microtime(true) * 100000
+            // todo use hrtime() to be more stable
+            ? (string)BigDecimal::of(microtime(true).mt_rand(100000000, 999999999))
+                ->toScale(9, RoundingMode::DOWN)
+                ->multipliedBy('1000000000')
+                ->stripTrailingZeros()
             : array_shift($this->iterator);
 
         $algorithm = $this->getKeyAlgorithm($private_key);

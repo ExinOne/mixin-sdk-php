@@ -204,7 +204,7 @@ try {
     // if use it by $mixinSdk->pin()->updatePin($oldPin,$pin),
     // $iterator need have two element (count($iterator) == 2)
     $mixinSdk->wallet()->setIterator($iterator)->transfer($asset_id, $opponent_id, $pin, $amount, $memo);
-    // By default, microtime(true) * 100000 is used as iterator
+    // By default, ( microtime(true) . RANDOM NUMBERS ) * 1000000000 is used as iterator
    ```
 
 2. Setting Http Request timeout
