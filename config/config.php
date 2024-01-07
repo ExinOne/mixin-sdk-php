@@ -377,6 +377,10 @@ return [
             'method' => 'get',
             'url'    => '/safe/assets',
         ],
+        'safe_read_asset'                        => [
+            'method' => 'get',
+            'url'    => '/safe/assets/',
+        ],
         'safe_read_asset_withdraw_fees'           => [
             'method' => 'get',
             'url'    => '/safe/assets/{$asset_id}/fees',

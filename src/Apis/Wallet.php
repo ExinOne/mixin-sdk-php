@@ -1129,6 +1129,12 @@ class Wallet extends Api
         return $this->res([], $url);
     }
 
+    public function safeReadAsset(string $asset_id): array
+    {
+        $url = $this->endPointUrl . $asset_id;
+        return $this->res([], $url);
+    }
+
     public function safeReadAssetWithdrawFees(string $asset_id): array
     {
         $url = str_replace('{$asset_id}', $asset_id, $this->endPointUrl);
