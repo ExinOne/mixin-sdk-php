@@ -373,9 +373,13 @@ return [
             'method' => 'get',
             'url'    => '/safe/snapshots',
         ],
-        'safe_read_assets'                    => [
+        'safe_read_assets'                       => [
             'method' => 'get',
             'url'    => '/safe/assets',
+        ],
+        'safe_read_asset_withdraw_fees'           => [
+            'method' => 'get',
+            'url'    => '/safe/assets/{$asset_id}/fees',
         ],
         'access_token_safe_read_snapshots'       => [
             'method' => 'get',
