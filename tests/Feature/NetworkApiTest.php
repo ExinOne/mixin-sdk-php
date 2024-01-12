@@ -14,16 +14,25 @@ use PHPUnit\Framework\TestCase;
 class NetworkApiTest extends TestCase
 {
     protected $mixinSDK;
+    protected $mixin_sdk_server_public;
 
     public function __construct(string $name = null, array $data = [], string $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        $this->mixinSDK = new MixinSDK(require './testKeys.php');
+        $this->mixinSDK                = new MixinSDK(require 'test_keys_ed25519.php');
+        $this->mixin_sdk_server_public = new MixinSDK(require 'test_keys_server_public.php');
     }
 
     public function test_it_can_read_user_success0()
     {
         $userInfo = $this->mixinSDK->network()->readUser('36d51948-4a0d-400a-80de-f71070e374c0');
+        dump($userInfo);
+        self::assertFalse(false);
+    }
+
+    public function test_server_public_read_user_success0()
+    {
+        $userInfo = $this->mixin_sdk_server_public->network()->readUser('36d51948-4a0d-400a-80de-f71070e374c0');
         dump($userInfo);
         self::assertFalse(false);
     }

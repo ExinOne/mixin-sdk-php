@@ -140,4 +140,9 @@ class TIPService
             Ed25519::ge_scalarmult_base($bin_seed)
         );
     }
+
+    public static function getSecretKeyFromSeed(string $seed): string
+    {
+        return sodium_crypto_sign_secretkey(sodium_crypto_sign_seed_keypair($seed));
+    }
 }
