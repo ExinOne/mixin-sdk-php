@@ -29,8 +29,19 @@ $ composer require exinone/mixin-sdk-php -vvv
 ### 例示
 
 ```php
-// 配置文件格式例示
+// 配置文件格式示例
+// 通过 Mixin 开发者后台的会话密钥部分来生成
 $config0 = [
+    "app_id"              => "d4155247-xxxx-xxxx-aa8a-775333b12406",
+    "session_id"          => "7a633a3f-xxxx-xxxx-99b9-ae43c88be4be",
+    "server_public_key"   => "556b82842exxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxa6d8ad8af3f2649474",
+    "session_private_key" => "154cd8dceaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx24d070b1acc880a13b",
+    "spend_key"           => "f86d9dd3faxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc64e8bc7c5aef6a0a4", // 注册应用钱包时备份的spend key
+    "client_secret"       => "fdbe66249axxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcc4519a4ea20d48b7e" // 授权密钥
+];
+
+// 旧版配置文件格式
+$config1 = [
     'mixin_id'      => '7000101633',
     'client_id'     => '982afd4e-92dd-4430-98cf-d308442ea04d',
     'client_secret' => 'b0a9adf1b358501b1fb6065c6292b09dbc675d5734225f86e0ec14a71d0fd38a',
