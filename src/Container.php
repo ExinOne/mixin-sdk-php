@@ -96,6 +96,7 @@ use GuzzleHttp\Client;
  * @method  array safeFetchDepositEntries(string $chain_uuid, array $members, int $threshold): array
  * @method  array safeReadDeposits(string $asset_uuid = null, string $destination = null, string $tag = null, string $offset = null, int $limit = 500): array
  * @method  array safeReadOutputs(array $members_array = null, int $threshold = null, int $offset_sequence = null, int $limit = 500, string $asset_hash = null, string $state = null, string $order = 'ASC'): array
+ * @method  array safeReadAssets(): array
  * @method  array safeFetchKeys(array $receiver_info): array
  * @method  array safeRequestTransaction(array $transaction, string $request_id): array
  * @method  array safeSendTransaction(array $transaction, array $views, string $trace_id = null, string $spent_key = null, bool $use_32_bits = false): array
@@ -347,7 +348,7 @@ class Container
     public function boomRoom($errorCode, $description, $extra, $headers = [])
     {
         $extra = json_encode($extra);
-        $id = $headers['X-Request-Id'][0] ?? '';
+        $id    = $headers['X-Request-Id'][0] ?? '';
         throw new MixinNetworkRequestException("{$description}, {$extra}, {$id}", $errorCode);
     }
 }

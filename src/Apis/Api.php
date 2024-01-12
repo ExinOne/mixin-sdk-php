@@ -54,11 +54,11 @@ class Api
     /**
      * Api constructor.
      *
-     * @param        $config
-     * @param string $base_uri
-     * @param int    $timeout
+     * @param array       $config
+     * @param string|null $base_uri
+     * @param int|null    $timeout
      */
-    public function __construct($config, string $base_uri = null, int $timeout = null)
+    public function __construct(array $config, string $base_uri = null, int $timeout = null)
     {
         $this->packageConfig = require(__DIR__.'/../../config/config.php');
 

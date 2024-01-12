@@ -22,11 +22,14 @@ class WalletApiTest extends TestCase
 
     protected $mixin_sdk_safe;
 
+    protected $mixin_sdk_server_public;
+
     public function __construct(?string $name = null, array $data = [], string $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        $this->mixin_sdk      = new MixinSDK(require 'test_keys_ed25519.php');
-        $this->mixin_sdk_safe = new MixinSDK(require 'test_safe_keys.php');
+        $this->mixin_sdk               = new MixinSDK(require 'test_keys_ed25519.php');
+        $this->mixin_sdk_safe          = new MixinSDK(require 'test_safe_keys.php');
+        $this->mixin_sdk_server_public = new MixinSDK(require 'test_keys_server_public.php');
     }
 
     public function test_it_can_create_address_success0()
@@ -396,6 +399,76 @@ class WalletApiTest extends TestCase
         dump('send transaction', $res);
     }
 
+    public function test_server_public_safe_mainnet_transfer_success()
+    {
+        $asset_hash = '6d2a7b89fcaca190f711043aeb5d6c274d6db49900257c1bd2e91aa24185d10c'; // asset ROAY
+        $res        = $this->mixin_sdk_server_public->wallet()->safeReadOutputs([$this->mixin_sdk_server_public->config['default']['client_id']], 1, null, 10, $asset_hash, 'unspent');
+        dump($res);
+        $input = $res[0];
+
+        $data = [
+            [
+                'receivers' => ['2ef7c59f-bf5c-41b3-bb67-2d2c4d6b925c'],
+                'index'     => 0,
+                'hint'      => Uuid::uuid4()->toString(),
+            ],
+            [
+                'receivers' => [$this->mixin_sdk_server_public->config['default']['client_id']],
+                'index'     => 1,
+                'hint'      => Uuid::uuid4()->toString(),
+            ],
+        ];
+
+        $keys = $this->mixin_sdk_server_public->wallet()->safeFetchKeys($data);
+
+        dump('ghost keys', $keys);
+
+        $transfer_amount = '1.1';
+
+        $transaction = [
+            'version' => 5,
+            'asset'   => $asset_hash,
+            'extra'   => bin2hex('test'), // <= 512
+            'outputs' => [
+                [
+                    'type'   => 0,
+                    'amount' => $transfer_amount,
+                    //todo 收款人长度超过10的话待测试
+                    'script' => "fffe0".count($data[0]['receivers']),
+                    'keys'   => $keys[0]['keys'],
+                    'mask'   => $keys[0]['mask'],
+                ],
+                [
+                    'type'   => 0,
+                    'amount' => (string)BigDecimal::of($input['amount'])->minus($transfer_amount)->stripTrailingZeros(),
+                    'script' => "fffe0".count($data[1]['receivers']),
+                    'keys'   => $keys[1]['keys'],
+                    'mask'   => $keys[1]['mask'],
+                ]
+            ],
+            'inputs'  => [
+                [
+                    'hash'  => $input['transaction_hash'],
+                    'index' => $input['output_index'],
+                ]
+            ],
+        ];
+
+        dump('transaction', $transaction);
+
+        $request_id = Uuid::uuid4()->toString();
+
+        $trans = $this->mixin_sdk_server_public->wallet()->safeRequestTransaction($transaction, $request_id);
+
+        dump('request transaction', $trans);
+
+        self::assertEquals($trans[0]['request_id'], $request_id);
+
+        $res = $this->mixin_sdk_server_public->wallet()->setRaw(true)->safeSendTransaction($transaction, $trans[0]['views'], $request_id);
+
+        dump('send transaction', $res);
+    }
+
     public function test_sign_mixin_ed25519()
     {
         $transaction = [
@@ -448,6 +521,15 @@ class WalletApiTest extends TestCase
     public function test_safe_read_assets_success()
     {
         $res = $this->mixin_sdk_safe->wallet()->safeReadAssets();
+
+        dump($res);
+
+        self::assertIsArray($res);
+    }
+
+    public function test_server_public_safe_read_assets_success()
+    {
+        $res = $this->mixin_sdk_server_public->wallet()->safeReadAssets();
 
         dump($res);
 
