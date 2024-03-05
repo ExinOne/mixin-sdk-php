@@ -48,7 +48,11 @@ class MixinSDK
         $this->useConfigName = 'default';
         if (! empty($config)) {
             if (is_array($config['keys'] ?? 'e')) {
-                $this->config = $config['keys'];
+                $keys = [];
+                foreach ($config['keys'] as $i => $key) {
+                    $keys[$i] = self::configParser($key);
+                }
+                $this->config = $keys;
             } else {
                 $this->config[$this->useConfigName] = self::configParser($config);
             }
