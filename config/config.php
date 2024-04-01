@@ -365,6 +365,10 @@ return [
             'method' => 'get',
             'url'    => '/safe/transactions/', //后面需要填参数
         ],
+        'safe_read_snapshot'                  => [
+            'method' => 'get',
+            'url'    => '/safe/snapshots/', //后面需要填参数
+        ],
         'access_token_safe_read_transaction'     => [
             'method' => 'get',
             'url'    => '/safe/transactions/', //后面需要填参数

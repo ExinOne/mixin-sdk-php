@@ -29,7 +29,7 @@ class WalletApiTest extends TestCase
         parent::__construct($name, $data, $dataName);
         $this->mixin_sdk               = new MixinSDK(require 'test_keys_ed25519.php');
         $this->mixin_sdk_safe          = new MixinSDK(require 'test_safe_keys.php');
-        $this->mixin_sdk_server_public = new MixinSDK(require 'test_keys_server_public.php');
+        // $this->mixin_sdk_server_public = new MixinSDK(require 'test_keys_server_public.php');
     }
 
     public function test_it_can_create_address_success0()
@@ -512,6 +512,15 @@ class WalletApiTest extends TestCase
     public function test_safe_read_snapshots_success()
     {
         $res = $this->mixin_sdk_safe->wallet()->safeReadSnapshots(null, '628bbb72-e53f-37f6-ba49-c4a070494a70');
+
+        dump($res);
+
+        self::assertIsArray($res);
+    }
+
+    public function test_safe_read_snapshot_success()
+    {
+        $res = $this->mixin_sdk_safe->wallet()->safeReadSnapshot('01ef948c-fda9-3487-8571-0283f99ab574');
 
         dump($res);
 
