@@ -145,4 +145,11 @@ class TIPService
     {
         return sodium_crypto_sign_secretkey(sodium_crypto_sign_seed_keypair($seed));
     }
+
+    public static function getSpendKeyFromEd25519KeyPair(string $key_pair): string
+    {
+        $secret_key = sodium_crypto_sign_secretkey(Base64Url::decode($key_pair));
+
+        return bin2hex(substr($secret_key,0,32));
+    }
 }

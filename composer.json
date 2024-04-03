@@ -24,7 +24,7 @@
     "ext-bcmath": "*",
     "ext-gmp": "*",
     "php": "^7.2 || ^8.0",
-    "firebase/php-jwt": "^5.0",
+    "firebase/php-jwt": "^6.0",
     "guzzlehttp/guzzle": "^6.3 || ^7.0",
     "ramsey/uuid": "^3.8 || ^4",
     "phpseclib/phpseclib": "^2.0",
