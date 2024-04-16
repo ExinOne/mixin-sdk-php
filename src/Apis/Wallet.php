@@ -941,7 +941,7 @@ class Wallet extends Api
         return $this->res([], $url);
     }
 
-    public function safeReadOutputs(array $members_array = null, int $threshold = null, int $offset_sequence = null, int $limit = 500, string $asset_hash = null, string $state = null, string $order = 'ASC'): array
+    public function safeReadOutputs(array $members_array = null, int $threshold = null, int $offset_sequence = null, int $limit = 500, string $asset_hash = null, string $state = null, string $order = 'ASC', string $app = null): array
     {
         $members = null;
         if (is_array($members_array)) {
@@ -953,7 +953,7 @@ class Wallet extends Api
 
         $asset = $asset_hash;
 
-        $url_argv = compact('members', 'threshold', 'offset', 'limit', 'asset', 'state', 'order');
+        $url_argv = compact('members', 'threshold', 'offset', 'limit', 'asset', 'state', 'order', 'app');
 
         $url = $this->endPointUrl.'?'.http_build_query(delEmptyItemInArray($url_argv));
 
