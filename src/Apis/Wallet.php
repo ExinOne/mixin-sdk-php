@@ -1138,7 +1138,7 @@ class Wallet extends Api
 
     public function safeReadAsset(string $asset_id): array
     {
-        $url = $this->endPointUrl . $asset_id;
+        $url = $this->endPointUrl.$asset_id;
         return $this->res([], $url);
     }
 
@@ -1159,5 +1159,60 @@ class Wallet extends Api
         return $this->res([], $url, [
             'Authorization' => 'Bearer '.$access_token,
         ]);
+    }
+
+    public function safeMultisigCreateRequests(array $array): array
+    {
+        // 简单的参数校验
+        foreach ($array as $index => $item) {
+            if (! isset($item['raw'])) {
+                throw new InvalidInputFieldException("field `raw`(array) is required in element {$index}");
+            }
+            if (! isset($item['request_id'])) {
+                throw new InvalidInputFieldException("field `request_id`(string) is required in element {$index}");
+            }
+        }
+
+        return $this->res($array);
+    }
+
+    public function safeMultisigCreateRequest(array $raw, string $request_id): array
+    {
+        $body = [
+            [
+                'request_id' => $request_id,
+                'raw'        => $raw,
+            ]
+        ];
+
+        return $this->res($body);
+    }
+
+    public function safeMultisigReadRequests(string $id_or_hash): array
+    {
+        $url = str_replace('{$idOrHash}', $id_or_hash, $this->endPointUrl);
+
+        return $this->res([], $url);
+    }
+
+    public function safeMultisigSignRequest(string $request_id, array $input): array
+    {
+        $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
+
+        return $this->res($input, $url);
+    }
+
+    public function safeMultisigUnlockRequest(string $request_id): array
+    {
+        $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
+
+        return $this->res([], $url);
+    }
+
+    public function safeMultisigCancelRequest(string $request_id): array
+    {
+        $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
+
+        return $this->res([], $url);
     }
 }

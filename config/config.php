@@ -365,7 +365,7 @@ return [
             'method' => 'get',
             'url'    => '/safe/transactions/', //后面需要填参数
         ],
-        'safe_read_snapshot'                  => [
+        'safe_read_snapshot'                     => [
             'method' => 'get',
             'url'    => '/safe/snapshots/', //后面需要填参数
         ],
@@ -385,13 +385,37 @@ return [
             'method' => 'get',
             'url'    => '/safe/assets/',
         ],
-        'safe_read_asset_withdraw_fees'           => [
+        'safe_read_asset_withdraw_fees'          => [
             'method' => 'get',
             'url'    => '/safe/assets/{$asset_id}/fees',
         ],
         'access_token_safe_read_snapshots'       => [
             'method' => 'get',
             'url'    => '/safe/snapshots',
+        ],
+        'safe_multisig_create_requests'          => [
+            'method' => 'post',
+            'url'    => '/safe/multisigs',
+        ],
+        'safe_multisig_create_request'           => [
+            'method' => 'post',
+            'url'    => '/safe/multisigs',
+        ],
+        'safe_multisig_read_requests'          => [
+            'method' => 'get',
+            'url'    => '/safe/multisigs/{$idOrHash}',
+        ],
+        'safe_multisig_sign_request'           => [
+            'method' => 'post',
+            'url'    => '/safe/multisigs/{$requestId}/sign',
+        ],
+        'safe_multisig_unlock_request'           => [
+            'method' => 'post',
+            'url'    => '/safe/multisigs/{$requestId}/unlock',
+        ],
+        'safe_multisig_cancel_request'           => [
+            'method' => 'post',
+            'url'    => '/safe/multisigs/{$requestId}/cancel',
         ],
     ],
 ];
