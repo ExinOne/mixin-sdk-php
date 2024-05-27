@@ -108,7 +108,7 @@ use GuzzleHttp\Client;
  * @method  array safeMultisigCreateRequests(array $array): array
  * @method  array safeMultisigCreateRequest(array $raw, string $request_id): array
  * @method  array safeMultisigReadRequests(string $id_or_hash): array
- * @method  array safeMultisigSignRequest(string $request_id, array $input): array
+ * @method  array safeMultisigSignRequest(array $raw, string $request_id): array
  * @method  array safeMultisigUnlockRequest(string $request_id): array
  * @method  array safeMultisigCancelRequest(string $request_id): array
  *

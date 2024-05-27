@@ -1164,13 +1164,15 @@ class Wallet extends Api
     public function safeMultisigCreateRequests(array $array): array
     {
         // 简单的参数校验
-        foreach ($array as $index => $item) {
+        foreach ($array as $index => &$item) {
             if (! isset($item['raw'])) {
                 throw new InvalidInputFieldException("field `raw`(array) is required in element {$index}");
             }
             if (! isset($item['request_id'])) {
                 throw new InvalidInputFieldException("field `request_id`(string) is required in element {$index}");
             }
+
+            $item['raw'] = (new Encoder())->encodeTransaction($item['raw']);
         }
 
         return $this->res($array);
@@ -1181,7 +1183,7 @@ class Wallet extends Api
         $body = [
             [
                 'request_id' => $request_id,
-                'raw'        => $raw,
+                'raw'        => (new Encoder())->encodeTransaction($raw),
             ]
         ];
 
@@ -1195,11 +1197,16 @@ class Wallet extends Api
         return $this->res([], $url);
     }
 
-    public function safeMultisigSignRequest(string $request_id, array $input): array
+    public function safeMultisigSignRequest(array $raw, string $request_id): array
     {
         $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
 
-        return $this->res($input, $url);
+        $body = [
+            'request_id' => $request_id,
+            'raw'        => (new Encoder())->encodeTransaction($raw),
+        ];
+
+        return $this->res($body, $url);
     }
 
     public function safeMultisigUnlockRequest(string $request_id): array
