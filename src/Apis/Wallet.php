@@ -1033,56 +1033,18 @@ class Wallet extends Api
      * @throws EncodeFailException
      * @throws EncodeNotYetImplementedException
      * @throws InvalidInputFieldException
-     * @throws InternalErrorException
-     * @throws \SodiumException
      */
     public function safeSendTransaction(array $transaction, array $views, string $trace_id = null, string $spent_key = null, bool $use_32_bits = false): array
     {
-        $inputs = $transaction['inputs'] ?? [];
-        if (! $inputs) {
-            throw new InvalidInputFieldException('MISSING_INPUTS');
-        }
-        if (count($inputs) !== count($views)) {
-            throw new InvalidInputFieldException('INPUTS_AND_VIEWS_NOT_MATCH');
-        }
-
-        $raw = (new Encoder())->encodeTransaction($transaction);
-        $msg = (new Blake3())->hash(hex2bin($raw));
-
         if (! $spent_key) {
             $spent_key = $this->config['safe_key'] ?? null;
         }
+
         if ($spent_key === null) {
             throw new InvalidInputFieldException('NEED_SPENT_KEY_TO_PERFORM_TRANSACTION');
         }
 
-        $raw_key = substr(Base64Url::decode($spent_key), 0, 32);
-
-        $spent_y = hash("sha512", $raw_key, true);
-
-        $y = TIPService::getBytesWithClamping(substr($spent_y, 0, 32));
-
-        $signatures_map = [];
-        foreach ($inputs as $i => $input) {
-            if (! ($views[$i] ?? null)) {
-                throw new InvalidInputFieldException('MISSING_VIEW');
-            }
-
-            $seed = hex2bin($views[$i]);
-
-            // $seed = sodium_crypto_core_ristretto255_scalar_add($seed, $y);
-            $seed = \ParagonIE_Sodium_Core_Ed25519::scalar_add($seed, $y);
-
-            $pub = TIPService::getPublicKeyFromEd25519KeyPair($seed, $use_32_bits);
-
-            $new_key = $seed.$pub;
-
-            $sig = bin2hex(TIPService::signWithMixinEd25519($new_key, hex2bin($msg)));
-
-            $signatures_map[$i] = [0 => $sig]; // for 1/1 bot transaction
-        }
-
-        $transaction['signatures_map'] = $signatures_map;
+        $signed_raw = TIPService::safeSignTransaction($transaction, $views, $spent_key, $use_32_bits);
 
         if (! $trace_id) {
             $trace_id = Uuid::uuid4()->toString();
@@ -1090,7 +1052,7 @@ class Wallet extends Api
         $body = [
             [
                 'request_id' => $trace_id,
-                'raw'        => (new Encoder())->encodeTransaction($transaction),
+                'raw'        => $signed_raw,
             ]
         ];
 
@@ -1197,26 +1159,40 @@ class Wallet extends Api
         return $this->res([], $url);
     }
 
-    public function safeMultisigSignRequest(array $raw, string $request_id): array
+    /**
+     * @param array       $transaction
+     * @param array       $views
+     * @param string      $request_id
+     * @param string|null $spent_key
+     * @param bool        $use_32_bits
+     * @return array
+     * @throws EncodeFailException
+     * @throws EncodeNotYetImplementedException
+     * @throws InvalidInputFieldException
+     */
+    public function safeMultisigSignRequest(array $transaction, array $views, string $request_id, string $spent_key = null, bool $use_32_bits = false): array
     {
-        $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
+        if (! $spent_key) {
+            $spent_key = $this->config['safe_key'] ?? null;
+        }
+
+        if ($spent_key === null) {
+            throw new InvalidInputFieldException('NEED_SPENT_KEY_TO_PERFORM_TRANSACTION');
+        }
+
+        $signed_raw = TIPService::safeSignTransaction($transaction, $views, $spent_key, $use_32_bits, 1);
 
         $body = [
             'request_id' => $request_id,
-            'raw'        => (new Encoder())->encodeTransaction($raw),
+            'raw'        => $signed_raw,
         ];
+
+        $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
 
         return $this->res($body, $url);
     }
 
     public function safeMultisigUnlockRequest(string $request_id): array
-    {
-        $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
-
-        return $this->res([], $url);
-    }
-
-    public function safeMultisigCancelRequest(string $request_id): array
     {
         $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
 

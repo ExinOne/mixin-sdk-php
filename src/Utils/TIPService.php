@@ -3,7 +3,11 @@
 namespace ExinOne\MixinSDK\Utils;
 
 use Base64Url\Base64Url;
+use ExinOne\MixinSDK\Exceptions\EncodeFailException;
+use ExinOne\MixinSDK\Exceptions\EncodeNotYetImplementedException;
 use ExinOne\MixinSDK\Exceptions\InternalErrorException;
+use ExinOne\MixinSDK\Exceptions\InvalidInputFieldException;
+use ExinOne\MixinSDK\Utils\TransactionV5\Encoder;
 use ParagonIE\Sodium\Core\Ed25519;
 use ParagonIE_Sodium_Core32_Ed25519 as Ed25519_32;
 
@@ -151,5 +155,62 @@ class TIPService
         $secret_key = sodium_crypto_sign_secretkey(Base64Url::decode($key_pair));
 
         return bin2hex(substr($secret_key,0,32));
+    }
+
+    /**
+     * 对Safe主网交易进行签名
+     * @param array  $transaction
+     * @param array  $views
+     * @param string $spent_key
+     * @param bool   $use_32_bits
+     * @return string
+     * @throws InternalErrorException
+     * @throws InvalidInputFieldException
+     * @throws EncodeFailException
+     * @throws EncodeNotYetImplementedException
+     * @throws \SodiumException
+     */
+    public static function safeSignTransaction(array $transaction, array $views, string $spent_key, bool $use_32_bits, int $k = 0): string
+    {
+        $inputs = $transaction['inputs'] ?? [];
+        if (! $inputs) {
+            throw new InvalidInputFieldException('MISSING_INPUTS');
+        }
+        if (count($inputs) !== count($views)) {
+            throw new InvalidInputFieldException('INPUTS_AND_VIEWS_NOT_MATCH');
+        }
+
+        $raw = (new Encoder())->encodeTransaction($transaction);
+        $msg = (new Blake3())->hash(hex2bin($raw));
+
+        $raw_key = substr(Base64Url::decode($spent_key), 0, 32);
+
+        $spent_y = hash("sha512", $raw_key, true);
+
+        $y = TIPService::getBytesWithClamping(substr($spent_y, 0, 32));
+
+        $signatures_map = [];
+        foreach ($inputs as $i => $input) {
+            if (! ($views[$i] ?? null)) {
+                throw new InvalidInputFieldException('MISSING_VIEW');
+            }
+
+            $seed = hex2bin($views[$i]);
+
+            // $seed = sodium_crypto_core_ristretto255_scalar_add($seed, $y);
+            $seed = \ParagonIE_Sodium_Core_Ed25519::scalar_add($seed, $y);
+
+            $pub = TIPService::getPublicKeyFromEd25519KeyPair($seed, $use_32_bits);
+
+            $new_key = $seed.$pub;
+
+            $sig = bin2hex(TIPService::signWithMixinEd25519($new_key, hex2bin($msg)));
+
+            $signatures_map[$i] = [$k => $sig]; // for 1/1 bot transaction
+        }
+
+        $transaction['signatures_map'] = $signatures_map;
+
+        return (new Encoder())->encodeTransaction($transaction);
     }
 }

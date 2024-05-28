@@ -413,9 +413,5 @@ return [
             'method' => 'post',
             'url'    => '/safe/multisigs/{$requestId}/unlock',
         ],
-        'safe_multisig_cancel_request'           => [
-            'method' => 'post',
-            'url'    => '/safe/multisigs/{$requestId}/cancel',
-        ],
     ],
 ];
