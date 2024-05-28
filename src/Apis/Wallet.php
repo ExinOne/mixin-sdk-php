@@ -1163,14 +1163,17 @@ class Wallet extends Api
      * @param array       $transaction
      * @param array       $views
      * @param string      $request_id
+     * @param int         $signer_position
      * @param string|null $spent_key
      * @param bool        $use_32_bits
      * @return array
      * @throws EncodeFailException
      * @throws EncodeNotYetImplementedException
+     * @throws InternalErrorException
      * @throws InvalidInputFieldException
+     * @throws \SodiumException
      */
-    public function safeMultisigSignRequest(array $transaction, array $views, string $request_id, string $spent_key = null, bool $use_32_bits = false): array
+    public function safeMultisigSignRequest(array $transaction, array $views, string $request_id, int $signer_position, string $spent_key = null, bool $use_32_bits = false): array
     {
         if (! $spent_key) {
             $spent_key = $this->config['safe_key'] ?? null;
@@ -1180,7 +1183,7 @@ class Wallet extends Api
             throw new InvalidInputFieldException('NEED_SPENT_KEY_TO_PERFORM_TRANSACTION');
         }
 
-        $signed_raw = TIPService::safeSignTransaction($transaction, $views, $spent_key, $use_32_bits, 1);
+        $signed_raw = TIPService::safeSignTransaction($transaction, $views, $spent_key, $use_32_bits, $signer_position);
 
         $body = [
             'request_id' => $request_id,
