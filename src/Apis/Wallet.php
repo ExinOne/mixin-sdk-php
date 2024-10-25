@@ -1104,9 +1104,16 @@ class Wallet extends Api
         return $this->res([], $url);
     }
 
-    public function safeReadAssetWithdrawFees(string $asset_id): array
+    public function safeReadAssetWithdrawFees(string $asset_id, string $destination = null): array
     {
         $url = str_replace('{$asset_id}', $asset_id, $this->endPointUrl);
+
+        $body = [];
+        if ($destination) {
+            $body['destination'] = $destination;
+        }
+
+        $url = $url.'?'.http_build_query($body);
 
         return $this->res([], $url);
     }
@@ -1200,5 +1207,10 @@ class Wallet extends Api
         $url = str_replace('{$requestId}', $request_id, $this->endPointUrl);
 
         return $this->res([], $url);
+    }
+
+    public function safeFetchAssets(array $asset_ids): array
+    {
+        return $this->res($asset_ids);
     }
 }

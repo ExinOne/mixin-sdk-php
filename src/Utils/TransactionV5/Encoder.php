@@ -167,19 +167,33 @@ class Encoder
         $this->write("\x00".chr($output['type']));
         $this->writeDecimal($output['amount']);
 
-        $this->writeInt(count($output['keys']));
-        foreach ($output['keys'] as $key) {
+        $keys = $output['keys'] ?? [];
+        $this->writeInt(count($keys));
+        foreach ($keys as $key) {
             $this->write(hex2bin($key));
         }
 
-        $this->write(hex2bin($output['mask']));
+        if ($output['mask'] ?? false) {
+            $this->write(hex2bin($output['mask']));
+        } else {
+            $this->write(str_repeat(chr(0x00), 32));
+        }
 
-        $_script = hex2bin($output['script']);
-        $this->writeInt(strlen($_script));
-        $this->write($_script);
+        if ($output['script'] ?? false) {
+            $_script = hex2bin($output['script']);
+            $this->writeInt(strlen($_script));
+            $this->write($_script);
+        } else {
+            $this->writeInt(0);
+        }
 
         if (isset($output['withdrawal'])) {
-            throw new EncodeNotYetImplementedException('WITHDRAWAL_NOT_YET_IMPLEMENTED');
+            $this->write(self::MAGIC);
+            $this->writeInt(strlen($output['withdrawal']['address']));
+            $this->write($output['withdrawal']['address']);
+
+            $this->writeInt(strlen($output['withdrawal']['tag']));
+            $this->write($output['withdrawal']['tag']);
         } else {
             $this->write(self::NULL);
         }

@@ -110,6 +110,8 @@ use GuzzleHttp\Client;
  * @method  array safeMultisigReadRequests(string $id_or_hash): array
  * @method  array safeMultisigSignRequest(array $transaction, array $views, string $request_id, int $signer_position, string $spent_key = null, bool $use_32_bits = false): array
  * @method  array safeMultisigUnlockRequest(string $request_id): array
+ * @method  array safeReadAssetWithdrawFees(string $asset_id, string $destination = null): array
+ * @method  array safeFetchAssets(array $asset_ids): array
  *
  * @see \ExinOne\MixinSDK\Apis\Message
  * @method  array sendText($user_id, $data, $category = 'CONTACT', $conversation_id = null): array

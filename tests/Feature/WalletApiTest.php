@@ -604,4 +604,114 @@ class WalletApiTest extends TestCase
 
         dump('migrate to safe 2', $res);
     }
+
+    public function test_safe_withdraw_fee_same_asset_success()
+    {
+        $fee_user_id = '674d6776-d600-4346-af46-58e77d8df185';
+        $asset_id = 'b91e18ff-a9ae-3dc7-8679-e935d9a4b34b'; // USDT trc-20
+        $asset_hash = '5b9d576914e71e2362f89bb867eb69084931eb958f9a3622d776b861602275f4'; // USDT trc-20
+        $destination = 'TTHy6BDKj9NjBSjACQkSYvf5YRZxBLask4'; // TRX
+        $tag = '';
+
+        // $asset_id = '69b2d237-1eb2-3b6c-8e1d-3876e507b263'; // asset ROAY
+        // $asset_hash = '6d2a7b89fcaca190f711043aeb5d6c274d6db49900257c1bd2e91aa24185d10c'; // asset ROAY
+        // $destination = '0x74736236D17aEf4F819Bd2FaD6eC055C01E0FE98'; // ETH
+        // $tag = '';
+
+        $res        = $this->mixin_sdk_safe->wallet()->safeReadOutputs([$this->mixin_sdk_safe->config['default']['client_id']], 1, null, 10, $asset_hash, 'unspent');
+
+        dump($res);
+        $input = $res[0];
+
+        $fee_res = $this->mixin_sdk_safe->wallet()->safeReadAssetWithdrawFees($asset_id, $destination);
+
+        dump($fee_res);
+
+        $fee_asset_id = null;
+        $fee_amount = null;
+        foreach ($fee_res as $info) {
+            if ($info['asset_id'] === $asset_id) {
+                $fee_asset_id = $info['asset_id'];
+                $fee_amount = $info['amount'];
+                break;
+            }
+        }
+
+        if (! $fee_asset_id) {
+            throw new \Exception('SAME_FEE_ASSET_NOT_EXISTS');
+        }
+
+        // fetch keys for fee and change
+        $data = [
+            [
+                'receivers' => [$fee_user_id],
+                'index'     => 1,
+                'hint'      => Uuid::uuid4()->toString(),
+            ],
+            [
+                'receivers' => [$this->mixin_sdk_safe->config['default']['client_id']],
+                'index'     => 2,
+                'hint'      => Uuid::uuid4()->toString(),
+            ],
+        ];
+
+        $keys = $this->mixin_sdk_safe->wallet()->safeFetchKeys($data);
+
+        dump('ghost keys', $keys);
+
+        $transfer_amount = '0.1';
+
+        $transaction = [
+            'version' => 5,
+            'asset'   => $asset_hash,
+            'extra'   => bin2hex('test_withdraw'), // <= 512
+            'outputs' => [
+                // withdraw
+                [
+                    'type'   => 161, // type withdraw
+                    'amount' => $transfer_amount,
+                    'withdrawal' => [
+                        'address' => $destination,
+                        'tag' => $tag,
+                    ],
+                ],
+                // fee
+                [
+                    'type'   => 0,
+                    'amount' => (string)$fee_amount,
+                    'script' => "fffe01",
+                    'keys'   => $keys[0]['keys'],
+                    'mask'   => $keys[0]['mask'],
+                ],
+                // change back
+                [
+                    'type'   => 0,
+                    'amount' => (string)BigDecimal::of($input['amount'])->minus($transfer_amount)->minus($fee_amount)->stripTrailingZeros(),
+                    'script' => "fffe0".count($data[1]['receivers']),
+                    'keys'   => $keys[1]['keys'],
+                    'mask'   => $keys[1]['mask'],
+                ],
+            ],
+            'inputs'  => [
+                [
+                    'hash'  => $input['transaction_hash'],
+                    'index' => $input['output_index'],
+                ]
+            ],
+        ];
+
+        dump('transaction', $transaction);
+
+        $request_id = Uuid::uuid4()->toString();
+
+        $trans = $this->mixin_sdk_safe->wallet()->safeRequestTransaction($transaction, $request_id);
+
+        dump('request transaction', $trans);
+
+        self::assertEquals($trans[0]['request_id'], $request_id);
+
+        $res = $this->mixin_sdk_safe->wallet()->setRaw(true)->safeSendTransaction($transaction, $trans[0]['views'], $request_id);
+
+        dump('send transaction', $res);
+    }
 }

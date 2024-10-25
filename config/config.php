@@ -385,6 +385,10 @@ return [
             'method' => 'get',
             'url'    => '/safe/assets/',
         ],
+        'safe_fetch_assets'                       => [
+            'method' => 'post',
+            'url'    => '/safe/assets/fetch',
+        ],
         'safe_read_asset_withdraw_fees'          => [
             'method' => 'get',
             'url'    => '/safe/assets/{$asset_id}/fees',
