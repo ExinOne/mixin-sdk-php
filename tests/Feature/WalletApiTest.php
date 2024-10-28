@@ -12,6 +12,7 @@ use Brick\Math\BigDecimal;
 use ExinOne\MixinSDK\MixinSDK;
 use ExinOne\MixinSDK\Utils\MixinService;
 use ExinOne\MixinSDK\Utils\TIPService;
+use ExinOne\MixinSDK\Utils\TransactionV5\Encoder;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 
@@ -683,7 +684,7 @@ class WalletApiTest extends TestCase
                     'keys'   => $keys[0]['keys'],
                     'mask'   => $keys[0]['mask'],
                 ],
-                // change back
+                // change back. Here assumes there always a change back
                 [
                     'type'   => 0,
                     'amount' => (string)BigDecimal::of($input['amount'])->minus($transfer_amount)->minus($fee_amount)->stripTrailingZeros(),
@@ -713,5 +714,153 @@ class WalletApiTest extends TestCase
         $res = $this->mixin_sdk_safe->wallet()->setRaw(true)->safeSendTransaction($transaction, $trans[0]['views'], $request_id);
 
         dump('send transaction', $res);
+    }
+
+    /**
+     * 在同一个交易中发起提现和支付手续费
+     * @return void
+     * @throws \Exception
+     */
+    public function test_safe_withdraw_fee_diff_asset_success()
+    {
+        $fee_user_id = '674d6776-d600-4346-af46-58e77d8df185';
+        $asset_id = 'b91e18ff-a9ae-3dc7-8679-e935d9a4b34b'; // USDT trc-20
+        $asset_hash = '5b9d576914e71e2362f89bb867eb69084931eb958f9a3622d776b861602275f4'; // USDT trc-20
+        $fee_asset_id = '25dabac5-056a-48ff-b9f9-f67395dc407c';
+        $fee_asset_hash = '05edf1e8723e2ece67afcdfd7fbb504c64a5a939ec8fe5fa05fc7a104011abc9';
+        $destination = 'TTHy6BDKj9NjBSjACQkSYvf5YRZxBLask4'; // TRX
+        $tag = '';
+
+        $res        = $this->mixin_sdk_safe->wallet()->safeReadOutputs([$this->mixin_sdk_safe->config['default']['client_id']], 1, null, 10, $asset_id, 'unspent');
+
+        dump($res);
+        $input = $res[0];
+
+        $fee_res = $this->mixin_sdk_safe->wallet()->safeReadAssetWithdrawFees($asset_id, $destination);
+
+        dump($fee_res);
+
+        $fee_asset_id = null;
+        $fee_amount = null;
+        foreach ($fee_res as $info) {
+            if ($info['asset_id'] === $fee_asset_id) {
+                $fee_amount = $info['amount'];
+                break;
+            }
+        }
+
+        if (! $fee_asset_id) {
+            throw new \Exception('SAME_FEE_ASSET_NOT_EXISTS');
+        }
+
+        $request_id = Uuid::uuid4()->toString();
+        $fee_request_id = Uuid::uuid4()->toString();
+
+        $res        = $this->mixin_sdk_safe->wallet()->safeReadOutputs([$this->mixin_sdk_safe->config['default']['client_id']], 1, null, 10, $fee_asset_id, 'unspent');
+
+        dump($res);
+        $fee_input = $res[0];
+
+        // fetch keys for change
+        $data = [
+            [
+                'receivers' => [$this->mixin_sdk_safe->config['default']['client_id']],
+                'index'     => 1,
+                'hint'      => Uuid::uuid4()->toString(),
+            ],
+        ];
+
+        $keys = $this->mixin_sdk_safe->wallet()->safeFetchKeys($data);
+
+        dump('change ghost keys', $keys);
+
+        $transfer_amount = '0.1';
+
+        $transaction = [
+            'version' => 5,
+            'asset'   => $asset_hash,
+            'extra'   => bin2hex('test_withdraw'), // <= 512
+            'outputs' => [
+                // withdraw
+                [
+                    'type'   => 161, // type withdraw
+                    'amount' => $transfer_amount,
+                    'withdrawal' => [
+                        'address' => $destination,
+                        'tag' => $tag,
+                    ],
+                ],
+                // change back. Here assumes there always a change back
+                [
+                    'type'   => 0,
+                    'amount' => (string)BigDecimal::of($input['amount'])->minus($transfer_amount)->stripTrailingZeros(),
+                    'script' => "fffe0".count($data[0]['receivers']),
+                    'keys'   => $keys[0]['keys'],
+                    'mask'   => $keys[0]['mask'],
+                ],
+            ],
+            'inputs'  => [
+                [
+                    'hash'  => $input['transaction_hash'],
+                    'index' => $input['output_index'],
+                ]
+            ],
+        ];
+
+        dump('transaction', $transaction);
+
+        $raw = (new Encoder())->encodeTransaction($transaction);
+
+        dump('transaction raw', $raw);
+
+        // fetch keys for fee and fee change
+        $data = [
+            [
+                'receivers' => [$fee_user_id],
+                'index'     => 0,
+                'hint'      => Uuid::uuid4()->toString(),
+            ],
+            [
+                'receivers' => [$this->mixin_sdk_safe->config['default']['client_id']],
+                'index'     => 1,
+                'hint'      => Uuid::uuid4()->toString(),
+            ],
+        ];
+
+        $keys = $this->mixin_sdk_safe->wallet()->safeFetchKeys($data);
+
+        dump('fee ghost keys', $keys);
+
+        $transaction = [
+            'version' => 5,
+            'asset'   => $fee_asset_hash,
+            'extra'   => bin2hex(''), // <= 512
+            'outputs' => [
+                // fee
+                [
+                    'type'   => 0,
+                    'amount' => (string)$fee_amount,
+                    'script' => "fffe01",
+                    'keys'   => $keys[0]['keys'],
+                    'mask'   => $keys[0]['mask'],
+                ],
+                // change back. Here assumes there always a change back
+                [
+                    'type'   => 0,
+                    'amount' => (string)BigDecimal::of($fee_input['amount'])->minus($fee_amount)->stripTrailingZeros(),
+                    'script' => "fffe0".count($data[1]['receivers']),
+                    'keys'   => $keys[1]['keys'],
+                    'mask'   => $keys[1]['mask'],
+                ],
+            ],
+            'inputs'  => [
+                [
+                    'hash'  => $fee_input['transaction_hash'],
+                    'index' => $fee_input['output_index'],
+                ]
+            ],
+            'reference' => $raw, //blake hash
+        ];
+
     }
 }
