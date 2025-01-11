@@ -146,4 +146,18 @@ class User extends Api
 
         return $this->res($body);
     }
+
+    /**
+     * @param string $user_id
+     * @return array
+     * @throws \Exception
+     */
+    public function safeAppsBilling(string $user_id = null): array
+    {
+        if (! $user_id) {
+            $user_id = $this->config['client_id'];
+        }
+        $url = str_replace('{$userId}', $user_id, $this->endPointUrl);
+        return $this->res([], $url);
+    }
 }
