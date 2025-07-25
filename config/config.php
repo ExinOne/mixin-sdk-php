@@ -417,5 +417,9 @@ return [
             'method' => 'post',
             'url'    => '/safe/multisigs/{$requestId}/unlock',
         ],
+        'safe_apps_billing'           => [
+            'method' => 'get',
+            'url'    => '/safe/apps/{$userId}/billing',
+        ],
     ],
 ];

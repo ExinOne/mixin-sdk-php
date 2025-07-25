@@ -103,13 +103,13 @@ class Network extends Api
 
     /**
      * @param string $fullName
-     *
+     * @param string $key_algorithm RS512 or Ed25519
      * @return array
      * @throws \Exception
-     * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function createUser($fullName, string $key_algorithm = 'RS512'): array
+    public function createUser($fullName, string $key_algorithm = 'Ed25519'): array
     {
+        // RS512 is no longer supported by Mixin Network
         if ($key_algorithm === 'Ed25519') {
             [$priKey, $pubKey, $session_secret] = $this->generateEdDSAKey();
         } else {
