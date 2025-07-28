@@ -608,6 +608,7 @@ class WalletApiTest extends TestCase
 
     public function test_safe_withdraw_fee_same_asset_success()
     {
+        // Mixin Fee User ID
         $fee_user_id = '674d6776-d600-4346-af46-58e77d8df185';
         $asset_id = 'b91e18ff-a9ae-3dc7-8679-e935d9a4b34b'; // USDT trc-20
         $asset_hash = '5b9d576914e71e2362f89bb867eb69084931eb958f9a3622d776b861602275f4'; // USDT trc-20
@@ -622,7 +623,12 @@ class WalletApiTest extends TestCase
         $res        = $this->mixin_sdk_safe->wallet()->safeReadOutputs([$this->mixin_sdk_safe->config['default']['client_id']], 1, null, 10, $asset_hash, 'unspent');
 
         dump($res);
-        $input = $res[0];
+
+        // find the largest amount input
+        usort($res, function($a, $b) {
+            return $b['amount'] <=> $a['amount'];
+        });
+        $input = reset($res);
 
         $fee_res = $this->mixin_sdk_safe->wallet()->safeReadAssetWithdrawFees($asset_id, $destination);
 
@@ -662,6 +668,12 @@ class WalletApiTest extends TestCase
 
         $transfer_amount = '0.1';
 
+        $change_amount = BigDecimal::of($input['amount'])->minus($transfer_amount)->minus($fee_amount);
+
+        if ($change_amount->isNegative()) {
+            throw new \Exception("INSUFFICIENT_BALANCE: Transfer amount: {$transfer_amount}, fee amount: {$fee_amount}, balance: {$input['amount']}");
+        }
+
         $transaction = [
             'version' => 5,
             'asset'   => $asset_hash,
@@ -687,7 +699,7 @@ class WalletApiTest extends TestCase
                 // change back. Here assumes there always a change back
                 [
                     'type'   => 0,
-                    'amount' => (string)BigDecimal::of($input['amount'])->minus($transfer_amount)->minus($fee_amount)->stripTrailingZeros(),
+                    'amount' => (string)$change_amount->stripTrailingZeros(),
                     'script' => "fffe0".count($data[1]['receivers']),
                     'keys'   => $keys[1]['keys'],
                     'mask'   => $keys[1]['mask'],
@@ -726,21 +738,26 @@ class WalletApiTest extends TestCase
         $fee_user_id = '674d6776-d600-4346-af46-58e77d8df185';
         $asset_id = 'b91e18ff-a9ae-3dc7-8679-e935d9a4b34b'; // USDT trc-20
         $asset_hash = '5b9d576914e71e2362f89bb867eb69084931eb958f9a3622d776b861602275f4'; // USDT trc-20
-        $fee_asset_id = '25dabac5-056a-48ff-b9f9-f67395dc407c';
+        $fee_asset_id = '25dabac5-056a-48ff-b9f9-f67395dc407c'; // TRX
         $fee_asset_hash = '05edf1e8723e2ece67afcdfd7fbb504c64a5a939ec8fe5fa05fc7a104011abc9';
-        $destination = 'TTHy6BDKj9NjBSjACQkSYvf5YRZxBLask4'; // TRX
+        $destination = 'TTHy6BDKj9NjBSjACQkSYvf5YRZxBLask4';
         $tag = '';
 
+        // fetch input
         $res        = $this->mixin_sdk_safe->wallet()->safeReadOutputs([$this->mixin_sdk_safe->config['default']['client_id']], 1, null, 10, $asset_id, 'unspent');
 
         dump($res);
-        $input = $res[0];
+        
+        // find the largest amount input
+        usort($res, function($a, $b) {
+            return $b['amount'] <=> $a['amount'];
+        });
+        $input = reset($res);
 
         $fee_res = $this->mixin_sdk_safe->wallet()->safeReadAssetWithdrawFees($asset_id, $destination);
 
         dump($fee_res);
 
-        $fee_asset_id = null;
         $fee_amount = null;
         foreach ($fee_res as $info) {
             if ($info['asset_id'] === $fee_asset_id) {
@@ -749,17 +766,23 @@ class WalletApiTest extends TestCase
             }
         }
 
-        if (! $fee_asset_id) {
+        if (! $fee_amount) {
             throw new \Exception('SAME_FEE_ASSET_NOT_EXISTS');
         }
 
         $request_id = Uuid::uuid4()->toString();
         $fee_request_id = Uuid::uuid4()->toString();
 
+        // fetch fee input
         $res        = $this->mixin_sdk_safe->wallet()->safeReadOutputs([$this->mixin_sdk_safe->config['default']['client_id']], 1, null, 10, $fee_asset_id, 'unspent');
 
         dump($res);
-        $fee_input = $res[0];
+        
+        // find the largest amount input
+        usort($res, function($a, $b) {
+            return $b['amount'] <=> $a['amount'];
+        });
+        $fee_input = reset($res);
 
         // fetch keys for change
         $data = [
@@ -776,6 +799,12 @@ class WalletApiTest extends TestCase
 
         $transfer_amount = '0.1';
 
+        $change_amount = BigDecimal::of($input['amount'])->minus($transfer_amount);
+        if ($change_amount->isNegative()) {
+            throw new \Exception("INSUFFICIENT_BALANCE: Transfer amount: {$transfer_amount}, balance: {$input['amount']}");
+        }
+
+        // withdraw transaction
         $transaction = [
             'version' => 5,
             'asset'   => $asset_hash,
@@ -793,7 +822,7 @@ class WalletApiTest extends TestCase
                 // change back. Here assumes there always a change back
                 [
                     'type'   => 0,
-                    'amount' => (string)BigDecimal::of($input['amount'])->minus($transfer_amount)->stripTrailingZeros(),
+                    'amount' => (string)$change_amount->stripTrailingZeros(),
                     'script' => "fffe0".count($data[0]['receivers']),
                     'keys'   => $keys[0]['keys'],
                     'mask'   => $keys[0]['mask'],
@@ -831,7 +860,18 @@ class WalletApiTest extends TestCase
 
         dump('fee ghost keys', $keys);
 
-        $transaction = [
+        $change_amount = BigDecimal::of($fee_input['amount'])->minus($fee_amount);
+
+        if ($change_amount->isNegative()) {
+            throw new \Exception("INSUFFICIENT_BALANCE: Fee amount: {$fee_amount}, balance: {$fee_input['amount']}");
+        }
+
+        if (! function_exists('blake3_hash')) {
+            throw new \Exception("MISSING_BLAKE3_HASH_FUNCTION: please install https://github.com/ExinOne/php-blake3-ext");
+        }
+
+        // fee transaction
+        $fee_transaction = [
             'version' => 5,
             'asset'   => $fee_asset_hash,
             'extra'   => bin2hex(''), // <= 512
@@ -847,7 +887,7 @@ class WalletApiTest extends TestCase
                 // change back. Here assumes there always a change back
                 [
                     'type'   => 0,
-                    'amount' => (string)BigDecimal::of($fee_input['amount'])->minus($fee_amount)->stripTrailingZeros(),
+                    'amount' => (string)$change_amount->stripTrailingZeros(),
                     'script' => "fffe0".count($data[1]['receivers']),
                     'keys'   => $keys[1]['keys'],
                     'mask'   => $keys[1]['mask'],
@@ -859,8 +899,56 @@ class WalletApiTest extends TestCase
                     'index' => $fee_input['output_index'],
                 ]
             ],
-            'reference' => $raw, //blake hash
+            'references' => [blake3_hash(hex2bin($raw))],
         ];
 
+        dump('fee transaction', $fee_transaction);
+
+        // safeRequestTransactions
+        $reqs = $this->mixin_sdk_safe
+            ->wallet()
+            ->safeRequestTransactions([$transaction, $fee_transaction], [$request_id, $fee_request_id]);
+
+        dump('request transactions', $reqs);
+
+        if (count($reqs) !== 2) {
+            throw new \Exception('REQUEST_TRANSACTIONS_COUNT_NOT_MATCH');
+        }
+
+        $withdraw_views = null;
+        $fee_views = null;
+        foreach ($reqs as $req) {
+            if ($req['state'] !== 'unspent') {
+                throw new \Exception('WITHDRAW_TRANSACTION_NOT_UNSPENT');
+            }
+
+            if ($req['request_id'] === $request_id) {
+                $withdraw_views = $req['views'];
+            } else if ($req['request_id'] === $fee_request_id) {
+                $fee_views = $req['views'];
+            }
+        }
+
+        if (! $withdraw_views || ! $fee_views) {
+            throw new \Exception('MISSING_VIEWS');
+        }
+
+        if (count($withdraw_views) !== count($transaction['inputs'])) {
+            throw new \Exception('WITHDRAW_VIEWS_COUNT_NOT_MATCH');
+        }
+
+        if (count($fee_views) !== count($fee_transaction['inputs'])) {
+            throw new \Exception('FEE_VIEWS_COUNT_NOT_MATCH');
+        }
+
+        $res = $this->mixin_sdk_safe
+            ->wallet()
+            ->setRaw(true)
+            ->safeSendTransactions([$transaction, $fee_transaction], [$withdraw_views, $fee_views], [$request_id, $fee_request_id]);
+
+        dump('send transactions', $res);
+
+        self::assertEquals($res['data'][0]['request_id'], $request_id);
+        self::assertEquals($res['data'][1]['request_id'], $fee_request_id);
     }
 }

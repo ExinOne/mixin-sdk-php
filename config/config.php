@@ -357,7 +357,15 @@ return [
             'method' => 'post',
             'url'    => '/safe/transaction/requests',
         ],
+        'safe_request_transactions'              => [
+            'method' => 'post',
+            'url'    => '/safe/transaction/requests',
+        ],
         'safe_send_transaction'                  => [
+            'method' => 'post',
+            'url'    => '/safe/transactions',
+        ],
+        'safe_send_transactions'                 => [
             'method' => 'post',
             'url'    => '/safe/transactions',
         ],
