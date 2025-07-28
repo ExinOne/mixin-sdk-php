@@ -8,7 +8,6 @@
 
 namespace ExinOne\MixinSDK\Apis;
 
-use Base64Url\Base64Url;
 use Brick\Math\BigDecimal;
 use ExinOne\MixinSDK\Exceptions\EncodeFailException;
 use ExinOne\MixinSDK\Exceptions\EncodeNotYetImplementedException;
@@ -16,8 +15,6 @@ use ExinOne\MixinSDK\Exceptions\InternalErrorException;
 use ExinOne\MixinSDK\Exceptions\InvalidInputFieldException;
 use ExinOne\MixinSDK\Exceptions\LoadPrivateKeyException;
 use ExinOne\MixinSDK\Exceptions\NotSupportTIPPINException;
-use ExinOne\MixinSDK\Traits\MixinSDKTrait;
-use ExinOne\MixinSDK\Utils\Blake3;
 use ExinOne\MixinSDK\Utils\TIPService;
 use ExinOne\MixinSDK\Utils\TransactionV5\Encoder;
 use Ramsey\Uuid\Uuid;
@@ -1019,9 +1016,22 @@ class Wallet extends Api
         return $this->res($body);
     }
 
-    //todo safeRequestTransactions
+    public function safeRequestTransactions(array $transactions, array $request_ids): array
+    {
+        if (count($transactions) !== count($request_ids)) {
+            throw new InvalidInputFieldException('TRANSACTIONS_AND_REQUEST_IDS_NOT_MATCH');
+        }
 
-    //todo safeSendTransactions
+        $body = [];
+        foreach ($transactions as $index => $transaction) {
+            $body[] = [
+                'request_id' => $request_ids[$index],
+                'raw'        => (new Encoder())->encodeTransaction($transaction),
+            ];
+        }
+
+        return $this->res($body);
+    }
 
     /**
      * @param array       $transaction
@@ -1056,6 +1066,32 @@ class Wallet extends Api
             ]
         ];
 
+        return $this->res($body);
+    }
+
+    public function safeSendTransactions(array $transactions, array $views_arr, array $trace_ids, string $spent_key = null, bool $use_32_bits = false): array
+    {
+        if (! $spent_key) {
+            $spent_key = $this->config['safe_key'] ?? null;
+        }
+
+        if ($spent_key === null) {
+            throw new InvalidInputFieldException('NEED_SPENT_KEY_TO_PERFORM_TRANSACTION');
+        }
+
+        if (count($transactions) !== count($views_arr) || count($transactions) !== count($trace_ids)) {
+            throw new InvalidInputFieldException('TRANSACTIONS_AND_VIEWS_AND_TRACE_IDS_NOT_MATCH');
+        }
+
+        $body = [];
+        foreach ($transactions as $index => $transaction) {
+            $signed_raw = TIPService::safeSignTransaction($transaction, $views_arr[$index], $spent_key, $use_32_bits);
+            $body[] = [
+                'request_id' => $trace_ids[$index],
+                'raw'        => $signed_raw,
+            ];
+        }
+        
         return $this->res($body);
     }
 

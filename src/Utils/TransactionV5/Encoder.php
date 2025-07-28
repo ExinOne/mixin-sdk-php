@@ -51,8 +51,13 @@ class Encoder
             $this->encodeOutput($output);
         }
 
+        // references
         if (isset($signed['references'])) {
-            throw new EncodeNotYetImplementedException('REFERENCES_NOT_YET_IMPLEMENTED');
+            $rl = count($signed['references']);
+            $this->writeInt($rl);
+            foreach ($signed['references'] as $reference) {
+                $this->write(hex2bin($reference));
+            }
         } else {
             $this->writeInt(0);
         }

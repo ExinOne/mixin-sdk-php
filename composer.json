@@ -37,5 +37,8 @@
   "require-dev": {
     "phpunit/phpunit": "^7.0 || ^8.0",
     "symfony/var-dumper": "^4.2"
+  },
+  "suggest": {
+    "ext-blake3": "https://github.com/ExinOne/php-blake3-ext"
   }
 }
