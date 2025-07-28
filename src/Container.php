@@ -99,6 +99,7 @@ use GuzzleHttp\Client;
  * @method  array safeReadAssets(): array
  * @method  array safeFetchKeys(array $receiver_info): array
  * @method  array safeRequestTransaction(array $transaction, string $request_id): array
+ * @method  array safeRequestTransactions(array $transactions, array $request_ids): array
  * @method  array safeSendTransaction(array $transaction, array $views, string $trace_id = null, string $spent_key = null, bool $use_32_bits = false): array
  * @method  array safeSendTransactions(array $transactions, array $views_arr, array $trace_ids, string $spent_key = null, bool $use_32_bits = false): array
  * @method  array safeReadTransaction(string $request_id): array
