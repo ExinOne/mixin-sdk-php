@@ -311,6 +311,13 @@ class Container
         return $this;
     }
 
+    public function setProxy(string $proxy = null)
+    {
+        $this->detailClass->setProxy($proxy);
+
+        return $this;
+    }
+
     /**
      * @param int $expire
      *
