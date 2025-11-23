@@ -52,6 +52,11 @@ class Api
     protected $http_client;
 
     /**
+     * @var string|null
+     */
+    protected $proxy;
+
+    /**
      * Api constructor.
      *
      * @param array       $config
@@ -250,6 +255,31 @@ class Api
     public function setTimeout(int $timeout): void
     {
         $this->timeout = $timeout;
+    }
+
+    /**
+     * 设置代理
+     * 
+     * @param string|null $proxy 代理地址，例如: 'http://proxy.example.com:8080' 或 'socks5://proxy.example.com:1080'
+     *                           传入 null 则清除代理配置
+     * @return void
+     */
+    public function setProxy(string $proxy = null): void
+    {
+        $this->proxy = $proxy;
+        
+        // 重新创建 HTTP 客户端以应用代理配置
+        $clientConfig = [
+            'base_uri' => $this->base_uri,
+            'timeout'  => $this->timeout,
+            'version'  => 1.3,
+        ];
+        
+        if ($this->proxy) {
+            $clientConfig['proxy'] = $this->proxy;
+        }
+        
+        $this->http_client = new Client($clientConfig);
     }
 
     /**
