@@ -72,10 +72,16 @@ class Api
             $this->timeout = $timeout;
         }
         $this->config      = $config;
-        $this->http_client = new Client([
+        $this->http_client = $this->createHttpClient();
+    }
+
+    protected function createHttpClient()
+    {
+        return new Client([
             'base_uri' => $this->base_uri,
             'timeout'  => $this->timeout,
             'version'  => 1.3,
+            'proxy'    => $this->proxy,
         ]);
     }
 
@@ -267,19 +273,7 @@ class Api
     public function setProxy(string $proxy = null): void
     {
         $this->proxy = $proxy;
-        
-        // 重新创建 HTTP 客户端以应用代理配置
-        $clientConfig = [
-            'base_uri' => $this->base_uri,
-            'timeout'  => $this->timeout,
-            'version'  => 1.3,
-        ];
-        
-        if ($this->proxy) {
-            $clientConfig['proxy'] = $this->proxy;
-        }
-        
-        $this->http_client = new Client($clientConfig);
+        $this->http_client = $this->createHttpClient();
     }
 
     /**

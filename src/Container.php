@@ -143,6 +143,11 @@ class Container
     protected $http_async = false;
 
     /**
+     * @var callable|null
+     */
+    protected $callback = null;
+
+    /**
      * @param $name
      * @param $arguments
      *
@@ -157,10 +162,12 @@ class Container
         ['content' => $content, 'customize_res' => $customize_res, 'auth_token' => $auth_token, 'promise' => $promise, 'headers' => $headers]
             = call_user_func_array([$this->detailClass, $name], $arguments);
 
+        $result = null;
+
         if ($this->isReturnAccessToken()) {
-            return $auth_token;
+            $result = $auth_token;
         } elseif ($this->isHttpAsync()) {
-            return $promise;
+            $result = $promise;
         } elseif (! $this->isRaw() && ($content['error'] ?? 0)) {
             // 出现异常
             $error       = $content['error'];
@@ -173,10 +180,17 @@ class Container
             if ($this->is_with_headers) {
                 $_h = ['headers' => $headers];
             }
-            return array_merge($content ?? [], $customize_res, $_h);
+            $result = array_merge($content ?? [], $customize_res, $_h);
         } else {
-            return array_merge($content['data'] ?? [], $customize_res ?? null);
+            $result = array_merge($content['data'] ?? [], $customize_res ?? null);
         }
+
+        // 执行回调函数（如果设置了）
+        if ($this->callback !== null && is_callable($this->callback)) {
+            call_user_func($this->callback, $result, $name, $arguments);
+        }
+
+        return $result;
     }
 
     /**
@@ -350,6 +364,18 @@ class Container
     {
         $this->detailClass->setIterator($iterator);
 
+        return $this;
+    }
+
+    /**
+     * 设置回调函数
+     *
+     * @param callable $callback
+     * @return $this
+     */
+    public function setCallback(callable $callback = null)
+    {
+        $this->callback = $callback;
         return $this;
     }
 

@@ -39,6 +39,16 @@ class MixinSDK
     public $iterator = null;
 
     /**
+     * @var callable|null
+     */
+    protected $callback = null;
+
+    /**
+     * @var string|null
+     */
+    protected $proxy = null;
+
+    /**
      * MixinSDK constructor.
      *
      * @param array $config
@@ -80,8 +90,17 @@ class MixinSDK
 
         // 作为包的入口， 根据 $name 返回相应的实例
         if (class_exists($class)) {
-            return (new Container())
+            $container = (new Container())
                 ->setDetailClass(new $class($this->config[$useConfigName], $this->base_uri, $this->timeout));
+            
+            // 如果设置了回调函数，传递给 Container
+            if ($this->callback !== null) {
+                $container->setCallback($this->callback);
+            }
+
+            $container->setProxy($this->proxy);
+            
+            return $container;
         } else {
             throw new ClassNotFoundException("class \"$name\" not found, pleace check className");
         }
@@ -165,6 +184,30 @@ class MixinSDK
      */
     public function get()
     {
+        return $this;
+    }
+
+    /**
+     * 设置回调函数
+     *
+     * @param callable $callback
+     * @return $this
+     */
+    public function setCallback(callable $callback = null)
+    {
+        $this->callback = $callback;
+        return $this;
+    }
+
+    /**
+     * 设置代理
+     *
+     * @param string|null $proxy
+     * @return $this
+     */
+    public function setProxy(string $proxy = null)
+    {
+        $this->proxy = $proxy;
         return $this;
     }
 
