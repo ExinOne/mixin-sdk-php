@@ -120,7 +120,7 @@ class Wallet extends Api
      * @throws LoadPrivateKeyException
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function deleteAddress(string $address_id, string $pin = null): array
+    public function deleteAddress(string $address_id, ?string $pin = null): array
     {
         if ($pin === null) {
             $pin = $this->config['pin'];
@@ -185,7 +185,7 @@ class Wallet extends Api
      * @return array
      * @throws \Exception
      */
-    public function withdrawal(string $address_id, string $amount, ?string $pin, string $memo = '', string $trace_id = null, string $fee = '0'): array
+    public function withdrawal(string $address_id, string $amount, ?string $pin, string $memo = '', ?string $trace_id = null, string $fee = '0'): array
     {
         if ($pin === null) {
             $pin = $this->config['pin'];
@@ -227,7 +227,7 @@ class Wallet extends Api
      * @return array
      * @throws LoadPrivateKeyException
      */
-    public function transfer(string $asset_id, string $opponent_id, ?string $pin, string $amount, string $memo = '', string $trace_id = null): array
+    public function transfer(string $asset_id, string $opponent_id, ?string $pin, string $amount, string $memo = '', ?string $trace_id = null): array
     {
         if ($pin === null) {
             $pin = $this->config['pin'];
@@ -315,7 +315,7 @@ class Wallet extends Api
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function readUserSnapshots($limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
+    public function readUserSnapshots($limit = null, ?string $offset = null, string $asset = '', string $order = 'DESC'): array
     {
         $limit    = empty($limit) ? $limit : (int)$limit;
         $url_argv = compact('limit', 'offset', 'asset', 'order');
@@ -351,7 +351,7 @@ class Wallet extends Api
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function accessTokenGetUserSnapshots(string $access_token, $limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
+    public function accessTokenGetUserSnapshots(string $access_token, $limit = null, ?string $offset = null, string $asset = '', string $order = 'DESC'): array
     {
         $limit    = empty($limit) ? $limit : (int)$limit;
         $url_argv = compact('limit', 'offset', 'asset', 'order');
@@ -425,7 +425,7 @@ class Wallet extends Api
      * @return array
      * @throws \Exception
      */
-    public function generateGhostKeys(array $client_ids, int $index = null, string $hint = null): array
+    public function generateGhostKeys(array $client_ids, ?int $index = null, ?string $hint = null): array
     {
         $body = [
             'receivers' => $client_ids,
@@ -634,7 +634,7 @@ class Wallet extends Api
      * @return array
      * @throws LoadPrivateKeyException|\Exception
      */
-    public function multisigsRequestsSign(string $request_id, string $pin = null): array
+    public function multisigsRequestsSign(string $request_id, ?string $pin = null): array
     {
         if ($pin === null) {
             $pin = $this->config['pin'];
@@ -676,7 +676,7 @@ class Wallet extends Api
      * @return array
      * @throws LoadPrivateKeyException
      */
-    public function multisigsRequestsUnlock(string $request_id, string $pin = null): array
+    public function multisigsRequestsUnlock(string $request_id, ?string $pin = null): array
     {
         if ($pin === null) {
             $pin = $this->config['pin'];
@@ -706,7 +706,7 @@ class Wallet extends Api
      * @throws NotSupportTIPPINException
      * @deprecated use multisigsRequestsSign instead
      */
-    public function multisigsSign(string $request_id, string $pin = null): array
+    public function multisigsSign(string $request_id, ?string $pin = null): array
     {
         if ($pin === null) {
             $pin = $this->config['pin'];
@@ -743,7 +743,7 @@ class Wallet extends Api
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      * @deprecated use multisigsRequestsCancel instead
      */
-    public function multisigsCancel(string $request_id, string $pin = null): array
+    public function multisigsCancel(string $request_id, ?string $pin = null): array
     {
         if ($pin === null) {
             $pin = $this->config['pin'];
@@ -772,7 +772,7 @@ class Wallet extends Api
      * @return array
      * @throws \Exception
      */
-    public function sendMultisigTransactions(string $asset_id, array $receivers, int $threshold, string $amount, string $pin = null, string $trace_id = null, string $memo = null): array
+    public function sendMultisigTransactions(string $asset_id, array $receivers, int $threshold, string $amount, ?string $pin = null, ?string $trace_id = null, ?string $memo = null): array
     {
         if ($pin === null) {
             $pin = $this->config['pin'];
@@ -815,7 +815,7 @@ class Wallet extends Api
      * @return array
      * @throws \Exception
      */
-    public function sendMainnetTransactions(string $asset_id, string $opponent_key, string $amount, string $pin = null, string $trace_id = null, string $memo = null): array
+    public function sendMainnetTransactions(string $asset_id, string $opponent_key, string $amount, ?string $pin = null, ?string $trace_id = null, ?string $memo = null): array
     {
         if ($pin === null) {
             $pin = $this->config['pin'];
@@ -928,7 +928,7 @@ class Wallet extends Api
         return $this->res($body);
     }
 
-    public function safeReadDeposits(string $asset_uuid = null, string $destination = null, string $tag = null, string $offset = null, int $limit = 500): array
+    public function safeReadDeposits(?string $asset_uuid = null, ?string $destination = null, ?string $tag = null, ?string $offset = null, int $limit = 500): array
     {
         $asset    = $asset_uuid;
         $url_argv = compact('asset', 'destination', 'tag', 'offset', 'limit');
@@ -938,7 +938,7 @@ class Wallet extends Api
         return $this->res([], $url);
     }
 
-    public function safeReadOutputs(array $members_array = null, int $threshold = null, int $offset_sequence = null, int $limit = 500, string $asset_hash = null, string $state = null, string $order = 'ASC', string $app = null): array
+    public function safeReadOutputs(?array $members_array = null, ?int $threshold = null, ?int $offset_sequence = null, int $limit = 500, ?string $asset_hash = null, ?string $state = null, string $order = 'ASC', ?string $app = null): array
     {
         $members = null;
         if (is_array($members_array)) {
@@ -957,7 +957,7 @@ class Wallet extends Api
         return $this->res([], $url);
     }
 
-    public function accessTokenSafeReadOutputs(string $access_token, array $members_array = null, int $threshold = null, int $offset_sequence = null, int $limit = 500, string $asset_hash = null, string $state = null, string $order = 'ASC'): array
+    public function accessTokenSafeReadOutputs(string $access_token, ?array $members_array = null, ?int $threshold = null, ?int $offset_sequence = null, int $limit = 500, ?string $asset_hash = null, ?string $state = null, string $order = 'ASC'): array
     {
         $members = null;
         if (is_array($members_array)) {
@@ -1044,7 +1044,7 @@ class Wallet extends Api
      * @throws EncodeNotYetImplementedException
      * @throws InvalidInputFieldException
      */
-    public function safeSendTransaction(array $transaction, array $views, string $trace_id = null, string $spent_key = null, bool $use_32_bits = false): array
+    public function safeSendTransaction(array $transaction, array $views, ?string $trace_id = null, ?string $spent_key = null, bool $use_32_bits = false): array
     {
         if (! $spent_key) {
             $spent_key = $this->config['safe_key'] ?? null;
@@ -1069,7 +1069,7 @@ class Wallet extends Api
         return $this->res($body);
     }
 
-    public function safeSendTransactions(array $transactions, array $views_arr, array $trace_ids, string $spent_key = null, bool $use_32_bits = false): array
+    public function safeSendTransactions(array $transactions, array $views_arr, array $trace_ids, ?string $spent_key = null, bool $use_32_bits = false): array
     {
         if (! $spent_key) {
             $spent_key = $this->config['safe_key'] ?? null;
@@ -1111,7 +1111,7 @@ class Wallet extends Api
         ]);
     }
 
-    public function safeReadSnapshots(string $asset_uuid = null, string $app = null, string $opponent = null, string $offset = null, int $limit = 500): array
+    public function safeReadSnapshots(?string $asset_uuid = null, ?string $app = null, ?string $opponent = null, ?string $offset = null, int $limit = 500): array
     {
         $asset    = $asset_uuid;
         $url_argv = compact('asset', 'app', 'opponent', 'offset', 'limit');
@@ -1140,7 +1140,7 @@ class Wallet extends Api
         return $this->res([], $url);
     }
 
-    public function safeReadAssetWithdrawFees(string $asset_id, string $destination = null): array
+    public function safeReadAssetWithdrawFees(string $asset_id, ?string $destination = null): array
     {
         $url = str_replace('{$asset_id}', $asset_id, $this->endPointUrl);
         
@@ -1153,7 +1153,7 @@ class Wallet extends Api
         return $this->res([], $url);
     }
 
-    public function accessTokenSafeReadSnapshots(string $access_token, string $asset_uuid = null, string $app = null, string $opponent = null, string $offset = null, int $limit = 500): array
+    public function accessTokenSafeReadSnapshots(string $access_token, ?string $asset_uuid = null, ?string $app = null, ?string $opponent = null, ?string $offset = null, int $limit = 500): array
     {
         $asset    = $asset_uuid;
         $url_argv = compact('asset', 'app', 'opponent', 'offset', 'limit');
@@ -1215,7 +1215,7 @@ class Wallet extends Api
      * @throws InvalidInputFieldException
      * @throws \SodiumException
      */
-    public function safeMultisigSignRequest(array $transaction, array $views, string $request_id, int $signer_position, string $spent_key = null, bool $use_32_bits = false): array
+    public function safeMultisigSignRequest(array $transaction, array $views, string $request_id, int $signer_position, ?string $spent_key = null, bool $use_32_bits = false): array
     {
         if (! $spent_key) {
             $spent_key = $this->config['safe_key'] ?? null;

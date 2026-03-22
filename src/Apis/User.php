@@ -108,7 +108,7 @@ class User extends Api
      * @return array
      * @throws \Exception
      */
-    public function readFavoriteApps(string $user_id = null): array
+    public function readFavoriteApps(?string $user_id = null): array
     {
         if (! $user_id) {
             $user_id = $this->config['client_id'];
@@ -117,7 +117,7 @@ class User extends Api
         return $this->res([], $url);
     }
 
-    public function safeRegister(string $safe_private_key, string $pin = null): array
+    public function safeRegister(string $safe_private_key, ?string $pin = null): array
     {
         if ($pin === null) {
             $pin = $this->config['pin'];
@@ -152,7 +152,7 @@ class User extends Api
      * @return array
      * @throws \Exception
      */
-    public function safeAppsBilling(string $user_id = null): array
+    public function safeAppsBilling(?string $user_id = null): array
     {
         if (! $user_id) {
             $user_id = $this->config['client_id'];

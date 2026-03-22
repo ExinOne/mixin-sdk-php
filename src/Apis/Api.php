@@ -63,7 +63,7 @@ class Api
      * @param string|null $base_uri
      * @param int|null    $timeout
      */
-    public function __construct(array $config, string $base_uri = null, int $timeout = null)
+    public function __construct(array $config, ?string $base_uri = null, ?int $timeout = null)
     {
         $this->packageConfig = require(__DIR__.'/../../config/config.php');
 
@@ -270,7 +270,7 @@ class Api
      *                           传入 null 则清除代理配置
      * @return void
      */
-    public function setProxy(string $proxy = null): void
+    public function setProxy(?string $proxy = null): void
     {
         $this->proxy = $proxy;
         $this->http_client = $this->createHttpClient();
@@ -314,7 +314,7 @@ class Api
      * @param \Closure|null $on_reject
      * @return void
      */
-    public function setHttpAsync(Client $http_client = null, \Closure $on_resolve = null, \Closure $on_reject = null)
+    public function setHttpAsync(?Client $http_client = null, ?\Closure $on_resolve = null, ?\Closure $on_reject = null)
     {
         if ($http_client) {
             $this->http_async      = true;
@@ -337,8 +337,13 @@ class Api
     /**
      * @return array
      */
-    public function __sleep()
+    public function __serialize(): array
     {
-        return ['config'];
+        return ['config' => $this->config];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->config = $data['config'];
     }
 }
