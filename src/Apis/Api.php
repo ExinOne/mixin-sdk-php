@@ -337,13 +337,8 @@ class Api
     /**
      * @return array
      */
-    public function __serialize(): array
+    public function __sleep()
     {
-        return ['config' => $this->config];
-    }
-
-    public function __unserialize(array $data): void
-    {
-        $this->config = $data['config'];
+        return ['config'];
     }
 }
