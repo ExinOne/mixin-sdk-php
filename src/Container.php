@@ -265,7 +265,7 @@ class Container
      * @param \Closure|null $on_reject
      * @return $this
      */
-    public function setHttpAsync($http_client = false, \Closure $on_resolve = null, \Closure $on_reject = null)
+    public function setHttpAsync($http_client = false, ?\Closure $on_resolve = null, ?\Closure $on_reject = null)
     {
         if ($http_client) {
             $this->http_async = true;
@@ -325,7 +325,7 @@ class Container
         return $this;
     }
 
-    public function setProxy(string $proxy = null)
+    public function setProxy(?string $proxy = null)
     {
         $this->detailClass->setProxy($proxy);
 
@@ -373,7 +373,7 @@ class Container
      * @param callable $callback
      * @return $this
      */
-    public function setCallback(callable $callback = null)
+    public function setCallback(?callable $callback = null)
     {
         $this->callback = $callback;
         return $this;

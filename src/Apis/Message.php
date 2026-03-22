@@ -24,7 +24,7 @@ class Message extends Api
      * @throws \Wrench\Exception\FrameException
      * @throws \Wrench\Exception\SocketException
      */
-    public function sendText(string $user_id, string $data, string $category = 'CONTACT', string $conversation_id = null, string $recipient_id = null): array
+    public function sendText(string $user_id, string $data, string $category = 'CONTACT', ?string $conversation_id = null, ?string $recipient_id = null): array
     {
         $message = [
             'id'     => Uuid::uuid4()->toString(),
@@ -43,7 +43,7 @@ class Message extends Api
         return $this->webSocketRes($message);
     }
 
-    public function sendPost(string $user_id, string $data, string $category = 'CONTACT', string $conversation_id = null, string $recipient_id = null): array
+    public function sendPost(string $user_id, string $data, string $category = 'CONTACT', ?string $conversation_id = null, ?string $recipient_id = null): array
     {
         $message = [
             'id'     => Uuid::uuid4()->toString(),
@@ -91,7 +91,7 @@ class Message extends Api
      * @throws \Wrench\Exception\FrameException
      * @throws \Wrench\Exception\SocketException
      */
-    public function sendContact(string $user_id, string $contact_id, string $category = 'CONTACT', string $conversation_id = null, string $recipient_id = null): array
+    public function sendContact(string $user_id, string $contact_id, string $category = 'CONTACT', ?string $conversation_id = null, ?string $recipient_id = null): array
     {
         $message = [
             'id'     => Uuid::uuid4()->toString(),
@@ -123,7 +123,7 @@ class Message extends Api
      * @throws \Wrench\Exception\FrameException
      * @throws \Wrench\Exception\SocketException
      */
-    public function sendAppButtonGroup(string $user_id, array $data, string $category = 'CONTACT', string $conversation_id = null, string $recipient_id = null): array
+    public function sendAppButtonGroup(string $user_id, array $data, string $category = 'CONTACT', ?string $conversation_id = null, ?string $recipient_id = null): array
     {
         $message = [
             'id'     => Uuid::uuid4()->toString(),
@@ -153,7 +153,7 @@ class Message extends Api
      * @throws \Wrench\Exception\FrameException
      * @throws \Wrench\Exception\SocketException
      */
-    public function sendAppCard(string $user_id, array $data, string $category = 'CONTACT', string $conversation_id = null, string $recipient_id = null): array
+    public function sendAppCard(string $user_id, array $data, string $category = 'CONTACT', ?string $conversation_id = null, ?string $recipient_id = null): array
     {
         $message = [
             'id'     => Uuid::uuid4()->toString(),

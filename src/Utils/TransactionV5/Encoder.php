@@ -19,8 +19,8 @@ class Encoder
     const MAXIMUM_ENCODING_INT = 0xFFFF; // 65535
 
 
-    const MAGIC = "\x77\x77";
-    const NULL  = "\x00\x00";
+    const MAGIC    = "\x77\x77";
+    const TX_NULL  = "\x00\x00";
 
     private $buffer = '';
 
@@ -153,13 +153,13 @@ class Encoder
         if (isset($input['deposit'])) {
             throw new EncodeNotYetImplementedException('DEPOSIT_NOT_YET_IMPLEMENTED');
         } else {
-            $this->write(self::NULL);
+            $this->write(self::TX_NULL);
         }
 
         if (isset($input['mint'])) {
             throw new EncodeNotYetImplementedException('MINT_NOT_YET_IMPLEMENTED');
         } else {
-            $this->write(self::NULL);
+            $this->write(self::TX_NULL);
         }
     }
 
@@ -200,7 +200,7 @@ class Encoder
             $this->writeInt(strlen($output['withdrawal']['tag']));
             $this->write($output['withdrawal']['tag']);
         } else {
-            $this->write(self::NULL);
+            $this->write(self::TX_NULL);
         }
     }
 

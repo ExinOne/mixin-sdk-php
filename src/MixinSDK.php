@@ -124,7 +124,7 @@ class MixinSDK
      * @param int|null    $timeout
      * @return $this
      */
-    public function use(string $name, array $config = [], string $base_uri = null, int $timeout = null)
+    public function use(string $name, array $config = [], ?string $base_uri = null, ?int $timeout = null)
     {
         $this->useConfigName = $name;
         if (! empty($config)) {
@@ -147,7 +147,7 @@ class MixinSDK
      * @param int|null    $timeout
      * @return $this
      */
-    public function setConfig(string $name, array $config, string $base_uri = null, int $timeout = null)
+    public function setConfig(string $name, array $config, ?string $base_uri = null, ?int $timeout = null)
     {
         $this->config[$name] = self::configParser($config);
         if ($base_uri) {
@@ -193,7 +193,7 @@ class MixinSDK
      * @param callable $callback
      * @return $this
      */
-    public function setCallback(callable $callback = null)
+    public function setCallback(?callable $callback = null)
     {
         $this->callback = $callback;
         return $this;
@@ -205,7 +205,7 @@ class MixinSDK
      * @param string|null $proxy
      * @return $this
      */
-    public function setProxy(string $proxy = null)
+    public function setProxy(?string $proxy = null)
     {
         $this->proxy = $proxy;
         return $this;

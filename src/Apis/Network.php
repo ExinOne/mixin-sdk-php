@@ -76,7 +76,7 @@ class Network extends Api
      * @throws \Exception
      * @throws \ExinOne\MixinSDK\Exceptions\MixinNetworkRequestException
      */
-    public function readNetworkSnapshots($limit = null, string $offset = null, string $asset = '', string $order = 'DESC'): array
+    public function readNetworkSnapshots($limit = null, ?string $offset = null, string $asset = '', string $order = 'DESC'): array
     {
         $limit = empty($limit) ? $limit : (int) $limit;
 
@@ -136,14 +136,14 @@ class Network extends Api
      * @throws \Exception
      */
     public function externalTransactions(
-        string $asset = null, 
-        string $destination = null, 
-        $limit = null, 
-        string $offset = null, 
-        string $tag = null,
-        string $transaction_hash = null,
-        string $source = null,
-        string $user = null
+        ?string $asset = null,
+        ?string $destination = null,
+        $limit = null,
+        ?string $offset = null,
+        ?string $tag = null,
+        ?string $transaction_hash = null,
+        ?string $source = null,
+        ?string $user = null
     ): array
     {
         $limit = empty($limit) ? $limit : (int) $limit;
@@ -174,7 +174,7 @@ class Network extends Api
      * @return array
      * @throws \Exception
      */
-    public function createConversations(string $category, array $participants, string $conversation_id = null, string $name = ''): array
+    public function createConversations(string $category, array $participants, ?string $conversation_id = null, string $name = ''): array
     {
         if (empty($conversation_id)) {
             $conversation_id = $category == 'GROUP'
