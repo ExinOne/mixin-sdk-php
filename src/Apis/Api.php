@@ -80,7 +80,7 @@ class Api
         return new Client([
             'base_uri' => $this->base_uri,
             'timeout'  => $this->timeout,
-            'version'  => 1.3,
+            'version'  => 1.1,
             'proxy'    => $this->proxy,
         ]);
     }
