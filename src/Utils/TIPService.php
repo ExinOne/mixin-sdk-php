@@ -14,6 +14,22 @@ use ParagonIE_Sodium_Core32_Ed25519 as Ed25519_32;
 class TIPService
 {
     /**
+     * 在 64 位平台启用 sodium_compat 的原生乘法模式。
+     *
+     * sodium_compat 的恒定时间乘法 Util::mul() 在 fe_sq2() 中的位宽提示（24）小于
+     * 输入 limb 的合法上界（1.01*2^25），极少数标量的高位会被静默丢弃，导致公钥计算
+     * 错误（影响 v1.x 全系及 v2.5.0，至今未修复）。原生乘法无此缺陷；现代 64 位 CPU
+     * 的乘法指令本身即为恒定时序（libsodium C 实现同样依赖该性质），不损失侧信道防护。
+     * 32 位平台原生乘积可能溢出为 float，因此仅在 64 位平台启用。
+     */
+    private static function enableFastMult(): void
+    {
+        if (PHP_INT_SIZE === 8) {
+            \ParagonIE_Sodium_Compat::$fastMult = true;
+        }
+    }
+
+    /**
      * 注意得到的私钥是base64url编码的
      * @return string
      * @throws InternalErrorException
@@ -54,6 +70,8 @@ class TIPService
 
     public static function signWithMixinEd25519(string $bin_pair, string $bin_to_sign): string
     {
+        self::enableFastMult();
+
         $message = $bin_to_sign;
         $sk      = $bin_pair;
         # crypto_hash_sha512(az, sk, 32);
@@ -114,6 +132,8 @@ class TIPService
 
     public static function getBytesWithClamping(string $bin_key): string
     {
+        self::enableFastMult();
+
         if (strlen($bin_key) !== 32) {
             throw new InternalErrorException('Invalid key length');
         }
@@ -127,14 +147,17 @@ class TIPService
     }
 
     /**
-     * 目前极端情况下可能计算出错误的结果
+     * 历史上 64 位路径因 sodium_compat fe_sq2() 的位宽缺陷会对极少数 seed 算错，
+     * 现已通过 enableFastMult() 修复（见该方法注释）；$use_32_bits 仅作兼容保留。
      * @param string $bin_seed
-     * @param bool   $use_32_bits 使用32位计算，速度会非常慢，但可能计算出正确的结果
+     * @param bool   $use_32_bits 使用32位计算，速度会非常慢
      * @return string
      * @throws \SodiumException
      */
     public static function getPublicKeyFromEd25519KeyPair(string $bin_seed, bool $use_32_bits = false): string
     {
+        self::enableFastMult();
+
         if ($use_32_bits) {
             return Ed25519_32::ge_p3_tobytes(
                 Ed25519_32::ge_scalarmult_base($bin_seed)
@@ -172,6 +195,8 @@ class TIPService
      */
     public static function safeSignTransaction(array $transaction, array $views, string $spent_key, bool $use_32_bits, int $k = 0): string
     {
+        self::enableFastMult();
+
         $inputs = $transaction['inputs'] ?? [];
         if (! $inputs) {
             throw new InvalidInputFieldException('MISSING_INPUTS');

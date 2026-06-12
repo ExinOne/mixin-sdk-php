@@ -90,3 +90,5 @@ test.php
 test_keys_*.php
 test_safe_keys*.php
 .phpunit.result.cache
+
+tmp_fuzz/
