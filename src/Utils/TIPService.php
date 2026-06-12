@@ -156,13 +156,21 @@ class TIPService
      */
     public static function getPublicKeyFromEd25519KeyPair(string $bin_seed, bool $use_32_bits = false): string
     {
-        self::enableFastMult();
-
         if ($use_32_bits) {
-            return Ed25519_32::ge_p3_tobytes(
-                Ed25519_32::ge_scalarmult_base($bin_seed)
-            );
+            // 与 64 位路径相反：Core32 在 fastMult=true 下反而会算错（约 1.3% 概率），
+            // 这条恒定时间实现必须在 fastMult 关闭时运行才与主网/Go 一致。
+            $orig = \ParagonIE_Sodium_Compat::$fastMult;
+            \ParagonIE_Sodium_Compat::$fastMult = false;
+            try {
+                return Ed25519_32::ge_p3_tobytes(
+                    Ed25519_32::ge_scalarmult_base($bin_seed)
+                );
+            } finally {
+                \ParagonIE_Sodium_Compat::$fastMult = $orig;
+            }
         }
+
+        self::enableFastMult();
         return Ed25519::ge_p3_tobytes(
             Ed25519::ge_scalarmult_base($bin_seed)
         );
