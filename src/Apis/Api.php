@@ -116,6 +116,7 @@ class Api
         $headers = array_merge([
             'Content-Type'  => 'application/json',
             'Authorization' => 'Bearer '.$auth_token,
+            'User-Agent'    => $this->packageConfig['user_agent'] ?? 'PHP SDK',
         ], $customizeHeaders);
 
         if ($this->is_return_access_token) {
@@ -166,6 +167,7 @@ class Api
         $wsClient = new WSClient('wss://blaze.mixin.one/', 'https://google.com');
         $wsClient->addRequestHeader('Authorization', 'Bearer '.$this->getToken('GET', '/', ''));
         $wsClient->addRequestHeader('protocol', 'Mixin-Blaze-1');
+        $wsClient->addRequestHeader('User-Agent', $this->packageConfig['user_agent'] ?? 'PHP SDK');
 
         // 重试操作
         for ($i = 0; $i < 5; $i++) {

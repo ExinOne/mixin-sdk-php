@@ -4,6 +4,9 @@ return [
     // API 基础URL
     'base_uri'  => 'https://api.mixin.one',
 
+    // WebSocket 连接时发送的 User-Agent 请求头（Mixin 官方要求必须携带，内容可自定义）
+    'user_agent' => 'PHP SDK',
+
     // api endpoints
     'endpoints' => [
         'read_profile'                           => [
