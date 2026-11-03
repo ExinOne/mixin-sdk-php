@@ -83,7 +83,7 @@ class Api
         $client_config = [
             'base_uri' => $this->base_uri,
             'timeout'  => $this->timeout,
-            'version'  => 1.3,
+            'version'  => 1.1,
         ];
 
         // 只在设置了代理时才传 proxy，未设置时保持 Guzzle 默认行为（含 HTTPS_PROXY 等环境变量）
@@ -125,6 +125,7 @@ class Api
         $headers = array_merge([
             'Content-Type'  => 'application/json',
             'Authorization' => 'Bearer '.$auth_token,
+            'User-Agent'    => $this->packageConfig['user_agent'] ?? 'PHP SDK',
         ], $customizeHeaders);
 
         if ($this->is_return_access_token) {
@@ -175,6 +176,7 @@ class Api
         $wsClient = new WSClient('wss://blaze.mixin.one/', 'https://google.com');
         $wsClient->addRequestHeader('Authorization', 'Bearer '.$this->getToken('GET', '/', ''));
         $wsClient->addRequestHeader('protocol', 'Mixin-Blaze-1');
+        $wsClient->addRequestHeader('User-Agent', $this->packageConfig['user_agent'] ?? 'PHP SDK');
 
         // 重试操作
         for ($i = 0; $i < 5; $i++) {
