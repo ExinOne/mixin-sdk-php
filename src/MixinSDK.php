@@ -27,6 +27,8 @@ class MixinSDK
 
     public $timeout;
 
+    public $user_agent;
+
     protected $useConfigName = 'default';
 
     /**
@@ -55,8 +57,9 @@ class MixinSDK
             } else {
                 $this->config[$this->useConfigName] = $config;
             }
-            $this->base_uri = $config['base_uri'] ?? null;
-            $this->timeout  = $config['timeout'] ?? null;
+            $this->base_uri   = $config['base_uri'] ?? null;
+            $this->timeout    = $config['timeout'] ?? null;
+            $this->user_agent = $config['user_agent'] ?? null;
         }
 
     }
@@ -80,7 +83,7 @@ class MixinSDK
         // 作为包的入口， 根据 $name 返回相应的实例
         if (class_exists($class)) {
             $container = (new Container())
-                ->setDetailClass(new $class($this->config[$useConfigName], $this->base_uri, $this->timeout));
+                ->setDetailClass(new $class($this->config[$useConfigName], $this->base_uri, $this->timeout, $this->user_agent));
 
             // 设置了全局代理时，传递给本次创建的 Container
             if ($this->proxy) {

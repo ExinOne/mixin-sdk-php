@@ -4,7 +4,8 @@ return [
     // API 基础URL
     'base_uri'  => 'https://api.mixin.one',
 
-    // HTTP 请求与 WebSocket 连接时发送的 User-Agent 请求头（Mixin 官方要求必须携带，内容可自定义）
+    // HTTP 请求与 WebSocket 连接时发送的默认 User-Agent 请求头（Mixin 官方要求必须携带）
+    // 可在 MixinSDK 构造配置的 user_agent（Laravel 下即 config/mixin_sdk.php）中覆盖，用法同 base_uri
     'user_agent' => 'PHP SDK',
 
     // api endpoints

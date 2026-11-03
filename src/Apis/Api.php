@@ -57,17 +57,23 @@ class Api
     protected $proxy;
 
     /**
+     * @var string|null
+     */
+    protected $user_agent;
+
+    /**
      * Api constructor.
      *
      * @param        $config
      * @param string $base_uri
      * @param int    $timeout
      */
-    public function __construct($config, string $base_uri = null, int $timeout = null)
+    public function __construct($config, string $base_uri = null, int $timeout = null, string $user_agent = null)
     {
         $this->packageConfig = require(__DIR__.'/../../config/config.php');
 
-        $this->base_uri = $base_uri ?: $this->packageConfig['base_uri'];
+        $this->base_uri   = $base_uri ?: $this->packageConfig['base_uri'];
+        $this->user_agent = $user_agent ?: ($this->packageConfig['user_agent'] ?? 'PHP SDK');
         if ($timeout) {
             $this->timeout = $timeout;
         }
@@ -125,7 +131,7 @@ class Api
         $headers = array_merge([
             'Content-Type'  => 'application/json',
             'Authorization' => 'Bearer '.$auth_token,
-            'User-Agent'    => $this->packageConfig['user_agent'] ?? 'PHP SDK',
+            'User-Agent'    => $this->user_agent,
         ], $customizeHeaders);
 
         if ($this->is_return_access_token) {
@@ -176,7 +182,7 @@ class Api
         $wsClient = new WSClient('wss://blaze.mixin.one/', 'https://google.com');
         $wsClient->addRequestHeader('Authorization', 'Bearer '.$this->getToken('GET', '/', ''));
         $wsClient->addRequestHeader('protocol', 'Mixin-Blaze-1');
-        $wsClient->addRequestHeader('User-Agent', $this->packageConfig['user_agent'] ?? 'PHP SDK');
+        $wsClient->addRequestHeader('User-Agent', $this->user_agent);
 
         // 重试操作
         for ($i = 0; $i < 5; $i++) {
