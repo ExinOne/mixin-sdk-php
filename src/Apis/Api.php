@@ -52,6 +52,11 @@ class Api
     protected $http_client;
 
     /**
+     * @var string|null
+     */
+    protected $proxy;
+
+    /**
      * Api constructor.
      *
      * @param        $config
@@ -67,11 +72,26 @@ class Api
             $this->timeout = $timeout;
         }
         $this->config      = $config;
-        $this->http_client = new Client([
+        $this->http_client = $this->createHttpClient();
+    }
+
+    /**
+     * @return Client
+     */
+    protected function createHttpClient()
+    {
+        $client_config = [
             'base_uri' => $this->base_uri,
             'timeout'  => $this->timeout,
             'version'  => 1.3,
-        ]);
+        ];
+
+        // 只在设置了代理时才传 proxy，未设置时保持 Guzzle 默认行为（含 HTTPS_PROXY 等环境变量）
+        if ($this->proxy) {
+            $client_config['proxy'] = $this->proxy;
+        }
+
+        return new Client($client_config);
     }
 
     /**
@@ -250,6 +270,19 @@ class Api
     public function setTimeout(int $timeout): void
     {
         $this->timeout = $timeout;
+    }
+
+    /**
+     * 设置代理
+     *
+     * @param string|null $proxy 代理地址，例如: 'http://proxy.example.com:8080' 或 'socks5://proxy.example.com:1080'
+     *                           传入 null 则清除代理配置
+     * @return void
+     */
+    public function setProxy(string $proxy = null): void
+    {
+        $this->proxy       = $proxy;
+        $this->http_client = $this->createHttpClient();
     }
 
     /**

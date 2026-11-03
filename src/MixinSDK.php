@@ -37,6 +37,11 @@ class MixinSDK
     public $iterator = null;
 
     /**
+     * @var string|null
+     */
+    protected $proxy = null;
+
+    /**
      * MixinSDK constructor.
      *
      * @param array $config
@@ -74,8 +79,15 @@ class MixinSDK
 
         // 作为包的入口， 根据 $name 返回相应的实例
         if (class_exists($class)) {
-            return (new Container())
+            $container = (new Container())
                 ->setDetailClass(new $class($this->config[$useConfigName], $this->base_uri, $this->timeout));
+
+            // 设置了全局代理时，传递给本次创建的 Container
+            if ($this->proxy) {
+                $container->setProxy($this->proxy);
+            }
+
+            return $container;
         } else {
             throw new ClassNotFoundException("class \"$name\" not found, pleace check className");
         }
@@ -159,6 +171,20 @@ class MixinSDK
      */
     public function get()
     {
+        return $this;
+    }
+
+    /**
+     * 设置全局代理，之后通过本实例创建的所有 Api 请求都会走该代理
+     *
+     * @param string|null $proxy 代理地址，例如: 'http://proxy.example.com:8080'，传入 null 则清除
+     *
+     * @return $this
+     */
+    public function setProxy(string $proxy = null)
+    {
+        $this->proxy = $proxy;
+
         return $this;
     }
 
